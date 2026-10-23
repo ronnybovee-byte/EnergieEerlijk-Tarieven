@@ -1,0 +1,11 @@
+
+{
+  "schema_version": 1,
+  "app": "EnergieEerlijk",
+  "status": "test",
+  "updated_at": "2026-10-23",
+  "electricity": [],
+  "gas": [],
+  "taxes": [],
+  "network_tariffs": []
+}
