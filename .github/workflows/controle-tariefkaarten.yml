@@ -14,43 +14,71 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Controleer officiële tariefkaarten
+      - name: Haal repositorybestanden op
+        uses: actions/checkout@v4
+
+      - name: Controleer alle geselecteerde tariefkaarten
         run: |
           python3 - <<'PY'
+          import csv
           import urllib.request
+          import urllib.parse
           from datetime import datetime, timezone
 
+          csv_bestand = "tariefkaart_scenarios_v120.csv"
           basis = "https://www.vtest.be/Profile/DownloadTariffCard"
           datum = "1/11/2026 00:00:00"
 
-          producten = {
-              18582: "OCTA+ Basic Online",
-              18399: "OCTA+ Boost Flex",
-          }
+          geslaagd = 0
+          mislukt = []
 
-          for product_id, naam in producten.items():
-              from urllib.parse import urlencode
+          with open(csv_bestand, newline="", encoding="utf-8-sig") as bestand:
+              producten = list(csv.DictReader(bestand))
 
-              url = basis + "?" + urlencode({
+          if not producten:
+              raise RuntimeError("CSV-bestand bevat geen producten")
+
+          for product in producten:
+              product_id = product["id"].strip()
+              naam = (
+                  product["leverancier"].strip()
+                  + " - "
+                  + product["contract"].strip()
+              )
+
+              url = basis + "?" + urllib.parse.urlencode({
                   "productId": product_id,
                   "signUpDate": datum,
               })
 
-              request = urllib.request.Request(
-                  url,
-                  headers={"User-Agent": "Mozilla/5.0"}
-              )
-
-              with urllib.request.urlopen(request, timeout=30) as response:
-                  inhoud = response.read(10_000_000)
-
-              if not inhoud.startswith(b"%PDF-"):
-                  raise RuntimeError(
-                      f"Geen geldige PDF voor {naam} ({product_id})"
+              try:
+                  request = urllib.request.Request(
+                      url,
+                      headers={"User-Agent": "Mozilla/5.0"}
                   )
 
-              print(f"OK: {naam} ({product_id})")
+                  with urllib.request.urlopen(
+                      request, timeout=30
+                  ) as response:
+                      inhoud = response.read(10_000_000)
 
-          print("Controle voltooid:",
+                  if not inhoud.startswith(b"%PDF-"):
+                      raise ValueError("Antwoord is geen PDF")
+
+                  print(f"OK: {naam} ({product_id})")
+                  geslaagd += 1
+
+              except Exception as fout:
+                  print(f"FOUT: {naam} ({product_id}): {fout}")
+                  mislukt.append(product_id)
+
+          print(f"Geslaagd: {geslaagd}/{len(producten)}")
+          print("Controle:",
                 datetime.now(timezone.utc).isoformat())
+
+          if mislukt:
+              raise RuntimeError(
+                  "Tariefkaarten niet bereikbaar: "
+                  + ", ".join(mislukt)
+              )
           PY
