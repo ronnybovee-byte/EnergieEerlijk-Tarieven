@@ -3,7 +3,7 @@ name: Controle tariefkaarten
 
 on:
   schedule:
-    - cron: '15 7 * * *'
+    - cron: '15 7 5 * *'
   workflow_dispatch:
 
 permissions:
@@ -27,7 +27,7 @@ jobs:
 
           csv_bestand = "tariefkaart_scenarios_v120.csv"
           basis = "https://www.vtest.be/Profile/DownloadTariffCard"
-          datum = "1/11/2026 00:00:00"
+          datum = f"1/{datetime.now(timezone.utc).month}/{datetime.now(timezone.utc).year} 00:00:00"
 
           geslaagd = 0
           mislukt = []
