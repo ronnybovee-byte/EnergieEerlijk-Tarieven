@@ -110,3 +110,46 @@ if __name__ == "__main__":
         )
 
     controleer(sys.argv[1], sys.argv[2])
+
+def lees_engie_basic_online(pdf_pad):
+    """Lees de geschatte jaarprijzen uit de ENGIE-tariefkaart."""
+    with pdfplumber.open(pdf_pad) as pdf:
+        tekst = pdf.pages[0].extract_text() or ""
+
+    if "Basic Online" not in tekst or "November 2026" not in tekst:
+        raise ValueError("Onverwachte ENGIE-tariefkaart")
+
+    # ENGIE toont eerst maandprijzen en daarna jaarprijzen.
+    # Neem uitsluitend de tweede rij 'Afname'.
+    regels = tekst.splitlines()
+    afname_regels = [
+        regel for regel in regels
+        if re.search(r"\bAfname\b", regel, re.IGNORECASE)
+    ]
+
+    if len(afname_regels) != 2:
+        raise ValueError(
+            f"Verwacht 2 afnameregels, gevonden: {len(afname_regels)}"
+        )
+
+    jaarregel = afname_regels[1]
+
+    waarden = re.findall(r"\d+,\d+", jaarregel)
+
+    if len(waarden) != 5:
+        raise ValueError(
+            f"Onverwachte ENGIE-prijsregel: {jaarregel}"
+        )
+
+    vast = re.search(
+        r"(\d+,\d+)\s*€/jaar", tekst
+    )
+    if not vast:
+        raise ValueError("ENGIE vaste vergoeding niet gevonden")
+
+    return {
+        "dag_ct": bedrag(waarden[1]),
+        "nacht_ct": bedrag(waarden[2]),
+        "vast_eur": bedrag(vast.group(1)),
+        "groen_wkk_ct": bedrag(waarden[4]),
+    }
