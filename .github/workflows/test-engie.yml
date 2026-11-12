@@ -1,0 +1,46 @@
+
+name: Test ENGIE Basic Online
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-engie:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Haal repositorybestanden op
+        uses: actions/checkout@v5
+
+      - name: Installeer PDF-uitlezer
+        run: python3 -m pip install pdfplumber
+
+      - name: Controleer ENGIE-prijzen
+        run: |
+          python3 - <<'PY'
+          from decimal import Decimal
+          from lees_tariefkaart import lees_engie_basic_online
+
+          pdf = "DownloadTariffCard (5).pdf"
+          prijzen = lees_engie_basic_online(pdf)
+
+          verwacht = {
+              "dag_ct": Decimal("25.198"),
+              "nacht_ct": Decimal("19.708"),
+              "vast_eur": Decimal("20.00"),
+              "groen_wkk_ct": Decimal("1.582"),
+          }
+
+          for veld, waarde in verwacht.items():
+              gevonden = Decimal(str(prijzen[veld]))
+              if gevonden != waarde:
+                  raise AssertionError(
+                      f"FOUT {veld}: PDF={gevonden}, verwacht={waarde}"
+                  )
+              print(f"{veld}: PDF={gevonden} OK")
+
+          print("GESLAAGD: alle vier de ENGIE-prijzen kloppen")
+          PY
