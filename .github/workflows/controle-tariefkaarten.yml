@@ -17,6 +17,38 @@ jobs:
       - name: Haal repositorybestanden op
         uses: actions/checkout@v5
 
+      - name: Installeer PDF-uitlezer
+        run: python3 -m pip install pdfplumber
+
+      - name: Vergelijk prijzen OCTA+ Basic Online
+        run: |
+          python3 - <<'PY'
+          import urllib.parse
+          import urllib.request
+
+          basis = "https://www.vtest.be/Profile/DownloadTariffCard"
+          url = basis + "?" + urllib.parse.urlencode({
+              "productId": "18582",
+              "signUpDate": "1/11/2026 00:00:00",
+          })
+
+          request = urllib.request.Request(
+              url, headers={"User-Agent": "Mozilla/5.0"}
+          )
+
+          with urllib.request.urlopen(request, timeout=30) as response:
+              inhoud = response.read(10_000_000)
+
+          if not inhoud.startswith(b"%PDF-"):
+              raise RuntimeError("Download is geen geldige PDF")
+
+          with open("octa_basic_online.pdf", "wb") as bestand:
+              bestand.write(inhoud)
+          PY
+
+          python3 lees_tariefkaart.py \
+            octa_basic_online.pdf tariefkaart_scenarios_v120.csv
+
       - name: Controleer alle geselecteerde tariefkaarten
         run: |
           python3 - <<'PY'
