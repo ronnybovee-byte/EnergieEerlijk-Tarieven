@@ -36,7 +36,13 @@ jobs:
                   "DownloadTariffCard (6).pdf",
                   ["25.684", "20.303", "30.00", "1.582"]
               ),
+              (
+                  "Flow",
+                  "DownloadTariffCard (7).pdf",
+                  ["25.851", "20.283", "59.00", "1.582"]
+              ),
           ]
+
 
           velden = [
               "dag_ct",
