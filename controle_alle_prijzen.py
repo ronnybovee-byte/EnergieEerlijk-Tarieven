@@ -114,7 +114,6 @@ def controleer_contract(pdf_paginas, product_id):
         verwachte_code = f"{TARIEFMAAND.year} {TARIEFMAAND.month:02d}"
         if verwachte_code not in eerste_pagina:
             raise ValueError("Verkeerde Energy Knights-tariefmaand")
-)
 
     elif leverancier == "OCTA+":
         if verwachte_maand not in eerste_pagina:
