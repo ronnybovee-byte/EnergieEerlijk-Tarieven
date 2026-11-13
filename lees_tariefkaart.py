@@ -197,3 +197,55 @@ def lees_luminus(pdf_pad):
         "groen_wkk_ct": Decimal("0"),
     }
 
+
+def lees_elegant(pdf_pad):
+    """Lees de geschatte jaarprijzen uit een Elegant-tariefkaart."""
+    with pdfplumber.open(pdf_pad) as pdf:
+        tekst = pdf.pages[0].extract_text() or ""
+
+    regels = tekst.splitlines()
+    kop = "\n".join(regels[:4])
+
+    if not re.search(r"^Flex$|^ComfortFlex$", kop, re.MULTILINE):
+        raise ValueError("Onverwacht Elegant-contract")
+
+    if "Versie november 2026" not in kop:
+        raise ValueError("Onverwachte Elegant-tariefmaand")
+
+    jaarprijs = re.search(
+        r"Geschatte jaarprijs.*?"
+        r"Afname\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)",
+        tekst,
+        re.IGNORECASE | re.DOTALL
+    )
+
+    if not jaarprijs:
+        raise ValueError("Elegant geschatte jaarprijs niet gevonden")
+
+    vast = re.search(
+        r"Vaste vergoeding\s*\(€/jaar\)\s*\(\d+\)\s+([\d,]+)",
+        tekst,
+        re.IGNORECASE
+    )
+
+    groen = re.search(
+        r"Bijdrage groene stroom\s*\(c€/kWh\)\s+([\d,]+)",
+        tekst,
+        re.IGNORECASE
+    )
+
+    wkk = re.search(
+        r"Bijdrage warmtekrachtkoppeling\s*\(c€/kWh\)\s+([\d,]+)",
+        tekst,
+        re.IGNORECASE
+    )
+
+    if not all((vast, groen, wkk)):
+        raise ValueError("Elegant vergoeding of bijdragen ontbreken")
+
+    return {
+        "dag_ct": bedrag(jaarprijs.group(2)),
+        "nacht_ct": bedrag(jaarprijs.group(3)),
+        "vast_eur": bedrag(vast.group(1)),
+        "groen_wkk_ct": bedrag(groen.group(1)) + bedrag(wkk.group(1)),
+    }
