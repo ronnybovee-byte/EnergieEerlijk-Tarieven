@@ -1,4 +1,8 @@
+
 import csv
+import io
+import os
+import tempfile
 
 from controle_alle_prijzen import (
     CSV_PAD,
@@ -21,6 +25,7 @@ def hoofdprogramma():
         lezer = csv.DictReader(bestand)
         kolommen = lezer.fieldnames
         producten = list(lezer)
+
     gevonden_ids = [rij["id"].strip() for rij in producten]
 
     if (
@@ -31,7 +36,8 @@ def hoofdprogramma():
         raise RuntimeError(
             "CSV bevat niet exact de 14 verwachte contracten"
         )
-          nieuwe_prijzen = {}
+
+    nieuwe_prijzen = {}
 
     for product in producten:
         product_id = product["id"].strip()
@@ -42,21 +48,22 @@ def hoofdprogramma():
         controleer_contract(paginas, product_id)
         prijzen = lees_prijzen(inhoud, paginas, product_id)
 
-        nieuwe_prijzen[product_id] = prijzen
-    for veld in VELDEN:
+        for veld in VELDEN:
             if veld not in prijzen:
                 raise ValueError(
                     f"Ontbrekende prijs bij {product_id}: {veld}"
                 )
 
             bedrag(prijzen[veld])
-                    for product in producten:
+
+        nieuwe_prijzen[product_id] = prijzen
+
+    for product in producten:
         product_id = product["id"].strip()
         prijzen = nieuwe_prijzen[product_id]
 
-    for veld in VELDEN:
+        for veld in VELDEN:
             product[veld] = str(bedrag(prijzen[veld]))
-    import io
 
     uitvoer = io.StringIO(newline="")
     schrijver = csv.DictWriter(
@@ -64,9 +71,7 @@ def hoofdprogramma():
         fieldnames=kolommen,
     )
     schrijver.writeheader()
-    schrijver.writerows(producten)  
-    import os
-    import tempfile
+    schrijver.writerows(producten)
 
     mapnaam = os.path.dirname(os.path.abspath(CSV_PAD))
 
@@ -81,5 +86,7 @@ def hoofdprogramma():
         tijdelijk_pad = tijdelijk.name
 
     os.replace(tijdelijk_pad, CSV_PAD)
+
+
 if __name__ == "__main__":
     hoofdprogramma()
