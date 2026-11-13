@@ -100,8 +100,6 @@ jobs:
           pdf_dag = lees_bedrag(p1, "Verbruik dag (c€/kWh)")
           pdf_nacht = lees_bedrag(p1, "Verbruik nacht (c€/kWh)")
           pdf_vast = lees_bedrag(p1, "Abonnement (€/jaar)")
-          print("=== UITGELEZEN PDF PAGINA 2 ===")
-          print(p2)
           pdf_groen = lees_bedrag(
               p2, "Bijdrage groene stroom"
           )
