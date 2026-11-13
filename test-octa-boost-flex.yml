@@ -1,0 +1,50 @@
+
+name: Test OCTA+ Boost Flex
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Haal repository op
+        uses: actions/checkout@v4
+
+      - name: Installeer pdfplumber
+        run: pip install pdfplumber
+
+      - name: Controleer OCTA+ Boost Flex
+        run: |
+          python3 - <<'PY'
+          import csv
+          from decimal import Decimal
+          from lees_tariefkaart import lees_tariefkaart
+
+          pdf = "nl-be-octa-boost-flex-electricity-november-2026.pdf"
+          csv_pad = "tariefkaart_scenarios_v120.csv"
+
+          prijzen = lees_tariefkaart(pdf)
+
+          with open(csv_pad, encoding="utf-8-sig", newline="") as bestand:
+              producten = list(csv.DictReader(bestand))
+
+          product = next(
+              (rij for rij in producten if rij["id"].strip() == "18399"),
+              None
+          )
+
+          if product is None:
+              raise ValueError("OCTA+ Boost Flex (18399) ontbreekt in CSV")
+
+          for veld, gevonden in prijzen.items():
+              verwacht = Decimal(product[veld].strip().replace(",", "."))
+              if gevonden != verwacht:
+                  raise AssertionError(
+                      f"FOUT {veld}: PDF={gevonden}, CSV={verwacht}"
+                  )
+              print(f"{veld}: PDF={gevonden} CSV={verwacht} OK")
+
+          print("GESLAAGD: OCTA+ Boost Flex (18399) - alle vier de prijzen kloppen")
+          PY
