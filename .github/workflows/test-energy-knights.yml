@@ -79,7 +79,7 @@ jobs:
               regels = [
                   regel.strip()
                   for regel in tekst.splitlines()
-                  if regel.lower().startswith(label.lower())
+                  if re.search(r"\b" + re.escape(label.lower()) + r"\s+\d+,\d{2}\s*$", regel.lower())
               ]
               if len(regels) != 1:
                   raise AssertionError(
