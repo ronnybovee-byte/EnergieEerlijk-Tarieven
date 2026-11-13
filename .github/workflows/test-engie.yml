@@ -41,6 +41,11 @@ jobs:
                   "DownloadTariffCard (7).pdf",
                   ["25.851", "20.283", "59.00", "1.582"]
               ),
+              (
+                  "Easy",
+                  "DownloadTariffCard (8).pdf",
+                  ["26.186", "20.932", "65.00", "1.582"]
+              ),
           ]
 
 
