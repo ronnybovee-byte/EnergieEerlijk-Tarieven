@@ -1,0 +1,181 @@
+
+name: Test Energy Knights Essentia Online Green
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  controle:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository ophalen
+        uses: actions/checkout@v4
+
+      - name: PDF-uitlezer installeren
+        run: python3 -m pip install pdfplumber
+
+      - name: Vergelijk PDF met CSV - Energy Knights 17280
+        run: |
+          python3 - <<'PY'
+          import csv
+          import io
+          import re
+          import urllib.parse
+          import urllib.request
+          from decimal import Decimal
+          import pdfplumber
+
+          product_id = "17280"
+
+          with open("tariefkaart_scenarios_v120.csv",
+                    encoding="utf-8-sig", newline="") as f:
+              matches = [
+                  row for row in csv.DictReader(f)
+                  if row["id"].strip() == product_id
+              ]
+
+          if len(matches) != 1:
+              raise RuntimeError("Product 17280 ontbreekt of is dubbel")
+
+          record = matches[0]
+
+          if record["leverancier"].strip() != "Energy Knights":
+              raise AssertionError("Verkeerde leverancier")
+          if record["contract"].strip() != "Essentia Online Green":
+              raise AssertionError("Verkeerde contractnaam")
+          if record["groen_wkk_behandeling"].strip() != "APART":
+              raise AssertionError("Onverwachte behandeling groen/WKK")
+
+          basis = "https://www.vtest.be/Profile/DownloadTariffCard"
+          url = basis + "?" + urllib.parse.urlencode({
+              "productId": product_id,
+              "signUpDate": "1/11/2026 00:00:00",
+          })
+
+          request = urllib.request.Request(
+              url, headers={"User-Agent": "Mozilla/5.0"}
+          )
+
+          with urllib.request.urlopen(request, timeout=30) as response:
+              pdf = response.read(10_000_000)
+
+          if not pdf.startswith(b"%PDF-"):
+              raise RuntimeError("Download is geen PDF")
+
+          with pdfplumber.open(io.BytesIO(pdf)) as document:
+              if len(document.pages) < 2:
+                  raise RuntimeError("Tariefkaart is onvolledig")
+              p1 = document.pages[0].extract_text() or ""
+              p2 = document.pages[1].extract_text() or ""
+
+          if "2026-11" not in p1:
+              raise AssertionError("Verkeerde tariefmaand")
+          if "Essentia Online Green" not in p1:
+              raise AssertionError("Verkeerde contractnaam in PDF")
+          if "Energy Knights" not in p1:
+              raise AssertionError("Verkeerde leverancier in PDF")
+
+          def lees_bedrag(tekst, label):
+              regels = [
+                  regel.strip()
+                  for regel in tekst.splitlines()
+                  if re.search(
+                      re.escape(label.lower()) +
+                      r"\s+\d+,\d{2}(?!\d)",
+                      regel.lower()
+                  )
+              ]
+
+              if len(regels) != 1:
+                  raise AssertionError(
+                      f"{label}: verwacht één regel, "
+                      f"gevonden {len(regels)}"
+                  )
+
+              na_label = regels[0].lower().split(
+                  label.lower(), 1
+              )[1]
+
+              match = re.search(
+                  r"(?<!\d)\d+,\d{2}(?!\d)",
+                  na_label
+              )
+
+              if not match:
+                  raise AssertionError(
+                      f"{label}: geen bedrag gevonden"
+                  )
+
+              return Decimal(
+                  match.group().replace(",", ".")
+              )
+
+          pdf_dag = lees_bedrag(
+              p1, "Verbruik dag (c€/kWh)"
+          )
+          pdf_nacht = lees_bedrag(
+              p1, "Verbruik nacht (c€/kWh)"
+          )
+          pdf_vast = lees_bedrag(
+              p1, "Abonnement (€/jaar)"
+          )
+          pdf_extra_groen = lees_bedrag(
+              p1, "Groene stroom (c€/kWh)"
+          )
+          pdf_groen = lees_bedrag(
+              p2, "Bijdrage groene stroom"
+          )
+          pdf_wkk = lees_bedrag(
+              p2, "Bijdrage WKK"
+          )
+
+          pdf_totaal_groen = (
+              pdf_extra_groen + pdf_groen + pdf_wkk
+          )
+
+          vergelijkingen = {
+              "Dagprijs": (
+                  pdf_dag, Decimal(record["dag_ct"])
+              ),
+              "Nachtprijs": (
+                  pdf_nacht, Decimal(record["nacht_ct"])
+              ),
+              "Vaste vergoeding": (
+                  pdf_vast, Decimal(record["vast_eur"])
+              ),
+              "Groen/WKK inclusief extra groene stroom": (
+                  pdf_totaal_groen,
+                  Decimal(record["groen_wkk_ct"])
+              ),
+          }
+
+          fouten = []
+
+          for naam, (pdf_waarde, csv_waarde) in vergelijkingen.items():
+              if pdf_waarde == csv_waarde:
+                  print(f"OK: {naam}: {pdf_waarde}")
+              else:
+                  print(
+                      f"FOUT: {naam}: PDF={pdf_waarde}, "
+                      f"CSV={csv_waarde}"
+                  )
+                  fouten.append(naam)
+
+          if fouten:
+              raise AssertionError(
+                  "Prijsverschillen: " + ", ".join(fouten)
+              )
+
+          print(
+              "GESLAAGD: 4/4 CSV-waarden gelijk aan PDF"
+          )
+          print(
+              "Groen/WKK inclusief extra toeslag:",
+              pdf_extra_groen, "+", pdf_groen,
+              "+", pdf_wkk, "=", pdf_totaal_groen
+          )
+          PY
