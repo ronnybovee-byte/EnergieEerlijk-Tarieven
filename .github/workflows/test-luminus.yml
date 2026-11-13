@@ -1,0 +1,60 @@
+
+name: Test Luminus
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Haal repository op
+        uses: actions/checkout@v4
+
+      - name: Installeer pdfplumber
+        run: pip install pdfplumber
+
+      - name: Controleer beide Luminus-contracten
+        run: |
+          python3 - <<'PY'
+          import csv
+          from decimal import Decimal
+          from lees_tariefkaart import lees_luminus
+
+          contracten = [
+              ("BasicFlex Online", "17100", "tariefkaart-lum_basicflexonline.pdf"),
+              ("MaxxFlex", "13419", "tariefkaart-lum_maxx.pdf"),
+          ]
+
+          with open("tariefkaart_scenarios_v120.csv", encoding="utf-8-sig", newline="") as bestand:
+              producten = list(csv.DictReader(bestand))
+
+          velden = ("dag_ct", "nacht_ct", "vast_eur", "groen_wkk_ct")
+
+          for naam, contract_id, pdf in contracten:
+              print(f"\nControle: Luminus {naam} ({contract_id})")
+
+              product = next(
+                  (rij for rij in producten if rij["id"].strip() == contract_id),
+                  None
+              )
+
+              if product is None:
+                  raise ValueError(f"Contract {contract_id} ontbreekt in CSV")
+
+              prijzen = lees_luminus(pdf)
+
+              for veld in velden:
+                  gevonden = prijzen[veld]
+                  verwacht = Decimal(product[veld].strip().replace(",", "."))
+
+                  if gevonden != verwacht:
+                      raise AssertionError(
+                          f"FOUT {veld}: PDF={gevonden}, CSV={verwacht}"
+                      )
+
+                  print(f"{veld}: PDF={gevonden} CSV={verwacht} OK")
+
+          print("\nGESLAAGD: beide Luminus-contracten kloppen")
+          PY
