@@ -1,0 +1,60 @@
+
+name: Test Elegant
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Haal repository op
+        uses: actions/checkout@v4
+
+      - name: Installeer pdfplumber
+        run: pip install pdfplumber
+
+      - name: Controleer beide Elegant-contracten
+        run: |
+          python3 - <<'PY'
+          import csv
+          from decimal import Decimal
+          from lees_tariefkaart import lees_elegant
+
+          contracten = [
+              ("Flex", "16065", "tariefkaart-elegant_flex.pdf"),
+              ("ComfortFlex", "16083", "tariefkaart-eleganty_comfortflex.pdf"),
+          ]
+
+          with open("tariefkaart_scenarios_v120.csv", encoding="utf-8-sig", newline="") as bestand:
+              producten = list(csv.DictReader(bestand))
+
+          velden = ("dag_ct", "nacht_ct", "vast_eur", "groen_wkk_ct")
+
+          for naam, contract_id, pdf in contracten:
+              print(f"\nControle: Elegant {naam} ({contract_id})")
+
+              product = next(
+                  (rij for rij in producten if rij["id"].strip() == contract_id),
+                  None
+              )
+
+              if product is None:
+                  raise ValueError(f"Contract {contract_id} ontbreekt in CSV")
+
+              prijzen = lees_elegant(pdf)
+
+              for veld in velden:
+                  gevonden = prijzen[veld]
+                  verwacht = Decimal(product[veld].strip().replace(",", "."))
+
+                  if gevonden != verwacht:
+                      raise AssertionError(
+                          f"FOUT {veld}: PDF={gevonden}, CSV={verwacht}"
+                      )
+
+                  print(f"{veld}: PDF={gevonden} CSV={verwacht} OK")
+
+          print("\nGESLAAGD: beide Elegant-contracten kloppen")
+          PY
