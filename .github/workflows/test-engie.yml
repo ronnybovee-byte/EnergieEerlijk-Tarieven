@@ -18,29 +18,45 @@ jobs:
       - name: Installeer PDF-uitlezer
         run: python3 -m pip install pdfplumber
 
+     
       - name: Controleer ENGIE-prijzen
         run: |
           python3 - <<'PY'
           from decimal import Decimal
           from lees_tariefkaart import lees_engie_basic_online
 
-          pdf = "DownloadTariffCard (5).pdf"
-          prijzen = lees_engie_basic_online(pdf)
+          contracten = [
+              (
+                  "Basic Online",
+                  "DownloadTariffCard (5).pdf",
+                  ["25.198", "19.708", "20.00", "1.582"]
+              ),
+              (
+                  "Direct Online",
+                  "DownloadTariffCard (6).pdf",
+                  ["25.684", "20.303", "30.00", "1.582"]
+              ),
+          ]
 
-          verwacht = {
-              "dag_ct": Decimal("25.198"),
-              "nacht_ct": Decimal("19.708"),
-              "vast_eur": Decimal("20.00"),
-              "groen_wkk_ct": Decimal("1.582"),
-          }
+          velden = [
+              "dag_ct",
+              "nacht_ct",
+              "vast_eur",
+              "groen_wkk_ct",
+          ]
 
-          for veld, waarde in verwacht.items():
-              gevonden = Decimal(str(prijzen[veld]))
-              if gevonden != waarde:
-                  raise AssertionError(
-                      f"FOUT {veld}: PDF={gevonden}, verwacht={waarde}"
-                  )
-              print(f"{veld}: PDF={gevonden} OK")
+          for naam, pdf, verwacht in contracten:
+              print(f"\nControle: ENGIE {naam}")
+              prijzen = lees_engie_basic_online(pdf)
 
-          print("GESLAAGD: alle vier de ENGIE-prijzen kloppen")
+              for veld, waarde in zip(velden, verwacht):
+                  gevonden = Decimal(str(prijzen[veld]))
+                  if gevonden != Decimal(waarde):
+                      raise AssertionError(
+                          f"FOUT {veld}: PDF={gevonden}, CSV={waarde}"
+                      )
+                  print(f"{veld}: PDF={gevonden} CSV={waarde} OK")
+
+          print("\nGESLAAGD: beide ENGIE-contracten kloppen")
           PY
+
