@@ -1,0 +1,57 @@
+
+name: Maandprijzen bijwerken via Pull Request
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 7 6 * *'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-maandprijzen:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository ophalen
+        uses: actions/checkout@v4
+
+      - name: Python installeren
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Bibliotheken installeren
+        run: python3 -m pip install pdfplumber
+
+      - name: Nieuwe maandprijzen ophalen
+        run: python3 update_maandprijzen.py
+
+      - name: Controleren welke bestanden zijn gewijzigd
+        id: wijzigingen
+        run: |
+          if git diff --quiet -- tariefkaart_scenarios_v120.csv; then
+            echo "gewijzigd=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "gewijzigd=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Pull Request aanmaken
+        if: steps.wijzigingen.outputs.gewijzigd == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          add-paths: tariefkaart_scenarios_v120.csv
+          branch: automatisch/maandprijzen
+          delete-branch: true
+          commit-message: 'Automatische update maandprijzen'
+          title: 'EnergieEerlijk - nieuwe maandprijzen'
+          body: |
+            Automatisch voorstel voor de maandelijkse tarieven.
+
+            Alle 14 tariefkaarten zijn gecontroleerd.
+            De 56 prijswaarden zijn verwerkt.
+
+            Controleer de wijzigingen voordat je deze Pull Request goedkeurt.
