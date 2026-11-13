@@ -49,12 +49,7 @@ jobs:
           python3 lees_tariefkaart.py \
             octa_basic_online.pdf tariefkaart_scenarios_v120.csv
 
-      - name: Controleer OCTA+ Boost Flex
-        run: |
-          python3 lees_tariefkaart.py \
-            nl-be-octa-boost-flex-electricity-november-2026.pdf \
-            tariefkaart_scenarios_v120.csv
-
+      
       - name: Controleer alle geselecteerde tariefkaarten
         run: |
           python3 - <<'PY'
