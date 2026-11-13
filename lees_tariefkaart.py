@@ -153,3 +153,47 @@ def lees_engie_basic_online(pdf_pad):
         "vast_eur": bedrag(vast.group(1)),
         "groen_wkk_ct": bedrag(waarden[4]),
     }
+
+def lees_luminus(pdf_pad):
+    """Lees de jaarschatting uit een Luminus-tariefkaart."""
+    with pdfplumber.open(pdf_pad) as pdf:
+        tekst = pdf.pages[0].extract_text() or ""
+
+    kop = "\n".join(tekst.splitlines()[:8])
+
+    if not any(
+        naam in kop
+        for naam in ("BasicFlex Online", "MaxxFlex")
+    ):
+        raise ValueError("Onverwacht Luminus-contract")
+
+    if not re.search(r"november\s+2026", kop, re.IGNORECASE):
+        raise ValueError("Onverwachte Luminus-tariefmaand")
+
+    # Neem de jaarschatting, niet de actuele energieprijs.
+    patroon = (
+        r"Jaarschatting energieprijs\s*\(c€/kWh\)\s*2?"
+        r"\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)"
+    )
+
+    gevonden = re.search(patroon, tekst, re.IGNORECASE)
+
+    if not gevonden:
+        raise ValueError("Luminus-jaarschatting niet gevonden")
+
+    vast = re.search(
+        r"Vaste vergoeding\s*\(€/jaar\)\s+([\d,]+)",
+        tekst,
+        re.IGNORECASE
+    )
+
+    if not vast:
+        raise ValueError("Luminus vaste vergoeding niet gevonden")
+
+    return {
+        "dag_ct": bedrag(gevonden.group(2)),
+        "nacht_ct": bedrag(gevonden.group(3)),
+        "vast_eur": bedrag(vast.group(1)),
+        "groen_wkk_ct": Decimal("0"),
+    }
+
