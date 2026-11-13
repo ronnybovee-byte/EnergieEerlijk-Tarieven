@@ -21,7 +21,7 @@ def hoofdprogramma():
         lezer = csv.DictReader(bestand)
         kolommen = lezer.fieldnames
         producten = list(lezer)
-          gevonden_ids = [rij["id"].strip() for rij in producten]
+    gevonden_ids = [rij["id"].strip() for rij in producten]
 
     if (
         len(producten) != 14
