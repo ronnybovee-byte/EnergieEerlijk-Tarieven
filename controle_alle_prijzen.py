@@ -17,7 +17,7 @@ from lees_tariefkaart import (
 )
 
 CSV_PAD = "tariefkaart_scenarios_v120.csv"
-TARIEFMAAND = date(2026, 11, 1)
+TARIEFMAAND = date.today().replace(day=1)
 TARIEFDATUM = f"{TARIEFMAAND.day}/{TARIEFMAAND.month}/{TARIEFMAAND.year} 00:00:00"
 
 PRODUCTEN = {
