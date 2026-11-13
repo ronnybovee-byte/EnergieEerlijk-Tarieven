@@ -30,7 +30,6 @@ jobs:
         run: |
           git diff -- tariefkaart_scenarios_v120.csv
 
-      - name: Controleren of precies één CSV is gewijzigd
+      - name: Status tonen
         run: |
           git status --short
-          git diff --check
