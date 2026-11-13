@@ -94,7 +94,7 @@ def controleer_contract(pdf_paginas, product_id):
 
     eerste_pagina = normale_tekst(pdf_paginas[0])
     if product_id == "10940":
-    print("PDF-CONTRACTNAAM 10940:", eerste_pagina[:1200])
+        print("PDF-CONTRACTNAAM 10940:", eerste_pagina[:1200])
     if normale_tekst(contract) not in eerste_pagina:
         raise ValueError(
             f"Contractnaam niet gevonden in PDF: {contract}"
