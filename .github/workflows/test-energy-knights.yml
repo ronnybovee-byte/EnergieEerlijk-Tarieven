@@ -79,7 +79,7 @@ jobs:
               regels = [
                   regel.strip()
                   for regel in tekst.splitlines()
-                  if label.lower() in regel.lower()
+                  if regel.lower().startswith(label.lower())
               ]
               if len(regels) != 1:
                   raise AssertionError(
