@@ -116,7 +116,7 @@ def lees_engie_basic_online(pdf_pad):
     with pdfplumber.open(pdf_pad) as pdf:
         tekst = pdf.pages[0].extract_text() or ""
 
-    if "Basic Online" not in tekst or "November 2026" not in tekst:
+    if not any(naam in tekst for naam in ("Basic Online", "Direct Online")) or "November 2026" not in tekst:
         raise ValueError("Onverwachte ENGIE-tariefkaart")
 
     # ENGIE toont eerst maandprijzen en daarna jaarprijzen.
