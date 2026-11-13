@@ -5,7 +5,7 @@ import re
 import urllib.parse
 import urllib.request
 from decimal import Decimal
-
+from datetime import date
 import pdfplumber
 
 from lees_tariefkaart import (
@@ -13,10 +13,12 @@ from lees_tariefkaart import (
     lees_engie_basic_online,
     lees_luminus,
     lees_elegant,
+    verwachte_tariefmaand,
 )
 
 CSV_PAD = "tariefkaart_scenarios_v120.csv"
-TARIEFDATUM = "1/11/2026 00:00:00"
+TARIEFMAAND = date(2026, 11, 1)
+TARIEFDATUM = f"{TARIEFMAAND.day}/{TARIEFMAAND.month}/{TARIEFMAAND.year} 00:00:00"
 
 PRODUCTEN = {
     "18582": ("OCTA+", "Basic Online"),
@@ -93,6 +95,8 @@ def controleer_contract(pdf_paginas, product_id):
     leverancier, contract = PRODUCTEN[product_id]
 
     eerste_pagina = normale_tekst(pdf_paginas[0])
+    maandnaam, jaar = verwachte_tariefmaand(TARIEFMAAND)
+    verwachte_maand = f"{maandnaam} {jaar}"
     
     verwachte_naam = normale_tekst(contract)
     if product_id == "10940":
@@ -106,23 +110,26 @@ def controleer_contract(pdf_paginas, product_id):
         if "energy knights" not in eerste_pagina:
             raise ValueError("Verkeerde leverancier in PDF")
 
-        if "2026 11" not in eerste_pagina:
-            raise ValueError("Verkeerde tariefmaand")
+        
+        verwachte_code = f"{TARIEFMAAND.year} {TARIEFMAAND.month:02d}"
+        if verwachte_code not in eerste_pagina:
+            raise ValueError("Verkeerde Energy Knights-tariefmaand")
+)
 
     elif leverancier == "OCTA+":
-        if "november 2026" not in eerste_pagina:
+        if verwachte_maand not in eerste_pagina:
             raise ValueError("Verkeerde OCTA+-tariefmaand")
 
     elif leverancier == "Luminus":
-        if "november 2026" not in eerste_pagina:
+        if verwachte_maand not in eerste_pagina:
             raise ValueError("Verkeerde Luminus-tariefmaand")
 
     elif leverancier == "Elegant":
-        if "november 2026" not in eerste_pagina:
+        if verwachte_maand not in eerste_pagina:
             raise ValueError("Verkeerde Elegant-tariefmaand")
 
     elif leverancier == "ENGIE":
-        if "november 2026" not in eerste_pagina:
+        if verwachte_maand not in eerste_pagina:
             raise ValueError("Verkeerde ENGIE-tariefmaand")
 
 
@@ -217,18 +224,18 @@ def lees_prijzen(inhoud, paginas, product_id):
         if product_id in (
             "18582", "18399", "10940", "18405"
         ):
-            return lees_tariefkaart(tijdelijk_pad)
+            return lees_tariefkaart(tijdelijk_pad, TARIEFMAAND)
 
         if product_id in (
             "15818", "15824", "10667", "12710"
         ):
-            return lees_engie_basic_online(tijdelijk_pad)
+            return lees_engie_basic_online(tijdelijk_pad, TARIEFMAAND)
 
         if product_id in ("17100", "13419"):
-            return lees_luminus(tijdelijk_pad)
+            return lees_luminus(tijdelijk_pad, TARIEFMAAND)
 
         if product_id in ("16065", "16083"):
-            return lees_elegant(tijdelijk_pad)
+            return lees_elegant(tijdelijk_pad, TARIEFMAAND)
 
         raise ValueError(
             f"Geen uitlezer voor product {product_id}"
