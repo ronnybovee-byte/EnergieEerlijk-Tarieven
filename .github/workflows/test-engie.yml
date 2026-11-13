@@ -63,6 +63,6 @@ jobs:
                       )
                   print(f"{veld}: PDF={gevonden} CSV={waarde} OK")
 
-          print("\nGESLAAGD: beide ENGIE-contracten kloppen")
+          print("\nGESLAAGD: alle drie de ENGIE-contracten kloppen")
           PY
 
