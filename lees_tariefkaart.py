@@ -1,10 +1,24 @@
 
 import csv
 import re
+from datetime import date
 import sys
 from decimal import Decimal
 
 import pdfplumber
+
+MAANDNAMEN = (
+    "januari", "februari", "maart", "april",
+    "mei", "juni", "juli", "augustus",
+    "september", "oktober", "november", "december",
+)
+
+def verwachte_tariefmaand(tariefmaand=None):
+    """Geef de verwachte maandnaam en het jaartal terug."""
+    if tariefmaand is None:
+        tariefmaand = date(2026, 11, 1)
+
+    return MAANDNAMEN[tariefmaand.month - 1], tariefmaand.year
 
 
 def bedrag(tekst):
@@ -22,7 +36,7 @@ def zoek_prijs(tekst, patroon, omschrijving):
     return bedrag(resultaat.group(1))
 
 
-def lees_tariefkaart(pdf_pad):
+def lees_tariefkaart(pdf_pad, tariefmaand=None):
     with pdfplumber.open(pdf_pad) as pdf:
         if len(pdf.pages) < 2:
             raise ValueError("Tariefkaart heeft te weinig pagina's")
@@ -30,11 +44,16 @@ def lees_tariefkaart(pdf_pad):
         pagina1 = pdf.pages[0].extract_text() or ""
         pagina2 = pdf.pages[1].extract_text() or ""
 
+    maandnaam, jaar = verwachte_tariefmaand(tariefmaand)
+
     if not re.search(
-        r"TARIEFFICHE\s+NOVEMBER\s+2026",
+        rf"TARIEFFICHE\s+{maandnaam}\s+{jaar}",
         pagina1, re.IGNORECASE
     ):
-        raise ValueError("Dit is niet de novembertariefkaart")
+        raise ValueError(
+            f"Dit is niet de tariefkaart van {maandnaam} {jaar}"
+        )
+
 
     dag = zoek_prijs(
         pagina1,
@@ -111,12 +130,22 @@ if __name__ == "__main__":
 
     controleer(sys.argv[1], sys.argv[2])
 
-def lees_engie_basic_online(pdf_pad):
+def lees_engie_basic_online(pdf_pad, tariefmaand=None):
     """Lees de geschatte jaarprijzen uit de ENGIE-tariefkaart."""
     with pdfplumber.open(pdf_pad) as pdf:
         tekst = pdf.pages[0].extract_text() or ""
 
-    if not any(naam in tekst for naam in ("Basic Online", "Direct Online", "Flow", "Easy")) or "November 2026" not in tekst:
+    
+    maandnaam, jaar = verwachte_tariefmaand(tariefmaand)
+
+    if (
+        not any(
+            naam in tekst
+            for naam in ("Basic Online", "Direct Online", "Flow", "Easy")
+        )
+        or f"{maandnaam} {jaar}".lower() not in tekst.lower()
+    ):
+
         raise ValueError("Onverwachte ENGIE-tariefkaart")
 
     # ENGIE toont eerst maandprijzen en daarna jaarprijzen.
@@ -154,7 +183,7 @@ def lees_engie_basic_online(pdf_pad):
         "groen_wkk_ct": bedrag(waarden[4]),
     }
 
-def lees_luminus(pdf_pad):
+def lees_luminus(pdf_pad, tariefmaand=None):
     """Lees de jaarschatting uit een Luminus-tariefkaart."""
     with pdfplumber.open(pdf_pad) as pdf:
         tekst = pdf.pages[0].extract_text() or ""
@@ -167,8 +196,15 @@ def lees_luminus(pdf_pad):
     ):
         raise ValueError("Onverwacht Luminus-contract")
 
-    if not re.search(r"november\s+2026", kop, re.IGNORECASE):
+    
+    maandnaam, jaar = verwachte_tariefmaand(tariefmaand)
+
+    if not re.search(
+        rf"{maandnaam}\s+{jaar}",
+        kop, re.IGNORECASE
+    ):
         raise ValueError("Onverwachte Luminus-tariefmaand")
+
 
     # Neem de jaarschatting, niet de actuele energieprijs.
     patroon = (
@@ -198,7 +234,7 @@ def lees_luminus(pdf_pad):
     }
 
 
-def lees_elegant(pdf_pad):
+def lees_elegant(pdf_pad, tariefmaand=None):
     """Lees de geschatte jaarprijzen uit een Elegant-tariefkaart."""
     with pdfplumber.open(pdf_pad) as pdf:
         tekst = pdf.pages[0].extract_text() or ""
@@ -209,8 +245,12 @@ def lees_elegant(pdf_pad):
     if not re.search(r"^Flex$|^ComfortFlex$", kop, re.MULTILINE):
         raise ValueError("Onverwacht Elegant-contract")
 
-    if "Versie november 2026" not in kop:
+    
+    maandnaam, jaar = verwachte_tariefmaand(tariefmaand)
+
+    if f"versie {maandnaam} {jaar}" not in kop.lower():
         raise ValueError("Onverwachte Elegant-tariefmaand")
+
 
     jaarprijs = re.search(
         r"Geschatte jaarprijs.*?"
