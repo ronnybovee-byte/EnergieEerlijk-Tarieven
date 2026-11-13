@@ -1,0 +1,46 @@
+
+name: Controle maandprijzen (test)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  controle:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Haal repositorybestanden op
+        uses: actions/checkout@v5
+
+      - name: Controleer CSV en toon contracten
+        run: |
+          python3 - <<'PY'
+          import csv
+
+          pad = "tariefkaart_scenarios_v120.csv"
+
+          with open(pad, newline="", encoding="utf-8-sig") as bestand:
+              producten = list(csv.DictReader(bestand))
+
+          if not producten:
+              raise RuntimeError("Geen contracten gevonden")
+
+          print(f"Aantal contracten: {len(producten)}")
+
+          for product in producten:
+              print(
+                  product["id"],
+                  product["leverancier"],
+                  product["contract"]
+              )
+
+          if len(producten) != 14:
+              raise RuntimeError(
+                  f"Verwacht 14 contracten, gevonden {len(producten)}"
+              )
+
+          print("GESLAAGD: CSV bevat 14 contracten")
+          PY
