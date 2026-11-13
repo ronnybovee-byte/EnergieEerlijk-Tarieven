@@ -3,6 +3,8 @@ name: Controle maandprijzen (test)
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '15 7 6 * *'
 
 permissions:
   contents: read
