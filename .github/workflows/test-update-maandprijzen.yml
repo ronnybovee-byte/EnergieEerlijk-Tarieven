@@ -1,0 +1,20 @@
+name: Test updatescript (syntax)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  syntaxcontrole:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository ophalen
+        uses: actions/checkout@v4
+
+      - name: Python installeren
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Python-syntax controleren
+        run: python3 -m py_compile update_maandprijzen.py
