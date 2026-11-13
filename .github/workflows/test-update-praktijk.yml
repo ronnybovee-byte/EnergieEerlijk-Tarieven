@@ -1,0 +1,36 @@
+
+name: Test maandprijzen update (praktijk)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository ophalen
+        uses: actions/checkout@v4
+
+      - name: Python installeren
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Benodigde bibliotheken installeren
+        run: python3 -m pip install pdfplumber
+
+      - name: Updatescript uitvoeren
+        run: python3 update_maandprijzen.py
+
+      - name: CSV-wijzigingen tonen
+        run: |
+          git diff -- tariefkaart_scenarios_v120.csv
+
+      - name: Controleren of precies één CSV is gewijzigd
+        run: |
+          git status --short
+          git diff --check
