@@ -26,10 +26,16 @@ def hoofdprogramma():
     codering = "utf-8-sig" if heeft_bom else "utf-8"
 
     csv_tekst = originele_inhoud.decode(codering)
-
     lezer = csv.DictReader(io.StringIO(csv_tekst))
     kolommen = lezer.fieldnames
     producten = list(lezer)
+
+    if not kolommen:
+        raise RuntimeError("CSV heeft geen kolomnamen")
+
+    vereiste_kolommen = ("id",) + VELDEN
+    if not all(veld in kolommen for veld in vereiste_kolommen):
+        raise RuntimeError("Verplichte CSV-kolommen ontbreken")
 
     gevonden_ids = [rij["id"].strip() for rij in producten]
 
@@ -42,16 +48,10 @@ def hoofdprogramma():
             "CSV bevat niet exact de 14 verwachte contracten"
         )
 
-    if not kolommen or not all(
-        veld in kolommen for veld in VELDEN
-    ):
-        raise RuntimeError("CSV-kolommen ontbreken")
-
     nieuwe_prijzen = {}
 
     for product in producten:
         product_id = product["id"].strip()
-
         print(f"Tariefkaart controleren: {product_id}")
 
         inhoud = download_pdf(product_id)
@@ -69,7 +69,6 @@ def hoofdprogramma():
                 )
 
             waarde = bedrag(prijzen[veld])
-
             if not isinstance(waarde, Decimal):
                 waarde = Decimal(str(waarde))
 
@@ -82,7 +81,11 @@ def hoofdprogramma():
 
         nieuwe_prijzen[product_id] = gecontroleerd
 
+    tariefmaand = TARIEFMAAND.strftime("%Y-%m")
     wijzigingen = 0
+
+    if "tariefmaand" not in kolommen:
+        kolommen = list(kolommen) + ["tariefmaand"]
 
     for product in producten:
         product_id = product["id"].strip()
@@ -95,20 +98,20 @@ def hoofdprogramma():
             if oude_waarde != nieuwe_waarde:
                 product[veld] = str(nieuwe_waarde)
                 wijzigingen += 1
-
                 print(
                     f"WIJZIGING {product_id} {veld}: "
                     f"{oude_tekst} -> {nieuwe_waarde}"
                 )
 
-    print(
-        f"Tariefmaand: {TARIEFMAAND.month:02d}/"
-        f"{TARIEFMAAND.year}"
-    )
-    print(f"Aantal gewijzigde prijzen: {wijzigingen}")
+        if product.get("tariefmaand") != tariefmaand:
+            product["tariefmaand"] = tariefmaand
+            wijzigingen += 1
+
+    print(f"Tariefmaand: {tariefmaand}")
+    print(f"Aantal wijzigingen: {wijzigingen}")
 
     if wijzigingen == 0:
-        print("Geen prijswijzigingen. CSV blijft ongewijzigd.")
+        print("Geen wijzigingen. CSV blijft ongewijzigd.")
         return
 
     uitvoer = io.StringIO(newline="")
