@@ -1,0 +1,50 @@
+
+name: Test OCTA+ Smart Variabel
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Haal repository op
+        uses: actions/checkout@v4
+
+      - name: Installeer pdfplumber
+        run: pip install pdfplumber
+
+      - name: Controleer OCTA+ Smart Variabel
+        run: |
+          python3 - <<'PY'
+          import csv
+          from decimal import Decimal
+          from lees_tariefkaart import lees_tariefkaart
+
+          pdf = "tariefkaart-4b8095fad263.pdf"
+          csv_pad = "tariefkaart_scenarios_v120.csv"
+
+          prijzen = lees_tariefkaart(pdf)
+
+          with open(csv_pad, encoding="utf-8-sig", newline="") as bestand:
+              producten = list(csv.DictReader(bestand))
+
+          product = next(
+              (rij for rij in producten if rij["id"].strip() == "10940"),
+              None
+          )
+
+          if product is None:
+              raise ValueError("OCTA+ Smart Variabel (10940) ontbreekt in CSV")
+
+          for veld, gevonden in prijzen.items():
+              verwacht = Decimal(product[veld].strip().replace(",", "."))
+              if gevonden != verwacht:
+                  raise AssertionError(
+                      f"FOUT {veld}: PDF={gevonden}, CSV={verwacht}"
+                  )
+              print(f"{veld}: PDF={gevonden} CSV={verwacht} OK")
+
+          print("GESLAAGD: OCTA+ Smart Variabel (10940) - alle vier de prijzen kloppen")
+          PY
