@@ -91,11 +91,12 @@ def controleer_tariefkaart(naam, gegevens):
             import re
 
             formule = re.search(
-                r"\(\s*(0[,.]1010)\s*\*\s*TTF-RLP-M\s*\)"
-                r"\s*\+\s*(0[,.]2200)",
+                r"\(\s*(\d+[,.]\d+)\s*\*\s*TTF-RLP-M\s*\)"
+                r"\s*\+\s*(\d+[,.]\d+)",
                 ocr_tekst,
                 re.IGNORECASE
             )
+
 
             if not formule:
                 raise ValueError(
