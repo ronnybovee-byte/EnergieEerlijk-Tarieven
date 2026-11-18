@@ -339,7 +339,62 @@ def hoofdprogramma():
         )
 
     print("GESLAAGD: alle 56 CSV-prijzen gecontroleerd")
+    bereken_jaarprijzen(producten)
 
+def bereken_jaarprijzen(producten):
+    """Bereken de jaarprijs van alle gecontroleerde contracten."""
+
+    dag_kwh = 2080.0
+    nacht_kwh = 1816.0
+    totaal_kwh = dag_kwh + nacht_kwh
+
+    # Dezelfde bedragen als in de huidige Android Top 10.
+    netkosten = 130.9206 + 18.92 + totaal_kwh * 0.080874
+    accijnzen = totaal_kwh * 0.044732
+
+    print()
+    print("JAARPRIJSBEREKENING - 14 CONTRACTEN")
+    print("=" * 65)
+
+    resultaten = []
+
+    for product in producten:
+        dagprijs = float(product["dag_ct"])
+        nachtprijs = float(product["nacht_ct"])
+        vaste_kosten = float(product["vast_eur"])
+        groen_wkk = float(product["groen_wkk_ct"])
+
+        levering = (
+            dag_kwh * dagprijs / 100
+            + nacht_kwh * nachtprijs / 100
+            + vaste_kosten
+        )
+
+        if product["groen_wkk_behandeling"].strip() == "APART":
+            groen = totaal_kwh * groen_wkk / 100
+        else:
+            groen = 0.0
+
+        jaarprijs = levering + groen + netkosten + accijnzen
+
+        resultaten.append((
+            jaarprijs,
+            product["leverancier"],
+            product["contract"]
+        ))
+
+    resultaten.sort()
+
+    for nummer, (prijs, leverancier, contract) in enumerate(
+        resultaten, start=1
+    ):
+        print(
+            f"{nummer:2}. {leverancier} - {contract}: "
+            f"EUR {prijs:.2f}"
+        )
+
+    print("=" * 65)
+    print(f"RESULTAAT: {len(resultaten)} jaarprijzen berekend")
 
 if __name__ == "__main__":
     hoofdprogramma()
