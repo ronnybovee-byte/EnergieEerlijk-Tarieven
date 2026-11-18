@@ -41,6 +41,15 @@ def controleer_tariefkaart(naam, gegevens):
 
         for nummer, pagina in enumerate(pdf.pages, start=1):
             pagina_tekst = pagina.extract_text() or ""
+            
+            print(
+                f"PDF-pagina {nummer}: "
+                f"{len(pagina.chars)} teksttekens, "
+                f"{len(pagina.images)} afbeeldingen, "
+                f"{len(pagina.rects)} rechthoeken, "
+                f"{len(pagina.curves)} vectorvormen"
+            )
+
             pagina_teksten.append(pagina_tekst)
 
             print(f"\n--- PAGINA {nummer} ---")
