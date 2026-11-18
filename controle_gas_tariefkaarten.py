@@ -42,6 +42,11 @@ def controleer_tariefkaart(naam, gegevens):
 
     if not tekst.strip():
         raise ValueError("Geen leesbare tekst in de tariefkaart")
+        
+    print("\n--- UITGELEZEN TARIEFKAART ---")
+    print(tekst[:6000])
+    print("--- EINDE TARIEFKAART ---\n")
+
 
     ontbrekend = [
         term
