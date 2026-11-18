@@ -1,4 +1,5 @@
-id,leverancier,contract,dag_ct,nacht_ct,vast_eur,groen_wkk_ct,bron_pdf,groen_wkk_behandeling,tariefmaand
+
+id,leverancier,contract,dag_ct,nacht_ct,vast_eur,groen_wkk_ct,bron_pdf,groen_wkk_behandeling,tariefmaand,domiciliering_verplicht,aandelen_verplicht,groepsaankoop_verplicht,digitale_meter_verplicht,zonnepanelen_verplicht,analoge_meter_toegelaten
 18582,OCTA+,Basic Online,23.36,18.36,40,1.596,18582.pdf,APART,2026-11
 18399,OCTA+,Boost Flex,23.64,18.64,65,1.596,18399.pdf,APART,2026-11
 15818,ENGIE (handelsnaam van Electrabel),Basic Online,25.198,19.708,20.00,1.582,15818.pdf,APART,2026-11
