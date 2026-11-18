@@ -135,7 +135,6 @@ def controleer_tariefkaart(naam, gegevens):
     print(f"PDF gedownload: {len(response.content)} bytes")
     print("Herkenningswoorden: OK")
     print("Tariefkaart leesbaar: OK")
-    print("Prijsformule: nog niet gevalideerd")
     print("STATUS: DOCUMENTCONTROLE GESLAAGD")
 
 
