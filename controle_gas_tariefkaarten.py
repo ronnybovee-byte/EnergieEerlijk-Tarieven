@@ -15,7 +15,8 @@ GAS_CONTRACTEN = {
             "https://portal.ecofixgp.be/docs/prices/current/"
             "GAS_Ecofix_Flexy_Online_NL.pdf"
         ),
-        "zoektermen": ["Ecofix", "Flexy", "2026"],
+        "zoektermen": ["November 2026", "9,78", "10,00"],
+
     },
 }
 
