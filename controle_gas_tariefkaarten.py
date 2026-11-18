@@ -33,12 +33,22 @@ def controleer_tariefkaart(naam, gegevens):
 
     if not response.content.startswith(b"%PDF-"):
         raise ValueError("Download is geen geldig PDF-bestand")
-
+    
     with pdfplumber.open(BytesIO(response.content)) as pdf:
-        tekst = "\n".join(
-            pagina.extract_text() or ""
-            for pagina in pdf.pages
-        )
+        print(f"\nAantal PDF-pagina's: {len(pdf.pages)}")
+
+        pagina_teksten = []
+
+        for nummer, pagina in enumerate(pdf.pages, start=1):
+            pagina_tekst = pagina.extract_text() or ""
+            pagina_teksten.append(pagina_tekst)
+
+            print(f"\n--- PAGINA {nummer} ---")
+            print(pagina_tekst[:5000])
+            print(f"--- EINDE PAGINA {nummer} ---")
+
+        tekst = "\n".join(pagina_teksten)
+
 
     if not tekst.strip():
         raise ValueError("Geen leesbare tekst in de tariefkaart")
