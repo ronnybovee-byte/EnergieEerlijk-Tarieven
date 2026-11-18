@@ -59,6 +59,35 @@ def controleer_tariefkaart(naam, gegevens):
         tekst = "\n".join(pagina_teksten)
 
 
+    # OCR-test: pagina 2 van de gastariefkaart
+    import fitz
+    import pytesseract
+    from PIL import Image
+
+    with fitz.open(stream=response.content, filetype="pdf") as doc:
+        if len(doc) >= 2:
+            pagina = doc[1]
+            pix = pagina.get_pixmap(
+                matrix=fitz.Matrix(2.5, 2.5),
+                alpha=False
+            )
+
+            afbeelding = Image.frombytes(
+                "RGB",
+                (pix.width, pix.height),
+                pix.samples
+            )
+
+            ocr_tekst = pytesseract.image_to_string(
+                afbeelding,
+                lang="nld+eng",
+                config="--psm 3"
+            )
+
+            print("\n--- OCR PAGINA 2 ---")
+            print(ocr_tekst[:10000])
+            print("--- EINDE OCR ---\n")
+
     if not tekst.strip():
         raise ValueError("Geen leesbare tekst in de tariefkaart")
         
