@@ -105,6 +105,24 @@ def controleer_tariefkaart(naam, gegevens):
 
             factor = float(formule.group(1).replace(",", "."))
             toeslag = float(formule.group(2).replace(",", "."))
+            
+            # Vergelijk met de laatst bevestigde Ecofix-formule
+            verwachte_factor = 0.1010
+            verwachte_toeslag = 0.2200
+
+            if (
+                abs(factor - verwachte_factor) > 0.000001
+                or abs(toeslag - verwachte_toeslag) > 0.000001
+            ):
+                raise ValueError(
+                    "Ecofix: WIJZIGING IN GASFORMULE!\n"
+                    f"Verwacht: {verwachte_factor:.4f} * TTF-RLP-M "
+                    f"+ {verwachte_toeslag:.4f}\n"
+                    f"Gevonden: {factor:.4f} * TTF-RLP-M "
+                    f"+ {toeslag:.4f}\n"
+                    "Handmatige controle vereist."
+                )
+
 
             print("\n--- GECONTROLEERDE GASFORMULE ---")
             print("Index: TTF-RLP-M")
