@@ -396,6 +396,25 @@ def bereken_jaarprijzen(producten):
 
         jaarprijs = levering + groen + netkosten + accijnzen
 
+        # Vergelijk uitsluitend met de referentie van november 2026.
+        tariefmaand = product["tariefmaand"].strip()
+        product_id = product["id"].strip()
+
+        if tariefmaand == "2026-11":
+            if product_id not in REFERENTIE_JAARPRIJZEN:
+                raise RuntimeError(
+                    f"Geen referentieprijs voor {product_id}"
+                )
+
+            referentie = REFERENTIE_JAARPRIJZEN[product_id]
+
+            if abs(jaarprijs - referentie) > 0.01001:
+                raise RuntimeError(
+                    f"Jaarprijs wijkt af voor {product_id}: "
+                    f"berekend EUR {jaarprijs:.2f}, "
+                    f"verwacht EUR {referentie:.2f}"
+                )
+
         resultaten.append((
             jaarprijs,
             product["leverancier"],
