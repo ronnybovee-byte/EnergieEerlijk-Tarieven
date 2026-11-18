@@ -115,3 +115,6 @@ jobs:
                   + ", ".join(mislukt)
               )
           PY
+
+      - name: Controleer 56 prijsvelden en bereken 14 jaarprijzen
+        run: python3 controle_alle_prijzen.py
