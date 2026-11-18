@@ -87,6 +87,30 @@ def controleer_tariefkaart(naam, gegevens):
             print("\n--- OCR PAGINA 2 ---")
             print(ocr_tekst[:10000])
             print("--- EINDE OCR ---\n")
+            
+            import re
+
+            formule = re.search(
+                r"\(\s*(0[,.]1010)\s*\*\s*TTF-RLP-M\s*\)"
+                r"\s*\+\s*(0[,.]2200)",
+                ocr_tekst,
+                re.IGNORECASE
+            )
+
+            if not formule:
+                raise ValueError(
+                    "Ecofix: prijsformule ontbreekt of is gewijzigd"
+                )
+
+            factor = float(formule.group(1).replace(",", "."))
+            toeslag = float(formule.group(2).replace(",", "."))
+
+            print("\n--- GECONTROLEERDE GASFORMULE ---")
+            print("Index: TTF-RLP-M")
+            print(f"Factor: {factor:.4f}")
+            print(f"Toeslag: {toeslag:.4f} c€/kWh")
+            print("STATUS: PRIJSFORMULE GEVALIDEERD")
+
 
     if not tekst.strip():
         raise ValueError("Geen leesbare tekst in de tariefkaart")
