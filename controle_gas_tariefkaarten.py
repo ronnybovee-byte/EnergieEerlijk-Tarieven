@@ -1,181 +1,140 @@
-
 #!/usr/bin/env python3
-"""Controle van officiële gastariefkaarten voor Eerlijke Energie."""
+"""Controleer officiële gastariefkaarten via tekstextractie en OCR.
 
+Contracten worden centraal geconfigureerd. Onzekere of gewijzigde formules
+worden gemeld en nooit automatisch overgenomen.
+"""
+from __future__ import annotations
+
+from datetime import datetime, timezone
 from io import BytesIO
-from datetime import datetime
+import re
 import sys
 
-import requests
+import fitz
 import pdfplumber
+import pytesseract
+import requests
+from PIL import Image
 
 GAS_CONTRACTEN = {
     "Ecofix Flexy Online": {
-        "url": (
-            "https://portal.ecofixgp.be/docs/prices/current/"
-            "GAS_Ecofix_Flexy_Online_NL.pdf"
-        ),
-        "zoektermen": ["November 2026", "9,78", "10,00"],
-
+        "url": "https://portal.ecofixgp.be/docs/prices/current/GAS_Ecofix_Flexy_Online_NL.pdf",
+        "verwachte_formule": {"index": "TTF-RLP-M", "factor": 0.1010, "toeslag": 0.2200},
+        "vereiste_woorden": ["Ecofix Flexy Online", "Onze tariefformule voor aardgas"],
     },
 }
 
+# Herkent de veelvoorkomende vorm '(factor * index) + toeslag'.
+# Een leverancier met een afwijkende formule vereist een extra parser.
+FORMULE_PATROON = re.compile(
+    r"\(\s*(?P<factor>\d+[,.]\d+)\s*[×*x]\s*"
+    r"(?P<index>[A-Z][A-Z0-9 _./-]{2,45}?)\s*\)\s*"
+    r"(?P<teken>[+-])\s*(?P<toeslag>\d+[,.]\d+)",
+    re.IGNORECASE,
+)
 
-def controleer_tariefkaart(naam, gegevens):
+
+def normaliseer_index(index: str) -> str:
+    return re.sub(r"\s+", "", index).upper().replace("–", "-")
+
+
+def herken_formule(tekst: str) -> dict | None:
+    # Zoek bij voorkeur vlak na de expliciete tariefformule-aanduiding.
+    for regel in tekst.splitlines():
+        if "tariefformule" not in regel.lower():
+            continue
+        match = FORMULE_PATROON.search(regel)
+        if match:
+            break
+    else:
+        match = FORMULE_PATROON.search(tekst)
+    if not match:
+        return None
+    toeslag = float(match.group("toeslag").replace(",", "."))
+    if match.group("teken") == "-":
+        toeslag = -toeslag
+    return {
+        "index": normaliseer_index(match.group("index")),
+        "factor": float(match.group("factor").replace(",", ".")),
+        "toeslag": toeslag,
+    }
+
+
+def lees_pdf(pdf_bytes: bytes) -> tuple[str, int]:
+    """Lees alle pagina's; OCR alleen waar de tekstlaag erg beperkt is."""
+    pagina_teksten = []
+    ocr_paginas = 0
+    with pdfplumber.open(BytesIO(pdf_bytes)) as pdf, fitz.open(
+        stream=pdf_bytes, filetype="pdf"
+    ) as doc:
+        if len(pdf.pages) != len(doc):
+            raise ValueError("PDF-pagina's komen niet overeen")
+        if not doc:
+            raise ValueError("Lege PDF")
+        if len(doc) > 20:
+            raise ValueError("Onverwacht lange tariefkaart; handmatige controle vereist")
+        for nummer, (pagina, fitz_pagina) in enumerate(zip(pdf.pages, doc), start=1):
+            tekst = pagina.extract_text() or ""
+            if len(tekst.strip()) < 120:
+                pix = fitz_pagina.get_pixmap(matrix=fitz.Matrix(2.5, 2.5), alpha=False)
+                afbeelding = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
+                ocr = pytesseract.image_to_string(afbeelding, lang="nld+eng", config="--psm 3")
+                if ocr.strip():
+                    tekst += "\n" + ocr
+                ocr_paginas += 1
+            pagina_teksten.append(tekst)
+            print(f"Pagina {nummer}: {len(tekst.strip())} tekens na extractie/OCR")
+    return "\n".join(pagina_teksten), ocr_paginas
+
+
+def controleer_tariefkaart(naam: str, gegevens: dict) -> None:
     print(f"\nControle: {naam}")
-
     response = requests.get(
-        gegevens["url"],
-        timeout=30,
-        headers={"User-Agent": "EerlijkeEnergie/1.0"},
+        gegevens["url"], timeout=45, headers={"User-Agent": "EerlijkeEnergie/1.0"}
     )
     response.raise_for_status()
-
     if not response.content.startswith(b"%PDF-"):
-        raise ValueError("Download is geen geldig PDF-bestand")
-    
-    with pdfplumber.open(BytesIO(response.content)) as pdf:
-        print(f"\nAantal PDF-pagina's: {len(pdf.pages)}")
+        raise ValueError("Download is geen PDF")
+    if len(response.content) > 15_000_000:
+        raise ValueError("PDF groter dan 15 MB")
 
-        pagina_teksten = []
-
-        for nummer, pagina in enumerate(pdf.pages, start=1):
-            pagina_tekst = pagina.extract_text() or ""
-            
-            print(
-                f"PDF-pagina {nummer}: "
-                f"{len(pagina.chars)} teksttekens, "
-                f"{len(pagina.images)} afbeeldingen, "
-                f"{len(pagina.rects)} rechthoeken, "
-                f"{len(pagina.curves)} vectorvormen"
-            )
-
-            pagina_teksten.append(pagina_tekst)
-
-            print(f"\n--- PAGINA {nummer} ---")
-            print(pagina_tekst[:5000])
-            print(f"--- EINDE PAGINA {nummer} ---")
-
-        tekst = "\n".join(pagina_teksten)
-
-
-    # OCR-test: pagina 2 van de gastariefkaart
-    import fitz
-    import pytesseract
-    from PIL import Image
-
-    with fitz.open(stream=response.content, filetype="pdf") as doc:
-        if len(doc) >= 2:
-            pagina = doc[1]
-            pix = pagina.get_pixmap(
-                matrix=fitz.Matrix(2.5, 2.5),
-                alpha=False
-            )
-
-            afbeelding = Image.frombytes(
-                "RGB",
-                (pix.width, pix.height),
-                pix.samples
-            )
-
-            ocr_tekst = pytesseract.image_to_string(
-                afbeelding,
-                lang="nld+eng",
-                config="--psm 3"
-            )
-
-            print("\n--- OCR PAGINA 2 ---")
-            print(ocr_tekst[:10000])
-            print("--- EINDE OCR ---\n")
-            
-            import re
-
-            formule = re.search(
-                r"\(\s*(\d+[,.]\d+)\s*\*\s*TTF-RLP-M\s*\)"
-                r"\s*\+\s*(\d+[,.]\d+)",
-                ocr_tekst,
-                re.IGNORECASE
-            )
-
-
-            if not formule:
-                raise ValueError(
-                    "Ecofix: prijsformule ontbreekt of is gewijzigd"
-                )
-
-            factor = float(formule.group(1).replace(",", "."))
-            toeslag = float(formule.group(2).replace(",", "."))
-            
-            # Vergelijk met de laatst bevestigde Ecofix-formule
-            verwachte_factor = 0.1010
-            verwachte_toeslag = 0.2200
-
-            if (
-                abs(factor - verwachte_factor) > 0.000001
-                or abs(toeslag - verwachte_toeslag) > 0.000001
-            ):
-                raise ValueError(
-                    "Ecofix: WIJZIGING IN GASFORMULE!\n"
-                    f"Verwacht: {verwachte_factor:.4f} * TTF-RLP-M "
-                    f"+ {verwachte_toeslag:.4f}\n"
-                    f"Gevonden: {factor:.4f} * TTF-RLP-M "
-                    f"+ {toeslag:.4f}\n"
-                    "Handmatige controle vereist."
-                )
-
-
-            print("\n--- GECONTROLEERDE GASFORMULE ---")
-            print("Index: TTF-RLP-M")
-            print(f"Factor: {factor:.4f}")
-            print(f"Toeslag: {toeslag:.4f} c€/kWh")
-            print("STATUS: PRIJSFORMULE GEVALIDEERD")
-
-
+    tekst, ocr_paginas = lees_pdf(response.content)
     if not tekst.strip():
-        raise ValueError("Geen leesbare tekst in de tariefkaart")
-        
-    print("\n--- UITGELEZEN TARIEFKAART ---")
-    print(tekst[:6000])
-    print("--- EINDE TARIEFKAART ---\n")
-
-
-    ontbrekend = [
-        term
-        for term in gegevens["zoektermen"]
-        if term.lower() not in tekst.lower()
-    ]
-
+        raise ValueError("Geen leesbare tekst")
+    ontbrekend = [w for w in gegevens.get("vereiste_woorden", []) if w.casefold() not in tekst.casefold()]
     if ontbrekend:
-        raise ValueError(
-            "Ontbrekende herkenningswoorden: "
-            + ", ".join(ontbrekend)
-        )
+        raise ValueError(f"Contractidentificatie ontbreekt: {ontbrekend}")
 
-    print(f"PDF gedownload: {len(response.content)} bytes")
-    print("Herkenningswoorden: OK")
-    print("Tariefkaart leesbaar: OK")
-    print("STATUS: DOCUMENTCONTROLE GESLAAGD")
+    gevonden = herken_formule(tekst)
+    if gevonden is None:
+        raise ValueError("Geen herkenbare formule; handmatige controle vereist")
+    print(f"Gevonden index: {gevonden['index']}")
+    print(f"Gevonden factor: {gevonden['factor']:.4f}")
+    print(f"Gevonden toeslag: {gevonden['toeslag']:.4f} c€/kWh")
+
+    verwacht = gegevens["verwachte_formule"]
+    if (gevonden["index"] != normaliseer_index(verwacht["index"])
+        or abs(gevonden["factor"] - verwacht["factor"]) > 0.000001
+        or abs(gevonden["toeslag"] - verwacht["toeslag"]) > 0.000001):
+        raise ValueError(f"FORMULE GEWIJZIGD: verwacht {verwacht}; gevonden {gevonden}. Handmatige controle vereist")
+    print(f"PDF: {len(response.content)} bytes; OCR op {ocr_paginas} pagina('s)")
+    print("STATUS: PRIJSFORMULE GEVALIDEERD")
+    print("Let op: actuele maandprijs en vaste vergoeding nog niet gevalideerd")
 
 
-def main():
-    print("Eerlijke Energie - controle gastariefkaarten")
-    print("Controle uitgevoerd:", datetime.now().isoformat())
-
+def main() -> int:
+    print("Eerlijke Energie - centrale controle gastariefkaarten")
+    print("Controle uitgevoerd:", datetime.now(timezone.utc).isoformat())
     fouten = 0
-
     for naam, gegevens in GAS_CONTRACTEN.items():
         try:
             controleer_tariefkaart(naam, gegevens)
         except Exception as fout:
             fouten += 1
             print(f"FOUT bij {naam}: {fout}")
-
-    if fouten:
-        print(f"\nMISLUKT: {fouten} tariefkaart(en)")
-        return 1
-
-    print("\nGESLAAGD: alle gastariefkaarten bereikbaar en leesbaar")
-    return 0
+    print(f"\n{'MISLUKT' if fouten else 'GESLAAGD'}: {len(GAS_CONTRACTEN) - fouten}/{len(GAS_CONTRACTEN)} contracten gevalideerd")
+    return 1 if fouten else 0
 
 
 if __name__ == "__main__":
