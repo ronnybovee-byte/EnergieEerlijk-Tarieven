@@ -341,6 +341,25 @@ def hoofdprogramma():
     print("GESLAAGD: alle 56 CSV-prijzen gecontroleerd")
     bereken_jaarprijzen(producten)
 
+# Gecontroleerde jaarprijzen voor november 2026.
+# Deze referenties gelden uitsluitend voor tariefmaand 2026-11.
+REFERENTIE_JAARPRIJZEN = {
+    "17211": 1501.87,
+    "17280": 1514.34,
+    "18582": 1560.69,
+    "18399": 1596.60,
+    "15818": 1602.85,
+    "17100": 1605.88,
+    "16083": 1625.67,
+    "16065": 1625.67,
+    "15824": 1633.77,
+    "10667": 1665.88,
+    "10940": 1670.08,
+    "13419": 1673.82,
+    "12710": 1690.63,
+    "18405": 1786.40,
+}
+
 def bereken_jaarprijzen(producten):
     """Bereken de jaarprijs van alle gecontroleerde contracten."""
 
