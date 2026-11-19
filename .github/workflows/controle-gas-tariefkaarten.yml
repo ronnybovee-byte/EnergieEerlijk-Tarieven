@@ -33,7 +33,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y tesseract-ocr tesseract-ocr-nld
           python -m pip install --upgrade pip
-          python -m pip install requests pdfplumber pymupdf pytesseract pillow
+          python -m pip install requests pdfplumber pymupdf pytesseract pillow beautifulsoup4
 
       - name: Gastariefkaarten controleren
         run: python controle_gas_tariefkaarten.py
@@ -41,8 +41,9 @@ jobs:
       - name: Geldigheidsmaand gastariefkaarten onderzoeken
         run: python controle_gas_geldigheidsmaand.py
         
-      - name: Gasbronnen controleren
-        run: python gas_bronregister.py
+      - name: Nieuwe gastariefkaarten zoeken
+        run: python zoek_nieuwe_gaskaarten.py
+
 
       - name: Gasgeldigheid toevoegen aan JSON
         run: python verrijk_gas_geldigheid.py
