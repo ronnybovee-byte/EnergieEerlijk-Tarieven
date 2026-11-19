@@ -94,3 +94,42 @@ def inspect(name, info, session):
         response.raise_for_status()
         raw = response.content
         if not raw.startswith(b'%PDF-') or len(raw) > 15_000_000:
+            raise ValueError('geen_geldige_pdf')
+        digest = hashlib.sha256(raw).hexdigest()
+        if digest != sha or digest != info.get('sha256'):
+            raise ValueError('pdf_hash_verschilt')
+        # Keep compatibility with existing OCR path, while tables are extracted
+        # directly from the original PDF to preserve cell boundaries.
+        _, ocr_pages = lees_pdf(raw)
+        candidates, vat, conditions = extract_evidence(raw)
+        result.update({'pdf_sha256': digest, 'ocr_paginas': ocr_pages,
+                       'kandidaten': candidates, 'btw_bronregels': vat,
+                       'voorwaarden_bronregels': conditions,
+                       'reden': 'pdf_gecontroleerd_bedragen_nog_niet_gevalideerd'})
+    except (requests.RequestException, ValueError, RuntimeError, Exception) as exc:
+        result['reden'] = 'pdf_controle_mislukt: ' + str(exc)[:180]
+    return result
+
+
+def main():
+    data = json.loads(SOURCE.read_text(encoding='utf-8'))
+    if data.get('schema_version') != 1 or not isinstance(data.get('contracten'), dict):
+        raise SystemExit('Ongeldig bronrapport')
+    report = {'schema_version': 2, 'gegenereerd_op_utc': datetime.now(timezone.utc).isoformat(),
+              'status': 'PDF_TABEL_EN_TEKST_KANDIDATEN_GEEN_AUTOMATISCHE_GOEDKEURING',
+              'voor_android_app': False,
+              'waarschuwing': 'Tabelkandidaten, btw en voorwaarden blijven handmatig te valideren.',
+              'contracten': {}}
+    with requests.Session() as session:
+        session.headers.update({'User-Agent': 'EerlijkeEnergie-GasVasteVergoedingControle/2.0'})
+        for name, info in data['contracten'].items():
+            report['contracten'][name] = inspect(name, info, session)
+            print(name, report['contracten'][name]['reden'])
+    temp = OUTPUT.with_suffix('.json.tmp')
+    temp.write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+    temp.replace(OUTPUT)
+    print('Rapport:', OUTPUT)
+
+
+if __name__ == '__main__':
+    main()
