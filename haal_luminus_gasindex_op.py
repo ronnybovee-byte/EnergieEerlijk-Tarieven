@@ -50,40 +50,56 @@ def discover_pdf_url(session):
     return candidates[0]
 
 def parse_pdf(data):
+    """Read the TTFDAHM column by printed year, not a fixed October position."""
     with pdfplumber.open(io.BytesIO(data)) as doc:
         page = doc.pages[0]
         words = page.extract_words()
         text = page.extract_text() or ''
     if 'TTFDAHM' not in text.replace(' ', ''):
         raise ValueError('TTFDAHM niet aanwezig')
-    m = re.search(r'November\s+2026', text, re.I)
-    if not m:
-        raise ValueError('Tariefmaand november 2026 niet bevestigd; geen automatische goedkeuring')
-    # Layout: BasicFlex TTFDAHM-tabel, pagina 1, gasgedeelte, x=230..385.
+    matches = re.findall(r'\b(' + '|'.join(MONTHS) + r')\s+(20\d{2})\b', text, re.I)
+    matches = list(dict.fromkeys((m.capitalize(), int(y)) for m, y in matches))
+    if len(matches) != 1:
+        raise ValueError(f'Tariefmaand niet eenduidig: {matches}')
+    tariff_month_name, tariff_year = matches[0]
+    tariff_month = MONTHS.index(tariff_month_name) + 1
+    tariff_date = dt.date(tariff_year, tariff_month, 1)
+    prev = tariff_date - dt.timedelta(days=1)
+    historic_month = f'{prev.year:04d}-{prev.month:02d}'
     region = [w for w in words if 225 <= w['x0'] <= 385 and w['top'] > 330]
-    def row(label):
-        labels = [w for w in region if w['text'].casefold() == label.casefold()]
-        if len(labels) != 1:
-            raise ValueError(f'Rij {label} niet eenduidig: {len(labels)}')
-        y = labels[0]['top']
-        return sorted([w for w in region if abs(w['top']-y)<2.0 and w['x0']>labels[0]['x0']+30],key=lambda w:w['x0'])
-    def number(s):
-        if not re.fullmatch(r'\d{1,3},\d{3}',s):
-            raise ValueError('Ongeldig indexgetal: '+s)
-        return float(s.replace(',','.'))
-    oct_values = [number(w['text']) for w in row('Oktober') if re.fullmatch(r'\d{1,3},\d{3}',w['text'])]
-    if len(oct_values)!=3:
-        raise ValueError(f'Oktober heeft {len(oct_values)} waarden, verwacht 3')
-    fw = [w for w in region if w['text']=='Forward*' and w['top']>480]
-    if len(fw)!=1:
+    def numeric(w):
+        return bool(re.fullmatch(r'\d{1,3},\d{3}', w['text']))
+    def number(w):
+        return float(w['text'].replace(',', '.'))
+    # Printed years are the column headers; only the most recent year's column is eligible.
+    headers = [w for w in region if w['text'] == str(prev.year) and 340 <= w['top'] <= 365]
+    if len(headers) != 1:
+        raise ValueError(f'Jaarheader {prev.year} ontbreekt of is dubbel')
+    x = headers[0]['x0']
+    label = MONTHS[prev.month - 1]
+    labels = [w for w in region if w['text'].casefold() == label.casefold() and 360 < w['top'] < 510]
+    if len(labels) != 1:
+        raise ValueError(f'Indexrij {label} niet eenduidig')
+    row = [w for w in region if abs(w['top'] - labels[0]['top']) < 2 and numeric(w)]
+    values = [w for w in row if abs(w['x0'] - x) < 7]
+    if len(values) != 1:
+        raise ValueError(f'Geen eenduidige TTFDAHM-waarde voor {historic_month}')
+    hist = number(values[0])
+    fw = [w for w in region if w['text'] == 'Forward*' and 480 < w['top'] < 525]
+    if len(fw) != 1:
         raise ValueError('Forwardrij niet eenduidig')
-    fvals = [w for w in region if abs(w['top']-fw[0]['top'])<2 and w['x0']>fw[0]['x1'] and re.fullmatch(r'\d{1,3},\d{3}',w['text'])]
-    if len(fvals)!=1:
+    fvals = [w for w in region if abs(w['top'] - fw[0]['top']) < 2 and numeric(w) and w['x0'] >= x - 7]
+    if len(fvals) != 1:
         raise ValueError('Forwardwaarde niet eenduidig')
-    hist=oct_values[2]; forward=number(fvals[0]['text'])
-    if not (0<hist<1000 and 0<forward<1000):
+    forward = number(fvals[0])
+    if not (1 < hist < 1000 and 1 < forward < 1000):
         raise ValueError('Index buiten controlebereik')
-    return hist,forward
+    # Guard against a future-dated or obsolete PDF. A missing new PDF is NOT a success.
+    current = dt.datetime.now(dt.timezone.utc).strftime('%Y-%m')
+    tariff = tariff_date.strftime('%Y-%m')
+    if tariff > current:
+        raise ValueError('Tariefmaand ligt in de toekomst')
+    return hist, forward, tariff, historic_month
 
 def main():
     ap=argparse.ArgumentParser()
@@ -114,8 +130,12 @@ def main():
                     raise ValueError('Ontdekte URL levert geen PDF')
                 data = r.content
                 out['bron_url'] = download_url
-        hist,forward=parse_pdf(data)
-        out.update(status='INDEX_EN_FORWARD_UIT_PDF_GEVONDEN',index='TTF DAH M',tariefmaand='2026-11',historische_indexmaand='2026-10',historische_waarde_eur_per_mwh=hist,geschatte_jaarparameter_eur_per_mwh=forward,bronbewijs_consistent=True,jaarprognose_gevalideerd=False)
+        hist,forward,tariff,historic_month=parse_pdf(data)
+        out.update(status='INDEX_EN_FORWARD_UIT_PDF_GEVONDEN',index='TTF DAH M',tariefmaand=tariff,historische_indexmaand=historic_month,historische_waarde_eur_per_mwh=hist,geschatte_jaarparameter_eur_per_mwh=forward,bronbewijs_consistent=True,jaarprognose_gevalideerd=False)
+        out['actueel_voor_huidige_maand'] = tariff == dt.datetime.now(dt.timezone.utc).strftime('%Y-%m')
+        if not out['actueel_voor_huidige_maand']:
+            out['status'] = 'HISTORISCHE_PDF_GEEN_ACTUELE_INDEX'
+            out['reden'] = 'PDF is niet van de huidige kalendermaand'
     except Exception as exc:
         out['reden']=f'{type(exc).__name__}: {exc}'
     Path(args.output).write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

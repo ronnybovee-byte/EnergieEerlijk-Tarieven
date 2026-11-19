@@ -40,18 +40,19 @@ def combine(leveranciers, luminus):
                  and src.get('status') == 'HISTORISCHE_INDEX_GEVONDEN'
                  and src.get('index') == index
                  and src.get('index_definitie') == definition
-                 and src.get('laatste_volledige_maand') == '2026-10'
-                 and close(src.get('waarde_eur_per_mwh'), expected)
-                 and close(src.get('waarde_ct_per_kwh'), expected / 10, 0.000051)
+                 and isinstance(src.get('laatste_volledige_maand'), str)
+                 and len(src['laatste_volledige_maand']) == 7
+                 and (src['laatste_volledige_maand'] > '2026-10' or close(src.get('waarde_eur_per_mwh'), expected))
+                 and close(src.get('waarde_ct_per_kwh'), src.get('waarde_eur_per_mwh', -999) / 10, 0.000051)
                  and isinstance(src.get('bron_url'), str)
                  and src['bron_url'].startswith('https://'))
         result['contracten'][name] = {
             'status': 'HISTORISCHE_BRONWAARDE_GECONTROLEERD' if valid else 'BRONCONTROLE_MISLUKT',
             'index': index,
-            'historische_indexmaand': '2026-10' if valid else None,
-            'historische_waarde_eur_per_mwh': expected if valid else None,
-            'geschatte_jaarparameter_eur_per_mwh': 89.2144 if valid and name == 'ENGIE Flow Gas' else None,
-            'herkomst_jaarparameter': 'tariefkaart_november_2026' if valid and name == 'ENGIE Flow Gas' else None,
+            'historische_indexmaand': src.get('laatste_volledige_maand') if valid else None,
+            'historische_waarde_eur_per_mwh': src.get('waarde_eur_per_mwh') if valid else None,
+            'geschatte_jaarparameter_eur_per_mwh': 89.2144 if valid and name == 'ENGIE Flow Gas' and src.get('laatste_volledige_maand') == '2026-10' else None,
+            'herkomst_jaarparameter': 'tariefkaart_november_2026' if valid and name == 'ENGIE Flow Gas' and src.get('laatste_volledige_maand') == '2026-10' else None,
             'bron_url': src.get('bron_url') if valid else None,
             'jaarprognose_gevalideerd': False,
             'geschikt_voor_automatische_jaarprijs': False,
@@ -59,27 +60,43 @@ def combine(leveranciers, luminus):
         }
     lvalid = (luminus.get('status') == 'INDEX_EN_FORWARD_UIT_PDF_GEVONDEN'
               and luminus.get('index') == 'TTF DAH M'
-              and luminus.get('tariefmaand') == '2026-11'
-              and luminus.get('historische_indexmaand') == '2026-10'
+              and isinstance(luminus.get('tariefmaand'), str)
+              and isinstance(luminus.get('historische_indexmaand'), str)
+              and luminus.get('historische_indexmaand') == (dt.date.fromisoformat(luminus['tariefmaand'] + '-01') - dt.timedelta(days=1)).strftime('%Y-%m')
               and luminus.get('bronbewijs_consistent') is True
-              and close(luminus.get('historische_waarde_eur_per_mwh'), 86.104)
-              and close(luminus.get('geschatte_jaarparameter_eur_per_mwh'), 89.218)
+              and (luminus['tariefmaand'] != '2026-11' or (close(luminus.get('historische_waarde_eur_per_mwh'), 86.104) and close(luminus.get('geschatte_jaarparameter_eur_per_mwh'), 89.218)))
+              and type(luminus.get('historische_waarde_eur_per_mwh')) in (int, float)
+              and type(luminus.get('geschatte_jaarparameter_eur_per_mwh')) in (int, float)
+              and 1 <= luminus['historische_waarde_eur_per_mwh'] <= 1000
+              and 1 <= luminus['geschatte_jaarparameter_eur_per_mwh'] <= 1000
               and isinstance(luminus.get('bron_url'), str)
               and luminus['bron_url'].startswith('https://www.luminus.be/'))
     result['contracten']['Luminus BasicFlex Online Gas'] = {
         'status': 'HISTORISCHE_EN_FORWARD_BRONWAARDEN_GECONTROLEERD' if lvalid else 'BRONCONTROLE_MISLUKT',
         'index': 'TTF DAH M',
-        'historische_indexmaand': '2026-10' if lvalid else None,
-        'historische_waarde_eur_per_mwh': 86.104 if lvalid else None,
-        'geschatte_jaarparameter_eur_per_mwh': 89.218 if lvalid else None,
-        'herkomst_jaarparameter': 'luminus_indexen_pdf_november_2026' if lvalid else None,
+        'historische_indexmaand': luminus.get('historische_indexmaand') if lvalid else None,
+        'historische_waarde_eur_per_mwh': luminus.get('historische_waarde_eur_per_mwh') if lvalid else None,
+        'geschatte_jaarparameter_eur_per_mwh': luminus.get('geschatte_jaarparameter_eur_per_mwh') if lvalid else None,
+        'herkomst_jaarparameter': 'luminus_indexen_pdf_' + luminus['tariefmaand'] if lvalid else None,
         'bron_url': luminus.get('bron_url') if lvalid else None,
         'jaarprognose_gevalideerd': False,
         'geschikt_voor_automatische_jaarprijs': False,
         'blokkades': ['Jaarprijs en contractvoorwaarden niet gevalideerd'] if lvalid else ['Luminus brongegevens niet betrouwbaar bevestigd']
     }
     result['alle_broncontroles_geslaagd'] = all(x['status'] != 'BRONCONTROLE_MISLUKT' for x in result['contracten'].values())
-    result['waarschuwing'] = 'Vastgepinde controles voor november 2026; toekomstige maanden vereisen een nieuwe validatieregel.'
+    current = dt.datetime.now(dt.timezone.utc).strftime('%Y-%m')
+    result['huidige_kalendermaand_utc'] = current
+    vorige_maand = (dt.date.fromisoformat(current + '-01') - dt.timedelta(days=1)).strftime('%Y-%m')
+    result['actueel_voor_huidige_maand'] = (
+        lvalid and luminus['tariefmaand'] == current
+        and result['alle_broncontroles_geslaagd']
+        and all(c['historische_indexmaand'] == vorige_maand for c in result['contracten'].values())
+    )
+    if not result['actueel_voor_huidige_maand']:
+        result['status'] = 'ONVOLLEDIG_OF_HISTORISCH_GEEN_ACTUELE_GASPRIJZEN'
+        for c in result['contracten'].values():
+            c['blokkades'].append('Actuele tariefmaand niet voor alle leveranciers bevestigd')
+    result['waarschuwing'] = 'Bronindexen zijn geen volledige jaarprijzen; tariefkaarten en kosten moeten afzonderlijk worden gevalideerd.'
     return result
 
 def main():

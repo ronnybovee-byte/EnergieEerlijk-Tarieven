@@ -69,7 +69,7 @@ def parse_engie(html, today=None):
     p = Tables()
     p.feed(html)
     # ENGIE publiceert meerdere tabellen (o.a. responsive weergaven).
-    # Alleen een tabel met de gecontroleerde oktoberreferentie is betrouwbaar.
+    # Oktober 2026 blijft een historisch controleanker; nieuwe maanden zijn toegestaan.
     valid_tables = []
     for table in p.tables:
         for hi, header in enumerate(table):
@@ -109,6 +109,10 @@ def parse_engie(html, today=None):
     if '2026-10' in grouped and abs(grouped['2026-10'] - 85.777) > 0.002:
         raise ValueError('ENGIE oktober 2026 wijkt af van gecontroleerde tariefkaart')
     last = max(grouped)
+    # Een oude publicatie mag nooit stilzwijgend als actuele index gelden.
+    last_complete = (today.replace(day=1) - dt.timedelta(days=1)).strftime('%Y-%m')
+    if last > last_complete:
+        raise ValueError('ENGIE indexmaand nog niet afgesloten')
     return {'status': 'HISTORISCHE_INDEX_GEVONDEN', 'bron_url': URL,
             'index': 'ZTPDAM (Heren)', 'index_definitie': 'ZTP DAM',
             'laatste_volledige_maand': last, 'waarde_eur_per_mwh': grouped[last],
