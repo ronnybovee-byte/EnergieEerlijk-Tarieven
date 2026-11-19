@@ -23,6 +23,19 @@ GAS_CONTRACTEN = {
         "verwachte_formule": {"index": "TTF-RLP-M", "factor": 0.1010, "toeslag": 0.2200},
         "vereiste_woorden": ["Ecofix Flexy Online", "Onze tariefformule voor aardgas"],
     },
+    # Gezamenlijke verkenning: nog NIET gevalideerd voor prijsberekeningen.
+    "Luminus BasicFlex Gas": {
+        "url": "https://www.luminus.be/-/media/general/pricelists/nl/GBFL0C_NL_BasicFlex_gas.pdf",
+        "status": "verkenning",
+    },
+    "TotalEnergies myEssential Variabel Gas": {
+        "url": "https://totalenergies.be/static/marketing-documents/b2c/tariff-card/latest/MYESSENTIAL_GAS_VL_NL.pdf",
+        "status": "verkenning",
+    },
+    "OCTA+ Boost Flex Gas": {
+        "url": "https://files.octaplus.be/tariffs/G_OCTA_BOOSTFLEX_PR_BR_NL.pdf",
+        "status": "verkenning",
+    },
 }
 
 # Herkent de veelvoorkomende vorm '(factor * index) + toeslag'.
@@ -106,6 +119,16 @@ def controleer_tariefkaart(naam: str, gegevens: dict) -> None:
     if ontbrekend:
         raise ValueError(f"Contractidentificatie ontbreekt: {ontbrekend}")
 
+    # Verkenningscontracten worden alleen geïnventariseerd: geen prijzen overnemen.
+    if gegevens.get("status") == "verkenning":
+        gevonden = herken_formule(tekst)
+        print(f"PDF: {len(response.content)} bytes; OCR op {ocr_paginas} pagina('s)")
+        print("Herkenbare formule:", gevonden if gevonden else "niet gevonden met huidig patroon")
+        print("TEKSTFRAGMENT (eerste 2500 tekens):")
+        print(tekst[:2500])
+        print("STATUS: VERKENNING — NIET GEVALIDEERD, NIET VOOR BEREKENING")
+        return
+
     gevonden = herken_formule(tekst)
     if gevonden is None:
         raise ValueError("Geen herkenbare formule; handmatige controle vereist")
@@ -133,7 +156,8 @@ def main() -> int:
         except Exception as fout:
             fouten += 1
             print(f"FOUT bij {naam}: {fout}")
-    print(f"\n{'MISLUKT' if fouten else 'GESLAAGD'}: {len(GAS_CONTRACTEN) - fouten}/{len(GAS_CONTRACTEN)} contracten gevalideerd")
+    print(f"\n{'MISLUKT' if fouten else 'GESLAAGD'}: {len(GAS_CONTRACTEN) - fouten}/{len(GAS_CONTRACTEN)} PDF-controles uitgevoerd")
+    print("Let op: verkenningscontracten zijn NIET gevalideerd voor prijsberekeningen")
     return 1 if fouten else 0
 
 
