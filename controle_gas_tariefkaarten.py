@@ -68,6 +68,11 @@ GAS_CONTRACTEN = {
         ],
     },
 
+    "OCTA+ Boost Flex Gas": {
+        "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
+        "status": "verkenning",
+    },
+}
 
 
 # Algemene herkenning van gasprijsformules
