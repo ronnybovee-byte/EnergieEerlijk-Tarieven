@@ -43,7 +43,7 @@ GAS_CONTRACTEN = {
     },
     
     "ENGIE Flow Gas": {
-        "url": "https://dtcmedia.s3.eu-central-1.amazonaws.com/tariffcard/1332312/nl-be-engie-flow-gas-november-2026.pdf",
+        "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
         "status": "verkenning",
     },
 
