@@ -29,7 +29,7 @@ def clean(value):
     return re.sub(r'\s+', ' ', str(value or '')).strip()
 
 
-def extract_evidence(pdf_bytes):
+def extract_evidence(pdf_bytes, name):
     """Preserve page and row references; never infer fees from arbitrary nearby amounts."""
     candidates = []
     vat_evidence = []
@@ -48,6 +48,28 @@ def extract_evidence(pdf_bytes):
                     candidates.append({'bron': 'tekst', 'pagina': page_no, 'regel': i+1,
                                        'tekst': context[:650], 'bedrag': None,
                                        'status': 'context_niet_automatisch_toegewezen'})
+            # ENGIE Flow: de vergoeding staat onder de kop in een afzonderlijk
+            # visueel vak, niet in een naastliggende PDF-tabelcel.
+            # Beperk tot de energieprijssectie boven "Netwerkkosten".
+            if name == 'ENGIE Flow Gas' and page_no == 1:
+                words = page.extract_words()
+                labels = [w for w in words if w['text'].lower() == 'vaste' and 300 < w['top'] < 490]
+                for label in labels:
+                    same_line = [w for w in words if abs(w['top'] - label['top']) < 9 and label['x0'] <= w['x0'] < 310]
+                    if not any('vergoeding' in w['text'].lower() for w in same_line):
+                        continue
+                    amounts = [w for w in words
+                               if label['top'] + 12 < w['top'] < min(label['top'] + 90, 490)
+                               and 70 < w['x0'] < 310
+                               and re.fullmatch(r'\d{1,4},\d{2}', w['text'])]
+                    if len(amounts) == 1:
+                        amount = amounts[0]
+                        candidates.append({'bron': 'visuele_kolom', 'pagina': page_no,
+                                           'labelcel': 'Vaste vergoeding (€/jaar)',
+                                           'bedrag': amount['text'].replace(',', '.'),
+                                           'positie': {'x': round(amount['x0'], 1),
+                                                       'y': round(amount['top'], 1)},
+                                           'status': 'visuele_kandidaat_niet_gevalideerd'})
             for table_no, table in enumerate(page.extract_tables() or [], 1):
                 for row_no, row in enumerate(table or [], 1):
                     cells = [clean(c) for c in (row or [])]
@@ -101,7 +123,7 @@ def inspect(name, info, session):
         # Keep compatibility with existing OCR path, while tables are extracted
         # directly from the original PDF to preserve cell boundaries.
         _, ocr_pages = lees_pdf(raw)
-        candidates, vat, conditions = extract_evidence(raw)
+        candidates, vat, conditions = extract_evidence(raw, name)
         result.update({'pdf_sha256': digest, 'ocr_paginas': ocr_pages,
                        'kandidaten': candidates, 'btw_bronregels': vat,
                        'voorwaarden_bronregels': conditions,
