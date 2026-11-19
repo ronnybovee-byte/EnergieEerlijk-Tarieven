@@ -68,8 +68,12 @@ def normaliseer_index(index: str) -> str:
     return re.sub(r"\s+", "", index).upper().replace("–", "-")
 
 
+
 def herken_formule(tekst: str) -> dict | None:
-    # Zoek bij voorkeur vlak na de expliciete tariefformule-aanduiding.
+    def getal(waarde):
+        return float(waarde.replace(",", "."))
+
+    # 1. Bestaande herkenning behouden.
     for regel in tekst.splitlines():
         if "tariefformule" not in regel.lower():
             continue
@@ -78,16 +82,49 @@ def herken_formule(tekst: str) -> dict | None:
             break
     else:
         match = FORMULE_PATROON.search(tekst)
-    if not match:
-        return None
-    toeslag = float(match.group("toeslag").replace(",", "."))
-    if match.group("teken") == "-":
-        toeslag = -toeslag
-    return {
-        "index": normaliseer_index(match.group("index")),
-        "factor": float(match.group("factor").replace(",", ".")),
-        "toeslag": toeslag,
-    }
+
+    if match:
+        toeslag = getal(match.group("toeslag"))
+        if match.group("teken") == "-":
+            toeslag = -toeslag
+        return {
+            "index": normaliseer_index(match.group("index")),
+            "factor": getal(match.group("factor")),
+            "toeslag": toeslag,
+        }
+
+    # 2. ENGIE: toeslag + (factor x index)
+    engie = re.search(
+        r"(?P<toeslag>\d+[,.]\d+)\s*\+\s*\(\s*"
+        r"(?P<factor>\d+[,.]\d+)\s*[x×*]\s*"
+        r"(?P<index>ZTPDAM\s*\(Heren\))\s*\)",
+        tekst,
+        re.IGNORECASE,
+    )
+    if engie:
+        return {
+            "index": normaliseer_index(engie.group("index")),
+            "factor": getal(engie.group("factor")),
+            "toeslag": getal(engie.group("toeslag")),
+        }
+
+    # 3. OCTA+: index * factor + toeslag
+    octa = re.search(
+        r"(?P<index>ZTP\s+RLP\s+M)\s*[x×*]\s*"
+        r"(?P<factor>\d+[,.]\d+)\s*\+\s*"
+        r"(?P<toeslag>\d+[,.]\d+)",
+        tekst,
+        re.IGNORECASE,
+    )
+    if octa:
+        return {
+            "index": normaliseer_index(octa.group("index")),
+            "factor": getal(octa.group("factor")),
+            "toeslag": getal(octa.group("toeslag")),
+        }
+
+    return None
+
 
 
 def lees_pdf(pdf_bytes: bytes) -> tuple[str, int]:
