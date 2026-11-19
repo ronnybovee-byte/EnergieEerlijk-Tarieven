@@ -34,12 +34,14 @@ GAS_CONTRACTEN = {
 
 # Herkent de veelvoorkomende vorm '(factor * index) + toeslag'.
 # Een leverancier met een afwijkende formule vereist een extra parser.
+
 FORMULE_PATROON = re.compile(
-    r"\(\s*(?P<factor>\d+[,.]\d+)\s*[×*x]\s*"
-    r"(?P<index>[A-Z][A-Z0-9 _./-]{2,45}?)\s*\)\s*"
-    r"(?P<teken>[+-])\s*(?P<toeslag>\d+[,.]\d+)",
+    r"\(?\s*(?P<factor>\d+[,.]\d+)\s*[×*x]\s*"
+    r"(?P<index>[A-Z][A-Z0-9_./-]{2,45})\s*\)?"
+    r"\s*(?P<teken>[+-])\s*(?P<toeslag>\d+[,.]\d+)",
     re.IGNORECASE,
 )
+
 
 
 def normaliseer_index(index: str) -> str:
