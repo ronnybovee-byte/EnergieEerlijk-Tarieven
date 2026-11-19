@@ -71,6 +71,9 @@ jobs:
       - name: Luminus gasindex en forward ophalen
         run: python haal_luminus_gasindex_op.py
         
+      - name: Gasindexen van drie leveranciers combineren
+        run: python combineer_gas_indexen.py
+        
       - name: ENGIE en Luminus indexbronnen onderzoeken
         run: python onderzoek_engie_luminus_gasindexen.py
 
@@ -117,7 +120,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"     
                        
-           git add gas_gevalideerde_formules.json gas_bronregister.json gas_gevonden_tariefkaarten.json gas_archiefformules_vergelijking.json gas_app_publicatie_status.json gas_vaste_vergoeding_kandidaten.json gas_vaste_vergoedingen_validatie.json gas_indexwaarden_bewijs.json gas_indexwaarden_genormaliseerd.json gas_indexen_leveranciers.json gas_index_brononderzoek.json gas_luminus_index.json
+           git add gas_gevalideerde_formules.json gas_bronregister.json gas_gevonden_tariefkaarten.json gas_archiefformules_vergelijking.json gas_app_publicatie_status.json gas_vaste_vergoeding_kandidaten.json gas_vaste_vergoedingen_validatie.json gas_indexwaarden_bewijs.json gas_indexwaarden_genormaliseerd.json gas_indexen_leveranciers.json gas_index_brononderzoek.json gas_luminus_index.json gas_indexen_gecombineerd.json
 
           if git diff --cached --quiet; then
             echo "Geen wijzigingen om te publiceren"
