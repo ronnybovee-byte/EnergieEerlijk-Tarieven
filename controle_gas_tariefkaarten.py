@@ -42,11 +42,19 @@ GAS_CONTRACTEN = {
             "myEssential",
         ],
     },
-
+   
     "Luminus BasicFlex Online Gas": {
         "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
-        "status": "verkenning",
+        "verwachte_formule": {
+            "index": "TTF DAH M",
+            "factor": 0.1001,
+            "toeslag": 0.5279,
+        },
+        "vereiste_woorden": [
+            "BasicFlex",
+        ],
     },
+
 
     "ENGIE Flow Gas": {
         "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
