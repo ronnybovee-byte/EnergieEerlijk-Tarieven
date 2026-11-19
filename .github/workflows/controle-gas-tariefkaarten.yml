@@ -52,6 +52,9 @@ jobs:
         
       - name: Vaste gasvergoedingen onderzoeken
         run: python controle_gas_vaste_vergoeding.py
+        
+      - name: Vaste gasvergoedingen valideren
+        run: python valideer_gas_vaste_vergoedingen.py
 
       - name: Gasgeldigheid toevoegen aan JSON
         run: python verrijk_gas_geldigheid.py
