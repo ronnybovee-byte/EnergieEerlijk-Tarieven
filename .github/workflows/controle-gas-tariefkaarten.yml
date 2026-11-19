@@ -65,6 +65,9 @@ jobs:
       - name: Actuele gasindexen bij leveranciers ophalen
         run: python haal_gasindexen_op.py
         
+      - name: ENGIE historische gasindex ophalen
+        run: python haal_engie_gasindex_op.py
+        
       - name: ENGIE en Luminus indexbronnen onderzoeken
         run: python onderzoek_engie_luminus_gasindexen.py
 
