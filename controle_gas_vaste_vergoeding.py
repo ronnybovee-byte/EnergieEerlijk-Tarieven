@@ -93,8 +93,4 @@ def inspect(name, info, session):
         response = session.get(url, timeout=45)
         response.raise_for_status()
         raw = response.content
-        
         if not raw.startswith(b'%PDF-') or len(raw) > 15_000_000:
-            raise ValueError('geen_geldige_pdf')
-        digest = hashlib.sha256(raw).hexdigest()
-
