@@ -1,33 +1,43 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-19T22:27:38.083573+00:00",
+  "gegenereerd_op_utc": "2026-11-19T22:43:43.974555+00:00",
   "bron": "gas_archiefformules_vergelijking.json",
-  "status": "ALLEEN_FORMULECONTROLE_GEEN_AUTOMATISCHE_JAARPRIJZEN",
+  "aanvullende_bronnen": [
+    "gas_vaste_vergoedingen_validatie.json",
+    "gas_indexen_gecombineerd.json"
+  ],
+  "status": "BRONCONTROLES_GEEN_AUTOMATISCHE_JAARPRIJZEN",
   "voor_android_app": false,
   "contracten": {
     "ENGIE Flow Gas": {
+      "historische_indexbron_gecontroleerd": true,
+      "jaarprognose_gevalideerd": false,
       "formule_gecontroleerd": true,
       "geschikt_voor_automatische_jaarprijs": false,
       "blokkades": [
-        "Contractuele indexwaarde en eenheid niet onafhankelijk geverifieerd",
+        "Jaarprognose index niet gevalideerd",
         "Contractvoorwaarden niet automatisch gevalideerd",
         "Volledige netkosten, accijnzen en btw niet als jaarprijs geverifieerd"
       ]
     },
     "Luminus BasicFlex Online Gas": {
+      "historische_indexbron_gecontroleerd": true,
+      "jaarprognose_gevalideerd": false,
       "formule_gecontroleerd": true,
       "geschikt_voor_automatische_jaarprijs": false,
       "blokkades": [
-        "Contractuele indexwaarde en eenheid niet onafhankelijk geverifieerd",
+        "Jaarprognose index niet gevalideerd",
         "Contractvoorwaarden niet automatisch gevalideerd",
         "Volledige netkosten, accijnzen en btw niet als jaarprijs geverifieerd"
       ]
     },
     "OCTA+ Boost Flex Gas": {
+      "historische_indexbron_gecontroleerd": true,
+      "jaarprognose_gevalideerd": false,
       "formule_gecontroleerd": true,
       "geschikt_voor_automatische_jaarprijs": false,
       "blokkades": [
-        "Contractuele indexwaarde en eenheid niet onafhankelijk geverifieerd",
+        "Jaarprognose index niet gevalideerd",
         "Vaste leveranciersvergoeding niet volledig geverifieerd",
         "Contractvoorwaarden niet automatisch gevalideerd",
         "Volledige netkosten, accijnzen en btw niet als jaarprijs geverifieerd"
