@@ -43,6 +43,14 @@ GAS_CONTRACTEN = {
     },
 }
 
+# Algemene herkenning van gasprijsformules
+FORMULE_PATROON = re.compile(
+    r"\(?\s*(?P<factor>\d+[,.]\d+)\s*[×*x]\s*"
+    r"(?P<index>[A-Z][A-Z0-9_./-]{2,45})\s*\)?"
+    r"\s*(?P<teken>[+-])\s*(?P<toeslag>\d+[,.]\d+)",
+    re.IGNORECASE,
+)
+
 
 def normaliseer_index(index: str) -> str:
     return re.sub(r"\s+", "", index).upper().replace("–", "-")
