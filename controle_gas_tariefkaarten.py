@@ -23,19 +23,13 @@ GAS_CONTRACTEN = {
         "verwachte_formule": {"index": "TTF-RLP-M", "factor": 0.1010, "toeslag": 0.2200},
         "vereiste_woorden": ["Ecofix Flexy Online", "Onze tariefformule voor aardgas"],
     },
-    # Gezamenlijke verkenning: nog NIET gevalideerd voor prijsberekeningen.
-    "Luminus BasicFlex Gas": {
-        "url": "https://www.luminus.be/-/media/general/pricelists/nl/GBFL0C_NL_BasicFlex_gas.pdf",
-        "status": "verkenning",
-    },
+   
+
     "TotalEnergies myEssential Variabel Gas": {
         "url": "https://totalenergies.be/static/marketing-documents/b2c/tariff-card/latest/MYESSENTIAL_GAS_VL_NL.pdf",
         "status": "verkenning",
     },
-    "OCTA+ Boost Flex Gas": {
-        "url": "https://files.octaplus.be/tariffs/G_OCTA_BOOSTFLEX_PR_BR_NL.pdf",
-        "status": "verkenning",
-    },
+    
 }
 
 # Herkent de veelvoorkomende vorm '(factor * index) + toeslag'.
