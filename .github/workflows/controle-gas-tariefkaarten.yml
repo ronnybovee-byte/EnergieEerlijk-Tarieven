@@ -41,6 +41,10 @@ jobs:
       - name: Geldigheidsmaand gastariefkaarten onderzoeken
         run: python controle_gas_geldigheidsmaand.py
 
+      - name: Gasgeldigheid toevoegen aan JSON
+        run: python verrijk_gas_geldigheid.py
+
+
       - name: JSON-uitvoer valideren
         run: |
           python - <<'PY'
