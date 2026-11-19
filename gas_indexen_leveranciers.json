@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "gegenereerd_op_utc": "2026-11-19T15:51:18.526792+00:00",
+  "voor_android_app": false,
+  "status": "HISTORISCHE_BRONCONTROLE_GEEN_JAARPRIJS",
+  "contracten": {
+    "ENGIE Flow Gas": {
+      "status": "BRONADAPTER_NOG_NIET_GEVALIDEERD"
+    },
+    "Luminus BasicFlex Online Gas": {
+      "status": "BRONADAPTER_NOG_NIET_GEVALIDEERD"
+    },
+    "OCTA+ Boost Flex Gas": {
+      "status": "HISTORISCHE_INDEX_GEVONDEN",
+      "bron_url": "https://files.octaplus.be/tariffs/parameters_aardgas_nl.pdf",
+      "index": "ZTP RLP M",
+      "index_definitie": "ZTP RLP Maand",
+      "laatste_volledige_maand": "2026-10",
+      "waarde_eur_per_mwh": 87.893,
+      "waarde_ct_per_kwh": 8.7893,
+      "aantal_historische_maanden": 25,
+      "jaarprognose_gevalideerd": false,
+      "geschikt_voor_automatische_jaarprijs": false
+    }
+  }
+}
