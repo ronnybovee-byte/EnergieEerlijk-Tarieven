@@ -17,31 +17,31 @@ import pytesseract
 import requests
 from PIL import Image
 
+
 GAS_CONTRACTEN = {
     "Ecofix Flexy Online": {
         "url": "https://portal.ecofixgp.be/docs/prices/current/GAS_Ecofix_Flexy_Online_NL.pdf",
-        "verwachte_formule": {"index": "TTF-RLP-M", "factor": 0.1010, "toeslag": 0.2200},
-        "vereiste_woorden": ["Ecofix Flexy Online", "Onze tariefformule voor aardgas"],
+        "verwachte_formule": {
+            "index": "TTF-RLP-M",
+            "factor": 0.1010,
+            "toeslag": 0.2200,
+        },
+        "vereiste_woorden": [
+            "Ecofix Flexy Online",
+            "Onze tariefformule voor aardgas",
+        ],
     },
-   
 
     "TotalEnergies myEssential Variabel Gas": {
         "url": "https://totalenergies.be/static/marketing-documents/b2c/tariff-card/latest/MYESSENTIAL_GAS_VL_NL.pdf",
         "status": "verkenning",
     },
-    
+
+    "Luminus BasicFlex Online Gas": {
+        "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
+        "status": "verkenning",
+    },
 }
-
-# Herkent de veelvoorkomende vorm '(factor * index) + toeslag'.
-# Een leverancier met een afwijkende formule vereist een extra parser.
-
-FORMULE_PATROON = re.compile(
-    r"\(?\s*(?P<factor>\d+[,.]\d+)\s*[×*x]\s*"
-    r"(?P<index>[A-Z][A-Z0-9_./-]{2,45})\s*\)?"
-    r"\s*(?P<teken>[+-])\s*(?P<toeslag>\d+[,.]\d+)",
-    re.IGNORECASE,
-)
-
 
 
 def normaliseer_index(index: str) -> str:
