@@ -58,6 +58,9 @@ jobs:
         
       - name: Gasindexwaarden uit tariefkaarten controleren
         run: python controle_gas_indexwaarden.py
+        
+      - name: Gasindexwaarden normaliseren
+        run: python normaliseer_gas_indexwaarden.py
 
       - name: Gasgeldigheid toevoegen aan JSON
         run: python verrijk_gas_geldigheid.py
@@ -102,7 +105,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"     
                        
-           git add gas_gevalideerde_formules.json gas_bronregister.json gas_gevonden_tariefkaarten.json gas_archiefformules_vergelijking.json gas_app_publicatie_status.json gas_vaste_vergoeding_kandidaten.json gas_vaste_vergoedingen_validatie.json gas_indexwaarden_bewijs.json
+           git add gas_gevalideerde_formules.json gas_bronregister.json gas_gevonden_tariefkaarten.json gas_archiefformules_vergelijking.json gas_app_publicatie_status.json gas_vaste_vergoeding_kandidaten.json gas_vaste_vergoedingen_validatie.json gas_indexwaarden_bewijs.json gas_indexwaarden_genormaliseerd.json
 
           if git diff --cached --quiet; then
             echo "Geen wijzigingen om te publiceren"
