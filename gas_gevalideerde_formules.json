@@ -5,13 +5,18 @@
       "index": "TTF-RLP-M",
       "toeslag": 0.22
     },
+    "Luminus BasicFlex Online Gas": {
+      "factor": 0.1001,
+      "index": "TTFDAHM",
+      "toeslag": 0.5279
+    },
     "TotalEnergies myEssential Variabel Gas": {
       "factor": 0.101,
       "index": "TTF_M_RLP",
       "toeslag": 0.574
     }
   },
-  "gegenereerd_op_utc": "2026-11-19T10:48:04.763988+00:00",
+  "gegenereerd_op_utc": "2026-11-19T10:51:58.377935+00:00",
   "schema_version": 1,
   "status": "alleen_gevalideerde_prijsformules",
   "waarschuwing": "Indexdefinities, indexwaarden, vaste vergoedingen en totale jaarprijzen zijn niet gevalideerd."
