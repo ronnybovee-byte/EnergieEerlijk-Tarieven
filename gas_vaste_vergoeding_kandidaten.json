@@ -1,9 +1,9 @@
 {
-  "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-19T14:52:30.111150+00:00",
-  "status": "KANDIDATEN_GEEN_GEVERIFIEERDE_VASTE_VERGOEDING",
+  "schema_version": 2,
+  "gegenereerd_op_utc": "2026-11-19T15:12:09.459874+00:00",
+  "status": "PDF_TABEL_EN_TEKST_KANDIDATEN_GEEN_AUTOMATISCHE_GOEDKEURING",
   "voor_android_app": false,
-  "waarschuwing": "Bedragen, periode, btw, kortingen en voorwaarden vereisen aparte controle.",
+  "waarschuwing": "Tabelkandidaten, btw en voorwaarden blijven handmatig te valideren.",
   "contracten": {
     "ENGIE Flow Gas": {
       "status": "handmatige_controle_nodig",
@@ -12,14 +12,70 @@
       "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
       "kandidaten": [
         {
+          "bron": "tekst",
+          "pagina": 1,
           "regel": 15,
           "tekst": "Prijs per kWh(1) (c€/kWh) | Vaste vergoeding (€/jaar)(11) | Maandelijkse prijzen | 10,344",
-          "bedrag_herkend_in_context": false
+          "bedrag": null,
+          "status": "context_niet_automatisch_toegewezen"
+        },
+        {
+          "bron": "tabel",
+          "pagina": 1,
+          "tabel": 1,
+          "rij": 3,
+          "labelcel": "Vaste vergoeding €/jaar",
+          "naastliggende_cel": "Afname c€/kWh",
+          "rijtekst": " | Vaste vergoeding €/jaar | Afname c€/kWh | Vaste vergoeding €/jaar | Afname c€/kWh | Vaste vergoeding €/jaar | Afname c€/kWh | Maandelijks/Jaarlijks €/jaar | c€/kWh",
+          "bedrag": null,
+          "status": "handmatige_controle_nodig"
+        },
+        {
+          "bron": "tabel",
+          "pagina": 1,
+          "tabel": 1,
+          "rij": 3,
+          "labelcel": "Vaste vergoeding €/jaar",
+          "naastliggende_cel": "Afname c€/kWh",
+          "rijtekst": " | Vaste vergoeding €/jaar | Afname c€/kWh | Vaste vergoeding €/jaar | Afname c€/kWh | Vaste vergoeding €/jaar | Afname c€/kWh | Maandelijks/Jaarlijks €/jaar | c€/kWh",
+          "bedrag": null,
+          "status": "handmatige_controle_nodig"
+        },
+        {
+          "bron": "tabel",
+          "pagina": 1,
+          "tabel": 1,
+          "rij": 3,
+          "labelcel": "Vaste vergoeding €/jaar",
+          "naastliggende_cel": "Afname c€/kWh",
+          "rijtekst": " | Vaste vergoeding €/jaar | Afname c€/kWh | Vaste vergoeding €/jaar | Afname c€/kWh | Vaste vergoeding €/jaar | Afname c€/kWh | Maandelijks/Jaarlijks €/jaar | c€/kWh",
+          "bedrag": null,
+          "status": "handmatige_controle_nodig"
+        }
+      ],
+      "btw_bronregels": [
+        {
+          "pagina": 1,
+          "tekst": "Prijzen inclusief 6% btw(9)"
+        },
+        {
+          "pagina": 2,
+          "tekst": "Prijzen inclusief 6% btw(9)"
+        },
+        {
+          "pagina": 2,
+          "tekst": "naam \"ZTP Price Assessment Weekend\" voor weekenddagen tijdens Vlaanderen. Prijzen inclusief 6% btw."
+        }
+      ],
+      "voorwaarden_bronregels": [
+        {
+          "pagina": 2,
+          "tekst": "engie.be. vergoeding aangerekend pro rata het aantal effectieve"
         }
       ],
       "pdf_sha256": "dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
       "ocr_paginas": 0,
-      "reden": "kandidaatregels_gevonden_maandbedrag_en_btw_nog_te_controleren"
+      "reden": "pdf_gecontroleerd_bedragen_nog_niet_gevalideerd"
     },
     "Luminus BasicFlex Online Gas": {
       "status": "handmatige_controle_nodig",
@@ -28,34 +84,68 @@
       "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
       "kandidaten": [
         {
+          "bron": "tekst",
+          "pagina": 1,
           "regel": 32,
           "tekst": "energie (c€/kWh)2 | Vaste vergoeding (€/jaar) 20,00 | 1 Voor meer info: zie infra bij ‘Informatie over uw tarief’. | 2 Deze jaarschatting is gebaseerd op de huidige en verwachte prijsevolutie van de komende 12 maanden.",
-          "bedrag_herkend_in_context": false
+          "bedrag": null,
+          "status": "context_niet_automatisch_toegewezen"
         },
         {
-          "regel": 57,
-          "tekst": "INFORMATIE OVER UW TARIEF: | De vermelde prijzen en eventuele promoties zijn incl. 6 % btw. Indien het geldende btw-tarief levering door Luminus voor gas. De vaste vergoeding wordt aangerekend op de afrekenings- of | verandert gedurende de looptijd van uw contract, dan wijzigen ook de prijzen en promoties. slotfactuur. De hierboven vermelde kosten voor het gebruik van de netten zijn de kosten die zijn | Index (excl. BTW): TTF DAH M = 86,104 €/MWh (indexwaarde van oktober 2026) goedgekeurd door d",
-          "bedrag_herkend_in_context": true
+          "bron": "tabel",
+          "pagina": 1,
+          "tabel": 3,
+          "rij": 4,
+          "labelcel": "Vaste vergoeding (€/jaar)",
+          "naastliggende_cel": "20,00",
+          "rijtekst": "Vaste vergoeding (€/jaar) | 20,00",
+          "bedrag": "20.00",
+          "status": "tabelcel_kandidaat_niet_gevalideerd"
         },
         {
-          "regel": 77,
-          "tekst": "uw afrekening kunnen daarom afwijken van de bovenstaande prijzen. 6.4 van onze algemene voorwaarden, aan u worden doorgerekend met naleving van de geldende | De vaste vergoeding is een jaarlijkse forfaitaire vergoeding per gasaansluiting die alle vaste regelgeving. | operationele kosten van Luminus dekt. Indien het contract vroegtijdig beëindigd wordt bij Luminus Deze kosten worden berekend volgens de volgende formule: volume aardgasafname (in MWh) × | (= in het eerste half jaar na de start van ",
-          "bedrag_herkend_in_context": false
+          "bron": "tekst",
+          "pagina": 2,
+          "regel": 2,
+          "tekst": "INFORMATIE OVER UW TARIEF: | De vermelde prijzen en eventuele promoties zijn incl. 6 % btw. Indien het geldende btw-tarief levering door Luminus voor gas. De vaste vergoeding wordt aangerekend op de afrekenings- of | verandert gedurende de looptijd van uw contract, dan wijzigen ook de prijzen en promoties. slotfactuur. De hierboven vermelde kosten voor het gebruik van de netten zijn de kosten die zijn | Index (excl. BTW): TTF DAH M = 86,104 €/MWh (indexwaarde van oktober 2026) goedgekeurd door de regulator (Vlaamse Nutsregulator) en de waarden van de taksen, heffingen,",
+          "bedrag": null,
+          "status": "context_niet_automatisch_toegewezen"
         },
         {
-          "regel": 79,
-          "tekst": "operationele kosten van Luminus dekt. Indien het contract vroegtijdig beëindigd wordt bij Luminus Deze kosten worden berekend volgens de volgende formule: volume aardgasafname (in MWh) × | (= in het eerste half jaar na de start van levering), is de klant de helft van de jaarlijkse vaste vergoeding omzettingscoëfficiënt van ton CO 2 naar MWh × CarP. De CarP wordt bepaald op basis van de | verschuldigd per gasaansluiting. Na het eerste half jaar na de start van levering wordt de vaste marktprijzen",
-          "bedrag_herkend_in_context": false
+          "bron": "tekst",
+          "pagina": 2,
+          "regel": 22,
+          "tekst": "uw afrekening kunnen daarom afwijken van de bovenstaande prijzen. 6.4 van onze algemene voorwaarden, aan u worden doorgerekend met naleving van de geldende | De vaste vergoeding is een jaarlijkse forfaitaire vergoeding per gasaansluiting die alle vaste regelgeving. | operationele kosten van Luminus dekt. Indien het contract vroegtijdig beëindigd wordt bij Luminus Deze kosten worden berekend volgens de volgende formule: volume aardgasafname (in MWh) × | (= in het eerste half jaar na de start van levering), is de klant de helft van de jaarlijkse vaste vergoeding omzettingscoëfficiënt van ton CO 2 naar MWh × CarP. De CarP wordt bepaald op basis ",
+          "bedrag": null,
+          "status": "context_niet_automatisch_toegewezen"
         },
         {
-          "regel": 96,
-          "tekst": "na ondertekening starten. Indien dit laatste niet het geval is, heeft Luminus het recht uw van de herinnering, op elk saldo tot volledige betaling | contractaanvraag te weigeren of u een nieuw contractvoorstel te doen. - een forfaitaire vergoeding van 20€ op een verschuldigd saldo t.e.m. 150€, 30€ + 10% van het | verschuldigde bedrag op de schijf van 150,01€ t.e.m. 500€ en 65€ + 5% van het verschuldigde | bedrag op de schijf vanaf 500,01€ tot maximaal 2.000€.",
-          "bedrag_herkend_in_context": true
+          "bron": "tekst",
+          "pagina": 2,
+          "regel": 24,
+          "tekst": "operationele kosten van Luminus dekt. Indien het contract vroegtijdig beëindigd wordt bij Luminus Deze kosten worden berekend volgens de volgende formule: volume aardgasafname (in MWh) × | (= in het eerste half jaar na de start van levering), is de klant de helft van de jaarlijkse vaste vergoeding omzettingscoëfficiënt van ton CO 2 naar MWh × CarP. De CarP wordt bepaald op basis van de | verschuldigd per gasaansluiting. Na het eerste half jaar na de start van levering wordt de vaste marktprijzen voor CO 2 -emissierechten en onze (administratieve) kosten, die momenteel nog niet | vergoeding enkel aangerekend in verhouding tot de werkelijke ver",
+          "bedrag": null,
+          "status": "context_niet_automatisch_toegewezen"
+        }
+      ],
+      "btw_bronregels": [
+        {
+          "pagina": 1,
+          "tekst": "1 Luminus geleverde energieprijzen (incl. BTW)1:"
+        },
+        {
+          "pagina": 2,
+          "tekst": "De vermelde prijzen en eventuele promoties zijn incl. 6 % btw. Indien het geldende btw-tarief levering door Luminus voor gas. De vaste vergoeding wordt aangerekend op de afrekenings- of"
+        }
+      ],
+      "voorwaarden_bronregels": [
+        {
+          "pagina": 2,
+          "tekst": "(= in het eerste half jaar na de start van levering), is de klant de helft van de jaarlijkse vaste vergoeding omzettingscoëfficiënt van ton CO 2 naar MWh × CarP. De CarP wordt bepaald op basis van de"
         }
       ],
       "pdf_sha256": "d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
       "ocr_paginas": 0,
-      "reden": "kandidaatregels_gevonden_maandbedrag_en_btw_nog_te_controleren"
+      "reden": "pdf_gecontroleerd_bedragen_nog_niet_gevalideerd"
     },
     "OCTA+ Boost Flex Gas": {
       "status": "handmatige_controle_nodig",
@@ -64,29 +154,68 @@
       "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
       "kandidaten": [
         {
+          "bron": "tekst",
+          "pagina": 1,
           "regel": 34,
           "tekst": "ENERGIEKOST (c€/kWh) | De gaskost bestaat uit een jaarlijkse vaste vergoeding en een gasprijs per verbruikte kWh. | AFNAME | Duurtijd Onbepaald",
-          "bedrag_herkend_in_context": false
+          "bedrag": null,
+          "status": "context_niet_automatisch_toegewezen"
         },
         {
+          "bron": "tekst",
+          "pagina": 1,
           "regel": 37,
           "tekst": "Duurtijd Onbepaald | Vaste vergoeding (€/jaar) 65,00 | Gasprijs (c€/kWh) 9,98 | OCTA+ Energie n.v. - Schaarbeeklei 600 1800 Vilvoorde T. 0800/43.001 (gratis) energie@octaplus.be www.octaplus.be",
-          "bedrag_herkend_in_context": false
+          "bedrag": null,
+          "status": "context_niet_automatisch_toegewezen"
         },
         {
-          "regel": 85,
+          "bron": "tabel",
+          "pagina": 1,
+          "tabel": 3,
+          "rij": 3,
+          "labelcel": "Vaste vergoeding (€/jaar)",
+          "naastliggende_cel": "65,00",
+          "rijtekst": "Vaste vergoeding (€/jaar) | 65,00",
+          "bedrag": "65.00",
+          "status": "tabelcel_kandidaat_niet_gevalideerd"
+        },
+        {
+          "bron": "tekst",
+          "pagina": 3,
+          "regel": 11,
           "tekst": "maandelijks gelezen meter. Ze zijn geldig voor elk getekend contract tussen 01/11/2026 en 30/11/2026. | De vaste vergoeding wordt gefactureerd op basis van het aantal dagen energielevering, behalve als het contract eindigt binnen de 6 maanden die | volgen op de ingang ervan. In dit laatste geval wordt de vaste vergoeding aangerekend voor een periode van 6 maanden. | ETS2-kost: bijkomende kost vanaf 1 januari 2028.",
-          "bedrag_herkend_in_context": false
+          "bedrag": null,
+          "status": "context_niet_automatisch_toegewezen"
         },
         {
-          "regel": 86,
+          "bron": "tekst",
+          "pagina": 3,
+          "regel": 12,
           "tekst": "De vaste vergoeding wordt gefactureerd op basis van het aantal dagen energielevering, behalve als het contract eindigt binnen de 6 maanden die | volgen op de ingang ervan. In dit laatste geval wordt de vaste vergoeding aangerekend voor een periode van 6 maanden. | ETS2-kost: bijkomende kost vanaf 1 januari 2028. | Overeenkomstig de Europese regelgeving zullen alle aardgasleveranciers vanaf 1 januari 2028 jaarlijks een aantal emissierechten moeten",
-          "bedrag_herkend_in_context": false
+          "bedrag": null,
+          "status": "context_niet_automatisch_toegewezen"
+        }
+      ],
+      "btw_bronregels": [
+        {
+          "pagina": 1,
+          "tekst": "INCL. BTW"
+        }
+      ],
+      "voorwaarden_bronregels": [
+        {
+          "pagina": 3,
+          "tekst": "De vaste vergoeding wordt gefactureerd op basis van het aantal dagen energielevering, behalve als het contract eindigt binnen de 6 maanden die"
+        },
+        {
+          "pagina": 3,
+          "tekst": "volgen op de ingang ervan. In dit laatste geval wordt de vaste vergoeding aangerekend voor een periode van 6 maanden."
         }
       ],
       "pdf_sha256": "432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
       "ocr_paginas": 0,
-      "reden": "kandidaatregels_gevonden_maandbedrag_en_btw_nog_te_controleren"
+      "reden": "pdf_gecontroleerd_bedragen_nog_niet_gevalideerd"
     }
   }
 }
