@@ -41,6 +41,17 @@ GAS_CONTRACTEN = {
         "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
         "status": "verkenning",
     },
+    
+    "ENGIE Flow Gas": {
+        "url": "https://dtcmedia.s3.eu-central-1.amazonaws.com/tariffcard/1332312/nl-be-engie-flow-gas-november-2026.pdf",
+        "status": "verkenning",
+    },
+
+    "OCTA+ Boost Flex Gas": {
+        "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
+        "status": "verkenning",
+    },
+
 }
 
 # Algemene herkenning van gasprijsformules
