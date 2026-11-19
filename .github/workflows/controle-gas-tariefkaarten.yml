@@ -52,7 +52,9 @@ jobs:
 
       - name: Gasgeldigheid toevoegen aan JSON
         run: python verrijk_gas_geldigheid.py
-
+        
+      - name: Gasprijzen controleren voor veilige publicatie
+        run: python controle_gas_publicatie.py
 
       - name: JSON-uitvoer valideren
         run: |
@@ -89,11 +91,9 @@ jobs:
       - name: Gevalideerde gasformules publiceren
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                    
-          
-          git add gas_gevalideerde_formules.json gas_bronregister.json gas_gevonden_tariefkaarten.json gas_archiefformules_vergelijking.json
-
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"     
+              
+          git add gas_gevalideerde_formules.json gas_bronregister.json gas_gevonden_tariefkaarten.json gas_archiefformules_vergelijking.json gas_app_publicatie_status.json
 
           if git diff --cached --quiet; then
             echo "Geen wijzigingen om te publiceren"
