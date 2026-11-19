@@ -2,7 +2,7 @@
   "schema_version": 1,
   "status": "kandidaten_niet_gevalideerd",
   "archief_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?energie=Gas&segment=Woning",
-  "gecontroleerd_op_utc": "2026-11-19T18:20:01.385268+00:00",
+  "gecontroleerd_op_utc": "2026-11-19T18:27:35.414717+00:00",
   "waarschuwing": "Archiefmaand en PDF-link zijn kandidaten, geen bevestiging van prijsformule, indexwaarde, contractgeldigheid of jaarprijs.",
   "contracten": {
     "ENGIE Flow Gas": {
