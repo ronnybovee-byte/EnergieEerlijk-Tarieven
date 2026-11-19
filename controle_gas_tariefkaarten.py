@@ -141,6 +141,17 @@ def controleer_tariefkaart(naam: str, gegevens: dict) -> None:
         print(f"PDF: {len(response.content)} bytes; OCR op {ocr_paginas} pagina('s)")
         print("Herkenbare formule:", gevonden if gevonden else "niet gevonden met huidig patroon")
         print("TEKSTFRAGMENT (eerste 2500 tekens):")
+        
+        if naam in ("ENGIE Flow Gas", "OCTA+ Boost Flex Gas"):
+            print("\n--- REGELS MET INDEX OF FORMULE ---")
+            for regel in tekst.splitlines():
+                if any(
+                    woord in regel.upper()
+                    for woord in ("TTF", "ZTP", "FORMULE", "INDEX")
+                ):
+                    print(regel[:300])
+            print("--- EINDE FORMULEREGELS ---")
+
         print(tekst[:2500])
         print("STATUS: VERKENNING — NIET GEVALIDEERD, NIET VOOR BEREKENING")
         return
