@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Controleer officiële gastariefkaarten via tekstextractie en OCR.
+"""Controleer gasprijsformules uit PDF-tariefkaarten en publiceer alleen gevalideerde formules.
 
-Contracten worden centraal geconfigureerd. Onzekere of gewijzigde formules
-worden gemeld en nooit automatisch overgenomen.
+Let op: archief-PDF's zijn geen bewijs van een actueel maandtarief.
+Indexwaarden, vaste vergoedingen en jaarprijzen worden hier niet gevalideerd.
 """
 from __future__ import annotations
 
 from datetime import datetime, timezone
 from io import BytesIO
+import json
+from pathlib import Path
 import re
 import sys
 
@@ -20,70 +22,30 @@ from PIL import Image
 GAS_CONTRACTEN = {
     "Ecofix Flexy Online": {
         "url": "https://portal.ecofixgp.be/docs/prices/current/GAS_Ecofix_Flexy_Online_NL.pdf",
-        "verwachte_formule": {
-            "index": "TTF-RLP-M",
-            "factor": 0.1010,
-            "toeslag": 0.2200,
-        },
-        "vereiste_woorden": [
-            "Ecofix Flexy Online",
-            "Onze tariefformule voor aardgas",
-        ],
+        "verwachte_formule": {"index": "TTF-RLP-M", "factor": 0.1010, "toeslag": 0.2200},
+        "vereiste_woorden": ["Ecofix Flexy Online", "Onze tariefformule voor aardgas"],
     },
-
     "TotalEnergies myEssential Variabel Gas": {
         "url": "https://totalenergies.be/static/marketing-documents/b2c/tariff-card/latest/MYESSENTIAL_GAS_VL_NL.pdf",
-        "verwachte_formule": {
-            "index": "TTF_M_RLP",
-            "factor": 0.1010,
-            "toeslag": 0.5740,
-        },
-        "vereiste_woorden": [
-            "myEssential",
-        ],
+        "verwachte_formule": {"index": "TTF_M_RLP", "factor": 0.1010, "toeslag": 0.5740},
+        "vereiste_woorden": ["myEssential"],
     },
-   
     "Luminus BasicFlex Online Gas": {
         "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
-        "verwachte_formule": {
-            "index": "TTF DAH M",
-            "factor": 0.1001,
-            "toeslag": 0.5279,
-        },
-        "vereiste_woorden": [
-            "BasicFlex",
-        ],
+        "verwachte_formule": {"index": "TTF DAH M", "factor": 0.1001, "toeslag": 0.5279},
+        "vereiste_woorden": ["BasicFlex"],
     },
-
-  
     "ENGIE Flow Gas": {
         "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
-        "verwachte_formule": {
-            "index": "ZTPDAM(HEREN)",
-            "factor": 0.1020,
-            "toeslag": 1.0095,
-        },
-        "vereiste_woorden": [
-            "Flow",
-        ],
+        "verwachte_formule": {"index": "ZTPDAM(HEREN)", "factor": 0.1020, "toeslag": 1.0095},
+        "vereiste_woorden": ["Flow"],
     },
-
-    
     "OCTA+ Boost Flex Gas": {
         "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
-        "verwachte_formule": {
-            "index": "ZTP RLP M",
-            "factor": 1.020,
-            "toeslag": 0.3200,
-        },
-        "vereiste_woorden": [
-            "Boost Flex",
-        ],
+        "verwachte_formule": {"index": "ZTP RLP M", "factor": 1.020, "toeslag": 0.3200},
+        "vereiste_woorden": ["Boost Flex"],
     },
-
-
-
-# Algemene herkenning van gasprijsformules
+}
 
 FORMULE_PATROON = re.compile(
     r"\(?\s*(?P<factor>\d+[,.]\d+)\s*[×*x]\s*"
@@ -97,12 +59,10 @@ def normaliseer_index(index: str) -> str:
     return re.sub(r"\s+", "", index).upper().replace("–", "-")
 
 
-
 def herken_formule(tekst: str) -> dict | None:
-    def getal(waarde):
+    def getal(waarde: str) -> float:
         return float(waarde.replace(",", "."))
 
-    # 1. Bestaande herkenning behouden.
     for regel in tekst.splitlines():
         if "tariefformule" not in regel.lower():
             continue
@@ -122,13 +82,11 @@ def herken_formule(tekst: str) -> dict | None:
             "toeslag": toeslag,
         }
 
-    # 2. ENGIE: toeslag + (factor x index)
     engie = re.search(
         r"(?P<toeslag>\d+[,.]\d+)\s*\+\s*\(\s*"
         r"(?P<factor>\d+[,.]\d+)\s*[x×*]\s*"
         r"(?P<index>ZTPDAM\s*\(Heren\))\s*\)",
-        tekst,
-        re.IGNORECASE,
+        tekst, re.IGNORECASE,
     )
     if engie:
         return {
@@ -137,13 +95,11 @@ def herken_formule(tekst: str) -> dict | None:
             "toeslag": getal(engie.group("toeslag")),
         }
 
-    # 3. OCTA+: index * factor + toeslag
     octa = re.search(
         r"(?P<index>ZTP\s+RLP\s+M)\s*[x×*]\s*"
         r"(?P<factor>\d+[,.]\d+)\s*\+\s*"
         r"(?P<toeslag>\d+[,.]\d+)",
-        tekst,
-        re.IGNORECASE,
+        tekst, re.IGNORECASE,
     )
     if octa:
         return {
@@ -151,13 +107,10 @@ def herken_formule(tekst: str) -> dict | None:
             "factor": getal(octa.group("factor")),
             "toeslag": getal(octa.group("toeslag")),
         }
-
     return None
 
 
-
 def lees_pdf(pdf_bytes: bytes) -> tuple[str, int]:
-    """Lees alle pagina's; OCR alleen waar de tekstlaag erg beperkt is."""
     pagina_teksten = []
     ocr_paginas = 0
     with pdfplumber.open(BytesIO(pdf_bytes)) as pdf, fitz.open(
@@ -183,7 +136,7 @@ def lees_pdf(pdf_bytes: bytes) -> tuple[str, int]:
     return "\n".join(pagina_teksten), ocr_paginas
 
 
-def controleer_tariefkaart(naam: str, gegevens: dict) -> None:
+def controleer_tariefkaart(naam: str, gegevens: dict) -> dict | None:
     print(f"\nControle: {naam}")
     response = requests.get(
         gegevens["url"], timeout=45, headers={"User-Agent": "EerlijkeEnergie/1.0"}
@@ -197,30 +150,19 @@ def controleer_tariefkaart(naam: str, gegevens: dict) -> None:
     tekst, ocr_paginas = lees_pdf(response.content)
     if not tekst.strip():
         raise ValueError("Geen leesbare tekst")
-    ontbrekend = [w for w in gegevens.get("vereiste_woorden", []) if w.casefold() not in tekst.casefold()]
+    ontbrekend = [
+        w for w in gegevens.get("vereiste_woorden", [])
+        if w.casefold() not in tekst.casefold()
+    ]
     if ontbrekend:
         raise ValueError(f"Contractidentificatie ontbreekt: {ontbrekend}")
 
-    # Verkenningscontracten worden alleen geïnventariseerd: geen prijzen overnemen.
     if gegevens.get("status") == "verkenning":
         gevonden = herken_formule(tekst)
         print(f"PDF: {len(response.content)} bytes; OCR op {ocr_paginas} pagina('s)")
         print("Herkenbare formule:", gevonden if gevonden else "niet gevonden met huidig patroon")
-        print("TEKSTFRAGMENT (eerste 2500 tekens):")
-        
-        if naam in ("ENGIE Flow Gas", "OCTA+ Boost Flex Gas"):
-            print("\n--- REGELS MET INDEX OF FORMULE ---")
-            for regel in tekst.splitlines():
-                if any(
-                    woord in regel.upper()
-                    for woord in ("TTF", "ZTP", "FORMULE", "INDEX")
-                ):
-                    print(regel[:300])
-            print("--- EINDE FORMULEREGELS ---")
-
-        print(tekst[:2500])
         print("STATUS: VERKENNING — NIET GEVALIDEERD, NIET VOOR BEREKENING")
-        return
+        return None
 
     gevonden = herken_formule(tekst)
     if gevonden is None:
@@ -230,70 +172,71 @@ def controleer_tariefkaart(naam: str, gegevens: dict) -> None:
     print(f"Gevonden toeslag: {gevonden['toeslag']:.4f} c€/kWh")
 
     verwacht = gegevens["verwachte_formule"]
-    if (gevonden["index"] != normaliseer_index(verwacht["index"])
+    if (
+        gevonden["index"] != normaliseer_index(verwacht["index"])
         or abs(gevonden["factor"] - verwacht["factor"]) > 0.000001
-        or abs(gevonden["toeslag"] - verwacht["toeslag"]) > 0.000001):
-        raise ValueError(f"FORMULE GEWIJZIGD: verwacht {verwacht}; gevonden {gevonden}. Handmatige controle vereist")
+        or abs(gevonden["toeslag"] - verwacht["toeslag"]) > 0.000001
+    ):
+        raise ValueError(
+            f"FORMULE GEWIJZIGD: verwacht {verwacht}; gevonden {gevonden}. "
+            "Handmatige controle vereist"
+        )
     print(f"PDF: {len(response.content)} bytes; OCR op {ocr_paginas} pagina('s)")
     print("STATUS: PRIJSFORMULE GEVALIDEERD")
     print("Let op: actuele maandprijs en vaste vergoeding nog niet gevalideerd")
     return gevonden
-import json
-from pathlib import Path
 
 
-def schrijf_gevalideerde_gasformules(resultaten: dict, uitvoerpad: str = 'gas_gevalideerde_formules.json') -> None:
-    """Schrijf alleen gevalideerde formules; vervang uitvoer atomair."""
+def schrijf_gevalideerde_gasformules(
+    resultaten: dict, uitvoerpad: str = "gas_gevalideerde_formules.json"
+) -> None:
     payload = {
-        'schema_version': 1,
-        'gegenereerd_op_utc': datetime.now(timezone.utc).isoformat(),
-        'status': 'alleen_gevalideerde_prijsformules',
-        'waarschuwing': 'Indexdefinities, indexwaarden, vaste vergoedingen en totale jaarprijzen zijn niet gevalideerd.',
-        'contracten': resultaten,
+        "schema_version": 1,
+        "gegenereerd_op_utc": datetime.now(timezone.utc).isoformat(),
+        "status": "alleen_gevalideerde_prijsformules",
+        "waarschuwing": (
+            "Indexdefinities, indexwaarden, vaste vergoedingen en totale jaarprijzen "
+            "zijn niet gevalideerd. Archief-PDF's bewijzen geen actuele maandprijzen."
+        ),
+        "contracten": resultaten,
     }
     bestemming = Path(uitvoerpad)
-    tijdelijk = bestemming.with_name(bestemming.name + '.tmp')
+    tijdelijk = bestemming.with_name(bestemming.name + ".tmp")
     try:
-        tijdelijk.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+        tijdelijk.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
         tijdelijk.replace(bestemming)
     finally:
         if tijdelijk.exists():
             tijdelijk.unlink()
 
 
-
 def main() -> int:
     print("Eerlijke Energie - centrale controle gastariefkaarten")
     print("Controle uitgevoerd:", datetime.now(timezone.utc).isoformat())
-
     fouten = 0
     gevalideerd = {}
-
     for naam, gegevens in GAS_CONTRACTEN.items():
         try:
             resultaat = controleer_tariefkaart(naam, gegevens)
-
             if resultaat is not None:
                 gevalideerd[naam] = resultaat
-
         except Exception as fout:
             fouten += 1
             print(f"FOUT bij {naam}: {fout}")
-
     if fouten == 0:
         schrijf_gevalideerde_gasformules(gevalideerd)
         print(f"JSON aangemaakt: {len(gevalideerd)} gevalideerde gasformules")
     else:
         print("Geen nieuwe JSON aangemaakt wegens mislukte controles")
-
     print(
         f"\n{'MISLUKT' if fouten else 'GESLAAGD'}: "
         f"{len(GAS_CONTRACTEN) - fouten}/{len(GAS_CONTRACTEN)} PDF-controles uitgevoerd"
     )
-    print("Let op: verkenningscontracten zijn NIET gevalideerd voor prijsberekeningen")
-
+    print("Let op: de controle valideert geen actuele maandprijzen of jaarprijzen")
     return 1 if fouten else 0
-
 
 
 if __name__ == "__main__":
