@@ -46,6 +46,9 @@ jobs:
         
       - name: Gevonden gasarchiefkaarten controleren
         run: python controle_gas_archiefkandidaten.py
+        
+      - name: Gasprijsformules uit archief vergelijken
+        run: python controle_gas_archiefformules.py
 
       - name: Gasgeldigheid toevoegen aan JSON
         run: python verrijk_gas_geldigheid.py
