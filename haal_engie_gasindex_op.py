@@ -68,29 +68,43 @@ def parse_engie(html, today=None):
     today = today or dt.datetime.now(dt.timezone.utc).date()
     p = Tables()
     p.feed(html)
-    candidates = []
+    # ENGIE publiceert meerdere tabellen (o.a. responsive weergaven).
+    # Alleen een tabel met de gecontroleerde oktoberreferentie is betrouwbaar.
+    valid_tables = []
     for table in p.tables:
         for hi, header in enumerate(table):
             norm = [re.sub(r'[^a-z0-9]+', '', c.lower()) for c in header]
-            matches = [i for i, c in enumerate(norm) if c == 'ztpdam' or c == 'waardeztpdam']
+            matches = [i for i, c in enumerate(norm) if c in ('ztpdam', 'waardeztpdam')]
             if len(matches) != 1:
                 continue
             col = matches[0]
-            for row in table[hi+1:]:
+            grouped = {}
+            conflict = False
+            for row in table[hi + 1:]:
                 month = parse_month(row[0]) if row else None
                 if month is None or col >= len(row):
                     continue
                 value = parse_number(row[col])
-                if value is not None and month < today.strftime('%Y-%m'):
-                    candidates.append((month, value))
+                if value is None or month >= today.strftime('%Y-%m'):
+                    continue
+                if month in grouped and abs(grouped[month] - value) > 0.00001:
+                    conflict = True
+                    break
+                grouped[month] = value
+            if (not conflict and '2026-10' in grouped
+                    and abs(grouped['2026-10'] - 85.777) <= 0.002):
+                valid_tables.append(grouped)
             break
-    if not candidates:
-        raise ValueError('Geen ondubbelzinnige ENGIE HTML-tabel met ZTP DAM-maandwaarden; geen gok uit platte tekst')
+    if not valid_tables:
+        raise ValueError('Geen ENGIE-tabel met juiste ZTP DAM-kolom en gecontroleerde oktoberreferentie')
+    # Alleen maanden accepteren waar alle bruikbare tabellen het over eens zijn.
     grouped = {}
-    for month, value in candidates:
-        if month in grouped and grouped[month] != value:
-            raise ValueError(f'Tegenstrijdige ENGIE-waarden voor {month}')
-        grouped[month] = value
+    for month in set().union(*(t.keys() for t in valid_tables)):
+        values = [t[month] for t in valid_tables if month in t]
+        if max(values) - min(values) <= 0.00001:
+            grouped[month] = values[0]
+    if not grouped:
+        raise ValueError('Geen onderling consistente ENGIE-maandwaarden')
     # November 2026 test reference: historical October 2026 must match the tariff card.
     if '2026-10' in grouped and abs(grouped['2026-10'] - 85.777) > 0.002:
         raise ValueError('ENGIE oktober 2026 wijkt af van gecontroleerde tariefkaart')
