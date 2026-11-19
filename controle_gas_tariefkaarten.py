@@ -17,7 +17,6 @@ import pytesseract
 import requests
 from PIL import Image
 
-
 GAS_CONTRACTEN = {
     "Ecofix Flexy Online": {
         "url": "https://portal.ecofixgp.be/docs/prices/current/GAS_Ecofix_Flexy_Online_NL.pdf",
@@ -32,26 +31,23 @@ GAS_CONTRACTEN = {
         ],
     },
 
-   
     "TotalEnergies myEssential Variabel Gas": {
-    "url": "https://totalenergies.be/static/marketing-documents/b2c/tariff-card/latest/MYESSENTIAL_GAS_VL_NL.pdf",
-    "verwachte_formule": {
-        "index": "TTF_M_RLP",
-        "factor": 0.1010,
-        "toeslag": 0.5740,
-    },
-    "vereiste_woorden": [
-        "myEssential",
-    ],
-},
-
+        "url": "https://totalenergies.be/static/marketing-documents/b2c/tariff-card/latest/MYESSENTIAL_GAS_VL_NL.pdf",
+        "verwachte_formule": {
+            "index": "TTF_M_RLP",
+            "factor": 0.1010,
+            "toeslag": 0.5740,
+        },
+        "vereiste_woorden": [
+            "myEssential",
+        ],
     },
 
     "Luminus BasicFlex Online Gas": {
         "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
         "status": "verkenning",
     },
-    
+
     "ENGIE Flow Gas": {
         "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
         "status": "verkenning",
@@ -61,8 +57,8 @@ GAS_CONTRACTEN = {
         "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
         "status": "verkenning",
     },
-
 }
+
 
 # Algemene herkenning van gasprijsformules
 
