@@ -40,6 +40,9 @@ jobs:
         
       - name: Geldigheidsmaand gastariefkaarten onderzoeken
         run: python controle_gas_geldigheidsmaand.py
+        
+      - name: Gasbronnen controleren
+        run: python gas_bronregister.py
 
       - name: Gasgeldigheid toevoegen aan JSON
         run: python verrijk_gas_geldigheid.py
