@@ -5,11 +5,49 @@ import datetime as dt
 import io
 import json
 import re
+from urllib.parse import urljoin, urlparse
+from html.parser import HTMLParser
 from pathlib import Path
 
 import pdfplumber
 
 MONTHS = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December']
+
+
+INDEX_PAGE = 'https://www.luminus.be/nl/prive/energie/indexatieparameters/'
+
+class DownloadLinks(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.links = []
+        self.href = None
+        self.label = []
+    def handle_starttag(self, tag, attrs):
+        if tag == 'a':
+            self.href = dict(attrs).get('href')
+            self.label = []
+    def handle_data(self, data):
+        if self.href is not None:
+            self.label.append(data)
+    def handle_endtag(self, tag):
+        if tag == 'a' and self.href is not None:
+            self.links.append((self.href, ' '.join(self.label)))
+            self.href = None
+
+def discover_pdf_url(session):
+    response = session.get(INDEX_PAGE, timeout=30, headers={'User-Agent':'Mozilla/5.0'})
+    response.raise_for_status()
+    parser = DownloadLinks()
+    parser.feed(response.text)
+    candidates = []
+    for href, label in parser.links:
+        url = urljoin(INDEX_PAGE, href)
+        if 'download indexatieparameters' in label.casefold() and urlparse(url).hostname == 'www.luminus.be':
+            candidates.append(url)
+    candidates = list(dict.fromkeys(candidates))
+    if len(candidates) != 1:
+        raise ValueError(f'Geen eenduidige officiële downloadlink: {len(candidates)} kandidaten')
+    return candidates[0]
 
 def parse_pdf(data):
     with pdfplumber.open(io.BytesIO(data)) as doc:
@@ -67,7 +105,15 @@ def main():
             data=r.content
             out['bron_url']=args.url
         else:
-            raise ValueError('Geen directe PDF-URL ingesteld; gebruik --url of --pdf')
+            import requests
+            with requests.Session() as session:
+                download_url = discover_pdf_url(session)
+                r = session.get(download_url, timeout=30, headers={'User-Agent':'Mozilla/5.0'})
+                r.raise_for_status()
+                if not r.content.startswith(b'%PDF'):
+                    raise ValueError('Ontdekte URL levert geen PDF')
+                data = r.content
+                out['bron_url'] = download_url
         hist,forward=parse_pdf(data)
         out.update(status='INDEX_EN_FORWARD_UIT_PDF_GEVONDEN',index='TTF DAH M',tariefmaand='2026-11',historische_indexmaand='2026-10',historische_waarde_eur_per_mwh=hist,geschatte_jaarparameter_eur_per_mwh=forward,bronbewijs_consistent=True,jaarprognose_gevalideerd=False)
     except Exception as exc:
