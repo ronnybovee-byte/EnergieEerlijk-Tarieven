@@ -7,7 +7,11 @@ on:
     - cron: "0 8 * * 1"
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: gas-tariefkaarten-publicatie
+  cancel-in-progress: false
 
 jobs:
   controle-gas:
@@ -16,6 +20,8 @@ jobs:
     steps:
       - name: Repository ophalen
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       - name: Python instellen
         uses: actions/setup-python@v5
@@ -29,6 +35,51 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install requests pdfplumber pymupdf pytesseract pillow
 
-
       - name: Gastariefkaarten controleren
         run: python controle_gas_tariefkaarten.py
+
+      - name: JSON-uitvoer valideren
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          bestand = Path("gas_gevalideerde_formules.json")
+          if not bestand.is_file():
+              raise SystemExit("FOUT: gas-JSON ontbreekt")
+
+          data = json.loads(bestand.read_text(encoding="utf-8"))
+
+          if data.get("schema_version") != 1:
+              raise SystemExit("FOUT: onbekende JSON-versie")
+
+          contracten = data.get("contracten")
+          if not isinstance(contracten, dict) or not contracten:
+              raise SystemExit("FOUT: geen gevalideerde contracten")
+
+          for naam, formule in contracten.items():
+              if not isinstance(formule, dict):
+                  raise SystemExit(f"FOUT: ongeldige formule voor {naam}")
+              if not isinstance(formule.get("index"), str) or not formule["index"]:
+                  raise SystemExit(f"FOUT: index ontbreekt voor {naam}")
+              for veld in ("factor", "toeslag"):
+                  waarde = formule.get(veld)
+                  if type(waarde) not in (int, float):
+                      raise SystemExit(f"FOUT: {veld} ongeldig voor {naam}")
+
+          print(f"JSON geldig: {len(contracten)} gevalideerde formules")
+          PY
+
+      - name: Gevalideerde gasformules publiceren
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -- gas_gevalideerde_formules.json
+
+          if git diff --cached --quiet; then
+            echo "Geen wijzigingen om te publiceren"
+          else
+            git commit -m "Update gevalideerde gasformules"
+            git push origin HEAD:main
+          fi
