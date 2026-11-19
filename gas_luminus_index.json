@@ -11,5 +11,6 @@
   "historische_waarde_eur_per_mwh": 86.104,
   "geschatte_jaarparameter_eur_per_mwh": 89.218,
   "bronbewijs_consistent": true,
-  "jaarprognose_gevalideerd": false
+  "jaarprognose_gevalideerd": false,
+  "actueel_voor_huidige_maand": true
 }
