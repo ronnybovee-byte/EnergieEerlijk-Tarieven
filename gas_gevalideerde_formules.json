@@ -1,0 +1,13 @@
+{
+  "contracten": {
+    "Ecofix Flexy Online": {
+      "factor": 0.101,
+      "index": "TTF-RLP-M",
+      "toeslag": 0.22
+    }
+  },
+  "gegenereerd_op_utc": "2026-11-19T09:44:35.144623+00:00",
+  "schema_version": 1,
+  "status": "alleen_gevalideerde_prijsformules",
+  "waarschuwing": "Indexdefinities, indexwaarden, vaste vergoedingen en totale jaarprijzen zijn niet gevalideerd."
+}
