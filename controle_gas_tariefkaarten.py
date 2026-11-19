@@ -208,7 +208,7 @@ def controleer_tariefkaart(naam: str, gegevens: dict) -> None:
     print(f"PDF: {len(response.content)} bytes; OCR op {ocr_paginas} pagina('s)")
     print("STATUS: PRIJSFORMULE GEVALIDEERD")
     print("Let op: actuele maandprijs en vaste vergoeding nog niet gevalideerd")
-        return gevonden
+    return gevonden
 import json
 from pathlib import Path
 
