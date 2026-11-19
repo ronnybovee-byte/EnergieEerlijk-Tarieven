@@ -44,9 +44,10 @@ GAS_CONTRACTEN = {
 }
 
 # Algemene herkenning van gasprijsformules
+
 FORMULE_PATROON = re.compile(
     r"\(?\s*(?P<factor>\d+[,.]\d+)\s*[×*x]\s*"
-    r"(?P<index>[A-Z][A-Z0-9_./-]{2,45})\s*\)?"
+    r"(?P<index>[A-Z][A-Z0-9_./ -]{2,45}?)\s*\)?"
     r"\s*(?P<teken>[+-])\s*(?P<toeslag>\d+[,.]\d+)",
     re.IGNORECASE,
 )
