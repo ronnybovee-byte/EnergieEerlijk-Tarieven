@@ -1,11 +1,16 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-19T17:43:32.339708+00:00",
+  "gegenereerd_op_utc": "2026-11-19T17:51:43.203552+00:00",
   "voor_android_app": false,
   "status": "HISTORISCHE_BRONCONTROLE_GEEN_JAARPRIJS",
   "contracten": {
     "ENGIE Flow Gas": {
-      "status": "BRONADAPTER_NOG_NIET_GEVALIDEERD"
+      "status": "BRONFORMAAT_OF_WAARDE_NOG_NIET_GEVALIDEERD",
+      "bron_url": "https://www.engie.be/nl/energie/elektriciteit-gas/prijzen-voorwaarden/indexatieparameters/indexatieparameters-gas",
+      "index": "ZTPDAM (Heren)",
+      "reden": "ValueError: Tegenstrijdige ENGIE-waarden voor 2026-10",
+      "jaarprognose_gevalideerd": false,
+      "geschikt_voor_automatische_jaarprijs": false
     },
     "Luminus BasicFlex Online Gas": {
       "status": "BRONADAPTER_NOG_NIET_GEVALIDEERD"
