@@ -15,14 +15,19 @@
       "index": "TTFDAHM",
       "toeslag": 0.5279
     },
+    "OCTA+ Boost Flex Gas": {
+      "factor": 1.02,
+      "index": "ZTPRLPM",
+      "toeslag": 0.32
+    },
     "TotalEnergies myEssential Variabel Gas": {
       "factor": 0.101,
       "index": "TTF_M_RLP",
       "toeslag": 0.574
     }
   },
-  "gegenereerd_op_utc": "2026-11-19T11:09:07.903503+00:00",
+  "gegenereerd_op_utc": "2026-11-19T11:21:06.408624+00:00",
   "schema_version": 1,
   "status": "alleen_gevalideerde_prijsformules",
-  "waarschuwing": "Indexdefinities, indexwaarden, vaste vergoedingen en totale jaarprijzen zijn niet gevalideerd."
+  "waarschuwing": "Indexdefinities, indexwaarden, vaste vergoedingen en totale jaarprijzen zijn niet gevalideerd. Archief-PDF's bewijzen geen actuele maandprijzen."
 }
