@@ -208,21 +208,63 @@ def controleer_tariefkaart(naam: str, gegevens: dict) -> None:
     print(f"PDF: {len(response.content)} bytes; OCR op {ocr_paginas} pagina('s)")
     print("STATUS: PRIJSFORMULE GEVALIDEERD")
     print("Let op: actuele maandprijs en vaste vergoeding nog niet gevalideerd")
+        return gevonden
+import json
+from pathlib import Path
+
+
+def schrijf_gevalideerde_gasformules(resultaten: dict, uitvoerpad: str = 'gas_gevalideerde_formules.json') -> None:
+    """Schrijf alleen gevalideerde formules; vervang uitvoer atomair."""
+    payload = {
+        'schema_version': 1,
+        'gegenereerd_op_utc': datetime.now(timezone.utc).isoformat(),
+        'status': 'alleen_gevalideerde_prijsformules',
+        'waarschuwing': 'Indexdefinities, indexwaarden, vaste vergoedingen en totale jaarprijzen zijn niet gevalideerd.',
+        'contracten': resultaten,
+    }
+    bestemming = Path(uitvoerpad)
+    tijdelijk = bestemming.with_name(bestemming.name + '.tmp')
+    try:
+        tijdelijk.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+        tijdelijk.replace(bestemming)
+    finally:
+        if tijdelijk.exists():
+            tijdelijk.unlink()
+
 
 
 def main() -> int:
     print("Eerlijke Energie - centrale controle gastariefkaarten")
     print("Controle uitgevoerd:", datetime.now(timezone.utc).isoformat())
+
     fouten = 0
+    gevalideerd = {}
+
     for naam, gegevens in GAS_CONTRACTEN.items():
         try:
-            controleer_tariefkaart(naam, gegevens)
+            resultaat = controleer_tariefkaart(naam, gegevens)
+
+            if resultaat is not None:
+                gevalideerd[naam] = resultaat
+
         except Exception as fout:
             fouten += 1
             print(f"FOUT bij {naam}: {fout}")
-    print(f"\n{'MISLUKT' if fouten else 'GESLAAGD'}: {len(GAS_CONTRACTEN) - fouten}/{len(GAS_CONTRACTEN)} PDF-controles uitgevoerd")
+
+    if fouten == 0:
+        schrijf_gevalideerde_gasformules(gevalideerd)
+        print(f"JSON aangemaakt: {len(gevalideerd)} gevalideerde gasformules")
+    else:
+        print("Geen nieuwe JSON aangemaakt wegens mislukte controles")
+
+    print(
+        f"\n{'MISLUKT' if fouten else 'GESLAAGD'}: "
+        f"{len(GAS_CONTRACTEN) - fouten}/{len(GAS_CONTRACTEN)} PDF-controles uitgevoerd"
+    )
     print("Let op: verkenningscontracten zijn NIET gevalideerd voor prijsberekeningen")
+
     return 1 if fouten else 0
+
 
 
 if __name__ == "__main__":
