@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "gegenereerd_op_utc": "2026-11-19T15:41:46.749383+00:00",
+  "bron": "gas_indexwaarden_bewijs.json",
+  "referentiemaand": "2026-11",
+  "status": "INDEX_GENORMALISEERD_GEEN_JAARPRIJSVALIDATIE",
+  "voor_android_app": false,
+  "contracten": {
+    "ENGIE Flow Gas": {
+      "tariefmaand": "2026-11",
+      "index": "ZTPDAM (Heren)",
+      "historische_indexmaand": "2026-10",
+      "historische_waarde_eur_per_mwh": 85.777,
+      "geschatte_jaarparameter_eur_per_mwh": 89.2144,
+      "index_in_prijsformule": "EUR/MWh",
+      "omrekening_van_eur_mwh_naar_formule_index": "geen",
+      "formule_factor": 0.102,
+      "formule_toeslag_ct_per_kwh_excl_btw": 1.0095,
+      "bronbewijs_consistent": true,
+      "indexwaarde_gevalideerd_voor_jaarprijs": false,
+      "geschikt_voor_automatische_jaarprijs": false,
+      "blokkades": [
+        "Volledige jaarprognose en contractvoorwaarden niet gevalideerd"
+      ],
+      "opmerking": "Historische waarde is geen jaarprognose"
+    },
+    "Luminus BasicFlex Online Gas": {
+      "tariefmaand": "2026-11",
+      "index": "TTF DAH M",
+      "historische_indexmaand": "2026-10",
+      "historische_waarde_eur_per_mwh": 86.104,
+      "geschatte_jaarparameter_eur_per_mwh": null,
+      "index_in_prijsformule": "EUR/MWh",
+      "omrekening_van_eur_mwh_naar_formule_index": "geen",
+      "formule_factor": 0.1001,
+      "formule_toeslag_ct_per_kwh_excl_btw": 0.5279,
+      "bronbewijs_consistent": true,
+      "indexwaarde_gevalideerd_voor_jaarprijs": false,
+      "geschikt_voor_automatische_jaarprijs": false,
+      "blokkades": [
+        "Volledige jaarprognose en contractvoorwaarden niet gevalideerd"
+      ],
+      "opmerking": "Historische waarde is geen jaarprognose"
+    },
+    "OCTA+ Boost Flex Gas": {
+      "tariefmaand": "2026-11",
+      "index": "ZTP RLP M",
+      "historische_indexmaand": null,
+      "historische_waarde_eur_per_mwh": null,
+      "geschatte_jaarparameter_eur_per_mwh": null,
+      "index_in_prijsformule": "cEUR/kWh",
+      "omrekening_van_eur_mwh_naar_formule_index": "delen_door_10",
+      "formule_factor": 1.02,
+      "formule_toeslag_ct_per_kwh_excl_btw": 0.32,
+      "bronbewijs_consistent": true,
+      "indexwaarde_gevalideerd_voor_jaarprijs": false,
+      "geschikt_voor_automatische_jaarprijs": false,
+      "blokkades": [
+        "Volledige jaarprognose en contractvoorwaarden niet gevalideerd"
+      ],
+      "opmerking": "100 EUR/MWh in OCTA+-PDF is uitsluitend een rekenvoorbeeld, geen marktwaarde"
+    }
+  }
+}
