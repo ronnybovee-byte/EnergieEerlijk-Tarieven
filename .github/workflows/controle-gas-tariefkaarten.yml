@@ -37,6 +37,9 @@ jobs:
 
       - name: Gastariefkaarten controleren
         run: python controle_gas_tariefkaarten.py
+        
+      - name: Geldigheidsmaand gastariefkaarten onderzoeken
+        run: python controle_gas_geldigheidsmaand.py
 
       - name: JSON-uitvoer valideren
         run: |
