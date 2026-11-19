@@ -33,7 +33,7 @@ GAS_CONTRACTEN = {
     },
 
    
-"TotalEnergies myEssential Variabel Gas": {
+    "TotalEnergies myEssential Variabel Gas": {
     "url": "https://totalenergies.be/static/marketing-documents/b2c/tariff-card/latest/MYESSENTIAL_GAS_VL_NL.pdf",
     "verwachte_formule": {
         "index": "TTF_M_RLP",
