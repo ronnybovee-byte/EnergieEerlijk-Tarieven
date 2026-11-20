@@ -10,6 +10,7 @@ from urllib.parse import parse_qs, urlparse
 
 import pdfplumber
 import requests
+from controle_gas_tariefkaarten import lees_pdf
 
 BRON = Path('gas_archiefformules_vergelijking.json')
 UITVOER = Path('gas_indexwaarden_bewijs.json')
@@ -78,7 +79,41 @@ def lees_totalenergies_prijs(pdf):
                         prijzen.add(prijs)
 
     return prijzen.pop() if len(prijzen) == 1 else None
+def lees_ecofix_prijs(pdf):
+    tekst, _ = lees_pdf(pdf)
+    tekst = ' '.join(tekst.split())
 
+    if not re.search(
+        r'verwachte\s+jaarprijs', tekst, re.I
+    ):
+        return None
+
+    if not re.search(
+        r'incl(?:usief)?\.?\s*6\s*%\s*btw',
+        tekst, re.I
+    ):
+        return None
+
+    with pdfplumber.open(io.BytesIO(pdf)) as doc:
+        pagina = doc.pages[0]
+
+        bedragen = [
+            w for w in pagina.extract_words()
+            if 0.59 < w['x0'] / pagina.width < 0.66
+            and 0.54 < w['top'] / pagina.height < 0.56
+            and re.fullmatch(
+                r'\d{1,4}[,.]\d{2}', w['text']
+            )
+        ]
+
+        if len(bedragen) == 1:
+            prijs = float(
+                bedragen[0]['text'].replace(',', '.')
+            )
+            if prijs > 0:
+                return prijs
+
+    return None
 def inspecteer(naam, info, sessie):
     result = {'tariefmaand': info.get('tariefmaand_archief'),
               'status': 'NIET_GEVERIFIEERD', 'indexwaarde_gevalideerd': False,
@@ -105,6 +140,10 @@ def inspecteer(naam, info, sessie):
         indexregels, waarderegels = bewijs_uit_pdf(pdf)
         if naam == 'TotalEnergies myEssential Variabel Gas':
             prijs = lees_totalenergies_prijs(pdf)
+            if prijs is not None:
+                result['geschatte_energieprijs_ct_per_kwh_incl_btw'] = prijs
+        if naam == 'Ecofix Flexy Online':
+            prijs = lees_ecofix_prijs(pdf)
             if prijs is not None:
                 result['geschatte_energieprijs_ct_per_kwh_incl_btw'] = prijs
         result.update({'pdf_sha256': digest, 'index_bronregels': indexregels,
