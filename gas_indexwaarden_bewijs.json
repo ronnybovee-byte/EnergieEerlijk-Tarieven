@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-20T17:22:00.949223+00:00",
+  "gegenereerd_op_utc": "2026-11-20T19:00:44.215729+00:00",
   "bron": "gas_archiefformules_vergelijking.json",
   "status": "INDEX_BEWIJS_GEEN_PRIJSVALIDATIE",
   "voor_android_app": false,
@@ -254,6 +254,7 @@
           ]
         }
       ],
+      "geschatte_energieprijs_ct_per_kwh_incl_btw": 10.16,
       "pdf_sha256": "8ff4e5eda77b3326f76062db7f131cd7b99dec9f467699e498f6accbb7d75971",
       "formule_uit_archief": {
         "index": "TTF_M_RLP",

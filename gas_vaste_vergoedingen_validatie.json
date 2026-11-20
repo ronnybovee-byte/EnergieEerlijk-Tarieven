@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-20T17:22:00.821465+00:00",
+  "gegenereerd_op_utc": "2026-11-20T19:00:44.040704+00:00",
   "bron": "gas_vaste_vergoeding_kandidaten.json",
   "referentiemaand": "2026-11",
   "status": "VASTE_VERGOEDING_BEWIJSCONTROLE_GEEN_JAARPRIJZEN",
@@ -278,9 +278,9 @@
       ]
     },
     "TotalEnergies myEssential Variabel Gas": {
-      "vast_bedrag_eur_incl_btw_per_jaar": null,
-      "bedrag_en_pdf_bewijs_gecontroleerd": false,
-      "vaste_vergoeding_volledig_gevalideerd": false,
+      "vast_bedrag_eur_incl_btw_per_jaar": "35.00",
+      "bedrag_en_pdf_bewijs_gecontroleerd": true,
+      "vaste_vergoeding_volledig_gevalideerd": true,
       "pdf_sha256": "8ff4e5eda77b3326f76062db7f131cd7b99dec9f467699e498f6accbb7d75971",
       "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=8ff4e5eda77b3326f76062db7f131cd7b99dec9f467699e498f6accbb7d75971",
       "voorwaarden_bronregels": [
@@ -301,10 +301,29 @@
         "zonnepanelen_verplicht": "onbekend",
         "analoge_meter_toegelaten": "onbekend",
         "variabel_contract": "onbekend",
-        "particuliere_klant": "onbekend",
-        "netgebied": "onbekend"
+        "particuliere_klant": "ja",
+        "netgebied": "ja"
       },
-      "geschiktheid_bewijs": {},
+      "geschiktheid_bewijs": {
+        "particuliere_klant": {
+          "pagina": 2,
+          "regel": 63,
+          "criteria": [
+            "particuliere_klant"
+          ],
+          "tekst": "Overeenkomstig artikel 6.4. van de algemene verkoopvoorwaarden voor de levering van elektriciteit en/of aardgas voor particulieren, kan een Klant die voldoet aan de voorwaarden van het",
+          "context": "producten en andere door middel van leidingen. De CREG is gerechtigd om de correcte toepassing van de bepalingen met betrekking tot de federale bijdrage te controleren. | Overeenkomstig artikel 6.4. van de algemene verkoopvoorwaarden voor de levering van elektriciteit en/of aardgas voor particulieren, kan een Klant die voldoet aan de voorwaarden van het | Sociaal Tarief conform artikel 2 van het Ministerieel Besluit van 30 maart 2007, of conform artikel 4 van de Programmawet van 27 april 2007, of conform de wetgeving die deze zou | vervangen, genieten van het Sociaal Tarief. Vanaf het moment dat het Sociaal Tarief wordt toegepast zal de Klant genieten van dit specifieke tarief en zullen de bijzondere voorwaarden van dit"
+        },
+        "netgebied": {
+          "pagina": 2,
+          "regel": 28,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius Antwerpen 2,26 0,91 0,59 15,68 83,22 562,63 0,17 18,92 0,00",
+          "context": "Vlaamse Gewest | Fluvius Antwerpen 2,26 0,91 0,59 15,68 83,22 562,63 0,17 18,92 0,00 | Fluvius Halle-Vilvoorde 2,50 0,98 0,62 17,59 93,38 631,27 0,17 18,92 0,00 | Fluvius Imewo 2,63 1,02 0,64 18,61 98,81 668,02 0,17 18,92 0,00"
+        }
+      },
       "geschiktheid_openstaande_criteria": [
         "domiciliering_verplicht",
         "aandelen_verplicht",
@@ -312,24 +331,18 @@
         "digitale_meter_verplicht",
         "zonnepanelen_verplicht",
         "analoge_meter_toegelaten",
-        "variabel_contract",
-        "particuliere_klant",
-        "netgebied"
+        "variabel_contract"
       ],
       "voorwaarden_automatisch_gevalideerd": false,
       "geschikt_voor_automatische_jaarprijs": false,
       "blokkades": [
-        "Geen uniek jaarlijks bedrag met bevestigd PDF-label",
-        "Inclusief btw niet bevestigd op prijspagina",
         "Contractgeschiktheid: domiciliering_verplicht",
         "Contractgeschiktheid: aandelen_verplicht",
         "Contractgeschiktheid: groepsaankoop_verplicht",
         "Contractgeschiktheid: digitale_meter_verplicht",
         "Contractgeschiktheid: zonnepanelen_verplicht",
         "Contractgeschiktheid: analoge_meter_toegelaten",
-        "Contractgeschiktheid: variabel_contract",
-        "Contractgeschiktheid: particuliere_klant",
-        "Contractgeschiktheid: netgebied"
+        "Contractgeschiktheid: variabel_contract"
       ]
     }
   }

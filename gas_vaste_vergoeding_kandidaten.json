@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "gegenereerd_op_utc": "2026-11-20T17:21:56.276040+00:00",
+  "gegenereerd_op_utc": "2026-11-20T19:00:37.632820+00:00",
   "status": "PDF_TABEL_EN_TEKST_KANDIDATEN_GEEN_AUTOMATISCHE_GOEDKEURING",
   "voor_android_app": false,
   "waarschuwing": "Tabelkandidaten, btw en voorwaarden blijven handmatig te valideren.",
@@ -830,6 +830,17 @@
           "tabel": 1,
           "rij": 1,
           "labelcel": "Vaste vergoeding 0 (€/jaar)",
+          "onderliggende_cel": "35,00",
+          "bedrag": "35.00",
+          "jaareenheid_bevestigd": true,
+          "status": "tabelcel_kandidaat_niet_gevalideerd"
+        },
+        {
+          "bron": "tabel",
+          "pagina": 1,
+          "tabel": 1,
+          "rij": 1,
+          "labelcel": "Vaste vergoeding 0 (€/jaar)",
           "naastliggende_cel": "",
           "rijtekst": "Vaste vergoeding 0 (€/jaar)",
           "bedrag": null,
@@ -853,7 +864,12 @@
           "status": "context_niet_automatisch_toegewezen"
         }
       ],
-      "btw_bronregels": [],
+      "btw_bronregels": [
+        {
+          "pagina": 1,
+          "tekst": "• BTW 6 % inbegrepen"
+        }
+      ],
       "voorwaarden_bronregels": [
         {
           "pagina": 2,
