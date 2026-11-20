@@ -141,11 +141,10 @@ def combine(leveranciers, luminus, current=None, genormaliseerd=None):
         }
     lvalid = (luminus.get('status') == 'INDEX_EN_FORWARD_UIT_PDF_GEVONDEN'
               and luminus.get('index') == 'TTF DAH M'
-              and isinstance(luminus.get('tariefmaand'), str)
+              and luminus.get('tariefmaand') == current
               and isinstance(luminus.get('historische_indexmaand'), str)
               and luminus.get('historische_indexmaand') == (dt.date.fromisoformat(luminus['tariefmaand'] + '-01') - dt.timedelta(days=1)).strftime('%Y-%m')
               and luminus.get('bronbewijs_consistent') is True
-              and (luminus['tariefmaand'] != '2026-11' or (close(luminus.get('historische_waarde_eur_per_mwh'), 86.104) and close(luminus.get('geschatte_jaarparameter_eur_per_mwh'), 89.218)))
               and type(luminus.get('historische_waarde_eur_per_mwh')) in (int, float)
               and type(luminus.get('geschatte_jaarparameter_eur_per_mwh')) in (int, float)
               and 1 <= luminus['historische_waarde_eur_per_mwh'] <= 1000
