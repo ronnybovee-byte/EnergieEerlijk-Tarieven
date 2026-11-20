@@ -11,7 +11,7 @@ from urllib.parse import parse_qs, urlparse
 import pdfplumber
 import pymupdf as fitz
 import pytesseract
-from PIL import Image
+from PIL import Image, ImageOps
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
@@ -103,14 +103,15 @@ def lees_ecofix_prijs(pdf):
             hoogte = pagina.rect.height
 
             uitsnede = fitz.Rect(
-                breedte * 0.35,
-                hoogte * 0.44,
-                breedte * 0.95,
-                hoogte * 0.59
+                breedte * 0.79,
+                hoogte * 0.543,
+                breedte * 0.898,
+                hoogte * 0.555
+            )
             )
 
             pix = pagina.get_pixmap(
-                matrix=fitz.Matrix(5, 5),
+                matrix=fitz.Matrix(8, 8),
                 clip=uitsnede,
                 alpha=False
             )
@@ -119,8 +120,17 @@ def lees_ecofix_prijs(pdf):
                 'RGB', (pix.width, pix.height), pix.samples
             )
 
+            afbeelding = ImageOps.autocontrast(
+                ImageOps.invert(afbeelding.convert('L'))
+            )
+
+            afbeelding = ImageOps.expand(
+                afbeelding, border=20, fill=255
+            )
+
             detailtekst = pytesseract.image_to_string(
-                afbeelding, lang='nld+eng', config='--psm 6'
+                afbeelding, lang='nld+eng', config='--psm 7'
+            )
             )
 
             jaarprijs_ok = bool(re.search(
