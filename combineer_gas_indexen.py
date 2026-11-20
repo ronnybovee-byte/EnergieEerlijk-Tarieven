@@ -65,7 +65,8 @@ def combine(leveranciers, luminus, current=None, genormaliseerd=None):
                     and forward > 0)
         evidence = {'bron': 'gas_indexwaarden_genormaliseerd.json',
                     'tariefmaand': current, 'bronbewijs_consistent': True} if eforward else None
-                   if name == 'OCTA+ Boost Flex Gas':
+
+        if name == 'OCTA+ Boost Flex Gas':
             forward = src.get(
                 'geschatte_jaarparameter_eur_per_mwh'
             )
