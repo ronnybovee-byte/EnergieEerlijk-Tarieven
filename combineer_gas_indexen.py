@@ -65,13 +65,37 @@ def combine(leveranciers, luminus, current=None, genormaliseerd=None):
                     and forward > 0)
         evidence = {'bron': 'gas_indexwaarden_genormaliseerd.json',
                     'tariefmaand': current, 'bronbewijs_consistent': True} if eforward else None
+                   if name == 'OCTA+ Boost Flex Gas':
+            forward = src.get(
+                'geschatte_jaarparameter_eur_per_mwh'
+            )
+
+            eforward = (
+                valid
+                and src.get('jaarprognose_gevalideerd') is True
+                and src.get('jaarparameter_tariefmaand') == current
+                and src.get('laatste_volledige_maand') == vorige_maand
+                and src.get('jaarparameter_bron_url') ==
+                    'https://files.octaplus.be/tariffs/parameters_forward_nl.pdf'
+                and type(forward) in (int, float)
+                and math.isfinite(forward)
+                and forward > 0
+            )
+
+            evidence = {
+                'bron': src.get('jaarparameter_bron_url'),
+                'tariefmaand': current,
+                'bronbewijs_consistent': True
+            } if eforward else None
         result['contracten'][name] = {
             'status': 'HISTORISCHE_EN_FORWARD_BRONWAARDEN_GECONTROLEERD' if eforward else ('HISTORISCHE_BRONWAARDE_GECONTROLEERD' if valid else 'BRONCONTROLE_MISLUKT'),
             'index': index,
             'historische_indexmaand': src.get('laatste_volledige_maand') if valid else None,
             'historische_waarde_eur_per_mwh': src.get('waarde_eur_per_mwh') if valid else None,
             'geschatte_jaarparameter_eur_per_mwh': forward if eforward else None,
-            'herkomst_jaarparameter': 'gas_indexwaarden_genormaliseerd.json' if eforward else None,
+            'herkomst_jaarparameter': (
+                evidence['bron'] if eforward else None
+            ),
             'bron_url': src.get('bron_url') if valid else None,
             'jaarprognose_gevalideerd': eforward,
             'jaarparameter_bronbewijs': evidence if eforward else None,
