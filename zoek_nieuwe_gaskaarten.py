@@ -19,6 +19,8 @@ TARGETS = {
     'ENGIE Flow Gas': ('ENGIE', 'Flow'),
     'Luminus BasicFlex Online Gas': ('Luminus', 'BasicFlex Online'),
     'OCTA+ Boost Flex Gas': ('OCTA+', 'Boost Flex'),
+    'Ecofix Flexy Online': ('Ecofix', 'Flexy Online'),
+    'TotalEnergies myEssential Variabel Gas': ('TotalEnergies', 'myEssential Variabel'),
 }
 MONTHS = {'jan': 1, 'feb': 2, 'mrt': 3, 'apr': 4, 'mei': 5, 'jun': 6,
           'jul': 7, 'aug': 8, 'sep': 9, 'okt': 10, 'nov': 11, 'dec': 12}
