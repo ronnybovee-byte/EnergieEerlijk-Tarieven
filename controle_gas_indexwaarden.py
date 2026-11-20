@@ -170,6 +170,26 @@ def lees_ecofix_prijs(pdf):
                 return prijs
 
     return None
+def lees_engie_jaarparameter(indexregels, waarderegels):
+    waarden = set()
+
+    for regel in indexregels + waarderegels:
+        tekst = regel.get('tekst', '')
+
+        patroon = (
+            r'De geschatte jaarlijkse parameter\s+'
+            r'ZTPDAM\s*\(Heren\)\s+bedraagt'
+            r'.{0,180}?'
+            r'(\d{1,3}[,.]\d{1,4})\s*'
+            r'€/MWh\s+voor deze maand'
+        )
+
+        for match in re.finditer(patroon, tekst, re.I):
+            waarde = float(match.group(1).replace(',', '.'))
+            if 0 < waarde <= 1000:
+                waarden.add(waarde)
+
+    return waarden.pop() if len(waarden) == 1 else None
 def inspecteer(naam, info, sessie):
     result = {'tariefmaand': info.get('tariefmaand_archief'),
               'status': 'NIET_GEVERIFIEERD', 'indexwaarde_gevalideerd': False,
@@ -194,6 +214,12 @@ def inspecteer(naam, info, sessie):
         if digest != sha or digest != info.get('sha256'):
             raise ValueError('sha256_verschilt')
         indexregels, waarderegels = bewijs_uit_pdf(pdf)
+        if naam == 'ENGIE Flow Gas':
+            jaarparameter = lees_engie_jaarparameter(
+                indexregels, waarderegels
+            )
+            if jaarparameter is not None:
+                result['geschatte_jaarparameter_eur_per_mwh'] = jaarparameter
         if naam == 'TotalEnergies myEssential Variabel Gas':
             prijs = lees_totalenergies_prijs(pdf)
             if prijs is not None:
