@@ -4,13 +4,13 @@
   "status": "INDEX_EN_FORWARD_UIT_PDF_GEVONDEN",
   "voor_android_app": false,
   "geschikt_voor_automatische_jaarprijs": false,
-  "bron_url": "https://www.luminus.be/api-next/download?fileId=file-e4aef677dbb655712c005c2be43bd4767dff0338-pdf&openFile=true",
+  "jaarprognose_gevalideerd": true,
+  "bron_url": "https://www.luminus.be/api-next/download/?fileId=file-e4aef677dbb655712c005c2be43bd4767dff0338-pdf&openFile=true",
   "index": "TTF DAH M",
   "tariefmaand": "2026-11",
   "historische_indexmaand": "2026-10",
   "historische_waarde_eur_per_mwh": 86.104,
   "geschatte_jaarparameter_eur_per_mwh": 89.218,
   "bronbewijs_consistent": true,
-  "jaarprognose_gevalideerd": false,
   "actueel_voor_huidige_maand": true
 }

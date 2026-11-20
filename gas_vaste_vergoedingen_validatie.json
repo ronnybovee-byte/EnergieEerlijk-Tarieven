@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-20T08:17:09.563789+00:00",
+  "gegenereerd_op_utc": "2026-11-20T08:39:21.840487+00:00",
   "bron": "gas_vaste_vergoeding_kandidaten.json",
   "referentiemaand": "2026-11",
   "status": "VASTE_VERGOEDING_BEWIJSCONTROLE_GEEN_JAARPRIJZEN",
@@ -10,34 +10,58 @@
       "vast_bedrag_eur_incl_btw_per_jaar": "50.00",
       "bedrag_en_pdf_bewijs_gecontroleerd": true,
       "vaste_vergoeding_volledig_gevalideerd": true,
+      "pdf_sha256": "dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
+      "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
+      "voorwaarden_bronregels": [
+        {
+          "pagina": 2,
+          "tekst": "engie.be. vergoeding aangerekend pro rata het aantal effectieve"
+        }
+      ],
       "voorwaarden_automatisch_gevalideerd": false,
       "geschikt_voor_automatische_jaarprijs": false,
       "blokkades": [
-        "Voorwaarden niet automatisch inhoudelijk gevalideerd",
-        "Indexwaarden en volledige jaarprijs niet gevalideerd"
+        "Contractgeschiktheid afzonderlijk te valideren"
       ]
     },
     "Luminus BasicFlex Online Gas": {
       "vast_bedrag_eur_incl_btw_per_jaar": "20.00",
       "bedrag_en_pdf_bewijs_gecontroleerd": true,
       "vaste_vergoeding_volledig_gevalideerd": true,
+      "pdf_sha256": "d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
+      "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
+      "voorwaarden_bronregels": [
+        {
+          "pagina": 2,
+          "tekst": "(= in het eerste half jaar na de start van levering), is de klant de helft van de jaarlijkse vaste vergoeding omzettingscoëfficiënt van ton CO 2 naar MWh × CarP. De CarP wordt bepaald op basis van de"
+        }
+      ],
       "voorwaarden_automatisch_gevalideerd": false,
       "geschikt_voor_automatische_jaarprijs": false,
       "blokkades": [
-        "Voorwaarden niet automatisch inhoudelijk gevalideerd",
-        "Indexwaarden en volledige jaarprijs niet gevalideerd"
+        "Contractgeschiktheid afzonderlijk te valideren"
       ]
     },
     "OCTA+ Boost Flex Gas": {
       "vast_bedrag_eur_incl_btw_per_jaar": "65.00",
       "bedrag_en_pdf_bewijs_gecontroleerd": true,
-      "vaste_vergoeding_volledig_gevalideerd": false,
+      "vaste_vergoeding_volledig_gevalideerd": true,
+      "pdf_sha256": "432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
+      "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
+      "voorwaarden_bronregels": [
+        {
+          "pagina": 3,
+          "tekst": "De vaste vergoeding wordt gefactureerd op basis van het aantal dagen energielevering, behalve als het contract eindigt binnen de 6 maanden die"
+        },
+        {
+          "pagina": 3,
+          "tekst": "volgen op de ingang ervan. In dit laatste geval wordt de vaste vergoeding aangerekend voor een periode van 6 maanden."
+        }
+      ],
       "voorwaarden_automatisch_gevalideerd": false,
       "geschikt_voor_automatische_jaarprijs": false,
       "blokkades": [
-        "Exact btw-percentage OCTA+ niet bevestigd in bronregels",
-        "Voorwaarden niet automatisch inhoudelijk gevalideerd",
-        "Indexwaarden en volledige jaarprijs niet gevalideerd"
+        "Contractgeschiktheid afzonderlijk te valideren"
       ]
     }
   }

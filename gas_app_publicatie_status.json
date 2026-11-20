@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-20T08:17:31.790799+00:00",
+  "gegenereerd_op_utc": "2026-11-20T08:39:46.709631+00:00",
   "bron": "gas_archiefformules_vergelijking.json",
   "aanvullende_bronnen": [
     "gas_vaste_vergoedingen_validatie.json",
@@ -38,7 +38,6 @@
       "geschikt_voor_automatische_jaarprijs": false,
       "blokkades": [
         "Jaarprognose index niet gevalideerd",
-        "Vaste leveranciersvergoeding niet volledig geverifieerd",
         "Contractvoorwaarden niet automatisch gevalideerd",
         "Bruikbare jaarparameter ontbreekt"
       ]
