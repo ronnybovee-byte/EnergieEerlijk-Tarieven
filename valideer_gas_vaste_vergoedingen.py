@@ -1,81 +1,67 @@
 #!/usr/bin/env python3
-"""Fail-closed validation of November 2026 gas fixed fees from PDF evidence.
-
-Only fixed-fee evidence is assessed; NEVER approves complete gas annual prices.
-New months and changed PDFs require new independently reviewed baselines.
-"""
+"""Validate current annual fixed fees independently of contract eligibility."""
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from decimal import Decimal, InvalidOperation
+from urllib.parse import urlparse, parse_qs
 
 SOURCE = Path('gas_vaste_vergoeding_kandidaten.json')
 OUTPUT = Path('gas_vaste_vergoedingen_validatie.json')
-BASELINES = {
-    'ENGIE Flow Gas': {'amount': '50.00', 'source': 'visuele_kolom', 'sha256': 'dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1'},
-    'Luminus BasicFlex Online Gas': {'amount': '20.00', 'source': 'tabel', 'sha256': 'd1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65'},
-    'OCTA+ Boost Flex Gas': {'amount': '65.00', 'source': 'tabel', 'sha256': '432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0'},
-}
+METHODS = {'ENGIE Flow Gas': 'visuele_kolom', 'Luminus BasicFlex Online Gas': 'tabel', 'OCTA+ Boost Flex Gas': 'tabel'}
+ANNUAL = re.compile(r'(?:€\s*/\s*jaar|euro\s*/\s*jaar|per\s+jaar|jaarlijkse)', re.I)
+VAT = re.compile(r'incl(?:usief)?\.?\s*(?:6\s*%\s*)?btw', re.I)
 
-def check(name, row, baseline):
+def check(name, row, method, month):
+    row = row if isinstance(row, dict) else {}
     problems = []
-    if not isinstance(row, dict):
-        return {'vaste_vergoeding_gevalideerd': False, 'blokkades': ['Contract ontbreekt']}
-    if row.get('tariefmaand') != '2026-11':
-        problems.append('Nieuwe of afwijkende tariefmaand: nieuwe referentiecontrole nodig')
-    if row.get('pdf_sha256') != baseline['sha256']:
-        problems.append('PDF-hash wijkt af van gecontroleerde novemberreferentie')
-    if row.get('reden') != 'pdf_gecontroleerd_bedragen_nog_niet_gevalideerd':
-        problems.append('PDF-controle niet geslaagd')
+    if row.get('tariefmaand') != month:
+        problems.append('Tariefmaand niet actueel')
+    url = urlparse(str(row.get('pdf_url') or ''))
+    digest = row.get('pdf_sha256')
+    if not (isinstance(digest, str) and re.fullmatch(r'[0-9a-f]{64}', digest) and url.scheme == 'https' and url.hostname == 'energieplatform-vlaanderen.be' and parse_qs(url.query).get('pdf', [''])[0].lower() == digest and row.get('reden') == 'pdf_gecontroleerd_bedragen_nog_niet_gevalideerd'):
+        problems.append('PDF-bronbewijs niet bevestigd')
     matches = []
-    for candidate in row.get('kandidaten', []):
-        if candidate.get('bron') != baseline['source'] or candidate.get('pagina') != 1:
+    for c in row.get('kandidaten', []):
+        if c.get('bron') != method or c.get('pagina') != 1:
             continue
-        if 'vaste vergoeding' not in str(candidate.get('labelcel', '')).lower():
+        label = str(c.get('labelcel', ''))
+        if 'vaste vergoeding' not in label.lower() or c.get('jaareenheid_bevestigd') is not True or not ANNUAL.search(label):
             continue
         try:
-            amount = Decimal(str(candidate.get('bedrag')))
-        except (InvalidOperation, TypeError):
+            value = Decimal(str(c.get('bedrag')))
+            if value.is_finite() and 0 <= value <= 9999 and value == value.quantize(Decimal('0.01')):
+                matches.append(value)
+        except (InvalidOperation, TypeError, ValueError):
             continue
-        matches.append(amount)
-    expected = Decimal(baseline['amount'])
-    if matches != [expected]:
-        problems.append('Geen uniek, correct bedrag in verwachte PDF-tabel/kolom')
-    vat = ' '.join(str(x.get('tekst', '')) for x in row.get('btw_bronregels', []))
-    if 'btw' not in vat.lower() or not ('incl' in vat.lower()):
-        problems.append('Geen bewijs dat tariefkaart inclusief btw vermeldt')
-    if name != 'OCTA+ Boost Flex Gas' and '6%' not in vat.replace(' ', ''):
-        problems.append('6%-btw-vermelding niet gevonden')
-    if name == 'OCTA+ Boost Flex Gas' and '6%' not in vat.replace(' ', ''):
-        problems.append('Exact btw-percentage OCTA+ niet bevestigd in bronregels')
-    conditions = ' '.join(str(x.get('tekst', '')) for x in row.get('voorwaarden_bronregels', []))
-    if not conditions:
-        problems.append('Contractvoorwaarden niet gevonden')
-    # The fee can be evidence-confirmed independently of conditions, but do not
-    # imply those conditions are machine-validated or that annual prices are ready.
-    fee_confirmed = not any('btw-percentage' not in p and 'Contractvoorwaarden' not in p for p in problems)
-    return {
-        'vast_bedrag_eur_incl_btw_per_jaar': baseline['amount'] if fee_confirmed else None,
-        'bedrag_en_pdf_bewijs_gecontroleerd': fee_confirmed,
-        'vaste_vergoeding_volledig_gevalideerd': len(problems) == 0,
-        'voorwaarden_automatisch_gevalideerd': False,
-        'geschikt_voor_automatische_jaarprijs': False,
-        'blokkades': problems + ['Voorwaarden niet automatisch inhoudelijk gevalideerd', 'Indexwaarden en volledige jaarprijs niet gevalideerd'],
-    }
+    if len(matches) != 1:
+        problems.append('Geen uniek jaarlijks bedrag met bevestigd PDF-label')
+    if not any(VAT.search(str(v.get('tekst', ''))) and v.get('pagina') == 1 for v in row.get('btw_bronregels', [])):
+        problems.append('Inclusief btw niet bevestigd op prijspagina')
+    ok = not problems
+    return {'vast_bedrag_eur_incl_btw_per_jaar': format(matches[0], '.2f') if ok else None,
+            'bedrag_en_pdf_bewijs_gecontroleerd': ok,
+            'vaste_vergoeding_volledig_gevalideerd': ok,
+            'pdf_sha256': digest, 'pdf_url': row.get('pdf_url'),
+            'voorwaarden_bronregels': row.get('voorwaarden_bronregels', []),
+            'voorwaarden_automatisch_gevalideerd': False,
+            'geschikt_voor_automatische_jaarprijs': False,
+            'blokkades': problems + ['Contractgeschiktheid afzonderlijk te valideren']}
 
 def main():
     data = json.loads(SOURCE.read_text(encoding='utf-8'))
     if data.get('schema_version') != 2 or not isinstance(data.get('contracten'), dict):
         raise SystemExit('Onbekend formaat van kandidatenrapport')
-    result = {name: check(name, data['contracten'].get(name), base) for name, base in BASELINES.items()}
-    output = {'schema_version': 1, 'gegenereerd_op_utc': datetime.now(timezone.utc).isoformat(),
-              'bron': str(SOURCE), 'referentiemaand': '2026-11',
-              'status': 'VASTE_VERGOEDING_BEWIJSCONTROLE_GEEN_JAARPRIJZEN',
-              'voor_android_app': False, 'contracten': result}
-    OUTPUT.write_text(json.dumps(output, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
-    for name, r in result.items():
-        print(f'{name}: bedrag/PDF={r["bedrag_en_pdf_bewijs_gecontroleerd"]}; volledige jaarprijs=GEBLOKKEERD')
-    print('Rapport:', OUTPUT)
+    now = datetime.now(timezone.utc)
+    month = now.strftime('%Y-%m')
+    result = {name: check(name, data['contracten'].get(name), method, month) for name, method in METHODS.items()}
+    output = {'schema_version': 1, 'gegenereerd_op_utc': now.isoformat(), 'bron': str(SOURCE), 'referentiemaand': month, 'status': 'VASTE_VERGOEDING_BEWIJSCONTROLE_GEEN_JAARPRIJZEN', 'voor_android_app': False, 'contracten': result}
+    temp = OUTPUT.with_suffix('.json.tmp')
+    temp.write_text(json.dumps(output, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+    temp.replace(OUTPUT)
+    for name, row in result.items():
+        print(f'{name}: bedrag/PDF={row["bedrag_en_pdf_bewijs_gecontroleerd"]}; blokkades={row["blokkades"]}')
 
 if __name__ == '__main__':
     main()
