@@ -177,7 +177,7 @@ def inspect(name, info, session):
             raise ValueError('pdf_hash_verschilt')
         # Keep compatibility with existing OCR path, while tables are extracted
         # directly from the original PDF to preserve cell boundaries.
-        _, ocr_pages = lees_pdf(raw)
+            ocr_text, ocr_pages = lees_pdf(raw)
         candidates, vat, conditions, eligibility = extract_evidence(raw, name)
         result.update({'pdf_sha256': digest, 'ocr_paginas': ocr_pages,
                        'kandidaten': candidates, 'btw_bronregels': vat,
