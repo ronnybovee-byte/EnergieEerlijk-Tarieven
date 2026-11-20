@@ -9,7 +9,13 @@ from urllib.parse import urlparse, parse_qs
 
 SOURCE = Path('gas_vaste_vergoeding_kandidaten.json')
 OUTPUT = Path('gas_vaste_vergoedingen_validatie.json')
-METHODS = {'ENGIE Flow Gas': 'visuele_kolom', 'Luminus BasicFlex Online Gas': 'tabel', 'OCTA+ Boost Flex Gas': 'tabel'}
+METHODS = {
+    'ENGIE Flow Gas': 'visuele_kolom',
+    'Luminus BasicFlex Online Gas': 'tabel',
+    'OCTA+ Boost Flex Gas': 'tabel',
+    'Ecofix Flexy Online': 'tabel',
+    'TotalEnergies myEssential Variabel Gas': 'tabel',
+}
 ANNUAL = re.compile(r'(?:€\s*/\s*jaar|euro\s*/\s*jaar|per\s+jaar|jaarlijkse)', re.I)
 VAT = re.compile(r'incl(?:usief)?\.?\s*(?:6\s*%\s*)?btw', re.I)
 
