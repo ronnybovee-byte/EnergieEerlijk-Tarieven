@@ -12,7 +12,62 @@ import requests
 URL = 'https://files.octaplus.be/tariffs/parameters_aardgas_nl.pdf'
 FORWARD_URL = 'https://files.octaplus.be/tariffs/parameters_forward_nl.pdf'
 
+def collect_octaplus_forward():
+    today = dt.datetime.now(dt.timezone.utc)
+    current_month = today.strftime('%m/%Y')
 
+    response = requests.get(
+        FORWARD_URL,
+        timeout=35,
+        params={'_': int(today.timestamp())},
+        headers={
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+        }
+    )
+    response.raise_for_status()
+
+    if not response.content.startswith(b'%PDF'):
+        raise ValueError('OCTA+ jaarparameterbron is geen PDF')
+
+    found = set()
+
+    with pdfplumber.open(io.BytesIO(response.content)) as pdf:
+        for page in pdf.pages:
+            for table in page.extract_tables():
+                if not table:
+                    continue
+
+                header = ' '.join(
+                    str(cell or '')
+                    for row in table[:4]
+                    for cell in row
+                )
+                if 'ZTP' not in header or 'TTF' not in header:
+                    continue
+
+                for row in table:
+                    if len(row) != 7:
+                        continue
+
+                    if str(row[0] or '').strip() != current_month:
+                        continue
+
+                    value = str(row[6] or '').strip()
+
+                    if re.fullmatch(r'\d+(?:[,.]\d+)?', value):
+                        found.add(float(value.replace(',', '.')))
+
+    if len(found) != 1:
+        raise ValueError(
+            'Geen eenduidige actuele OCTA+ jaarparameter gevonden'
+        )
+
+    return {
+        'jaarparameter_tariefmaand': today.strftime('%Y-%m'),
+        'geschatte_jaarparameter_eur_per_mwh': found.pop(),
+        'jaarparameter_bron_url': FORWARD_URL
+    }
 def collect_octaplus():
     response = requests.get(URL, timeout=35, headers={'User-Agent': 'EerlijkeEnergie/1.0 (tariefcontrole)'})
     response.raise_for_status()
@@ -77,7 +132,18 @@ def main():
                   'OCTA+ Boost Flex Gas': {'status': 'BRON_NIET_BEREIKBAAR_OF_FORMAAT_ONBEKEND'}
               }}
     try:
-        report['contracten']['OCTA+ Boost Flex Gas'] = collect_octaplus()
+                entry = collect_octaplus()
+
+        try:
+            forward = collect_octaplus_forward()
+            entry.update(forward)
+            entry['jaarprognose_gevalideerd'] = True
+            entry['herkomst_jaarparameter'] = 'OCTA+ officiële PDF'
+        except Exception as exc:
+            entry['jaarprognose_gevalideerd'] = False
+            entry['jaarprognose_reden'] = str(exc)
+
+        report['contracten']['OCTA+ Boost Flex Gas'] = entry
     except (requests.RequestException, ValueError, Exception) as exc:
         report['contracten']['OCTA+ Boost Flex Gas']['fout'] = f'{type(exc).__name__}: {str(exc)[:300]}'
     OUT.write_text(json.dumps(report, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
