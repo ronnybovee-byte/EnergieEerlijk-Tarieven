@@ -108,7 +108,6 @@ def lees_ecofix_prijs(pdf):
                 breedte * 0.898,
                 hoogte * 0.555
             )
-            )
 
             pix = pagina.get_pixmap(
                 matrix=fitz.Matrix(8, 8),
