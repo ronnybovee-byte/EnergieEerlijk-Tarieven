@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-20T08:56:40.218165+00:00",
+  "gegenereerd_op_utc": "2026-11-20T09:52:34.895550+00:00",
   "bron": "gas_archiefformules_vergelijking.json",
   "aanvullende_bronnen": [
     "gas_vaste_vergoedingen_validatie.json",
