@@ -6,15 +6,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from decimal import Decimal, InvalidOperation
 from urllib.parse import urlparse, parse_qs
+from controle_gas_tariefkaarten import GAS_CONTRACTEN
 
 SOURCE = Path('gas_vaste_vergoeding_kandidaten.json')
 OUTPUT = Path('gas_vaste_vergoedingen_validatie.json')
 METHODS = {
-    'ENGIE Flow Gas': 'visuele_kolom',
-    'Luminus BasicFlex Online Gas': 'tabel',
-    'OCTA+ Boost Flex Gas': 'tabel',
-    'Ecofix Flexy Online': 'visuele_kolom',
-    'TotalEnergies myEssential Variabel Gas': 'tabel',
+    naam: gegevens['vaste_vergoeding_methode']
+    for naam, gegevens in GAS_CONTRACTEN.items()
+    if 'vaste_vergoeding_methode' in gegevens
 }
 ANNUAL = re.compile(r'(?:€\s*/\s*jaar|euro\s*/\s*jaar|per\s+jaar|jaarlijkse)', re.I)
 VAT = re.compile(r'(?:incl(?:usief)?\.?\s*(?:6\s*%\s*)?btw|btw\s+6\s*%\s*inbegrepen)', re.I)
