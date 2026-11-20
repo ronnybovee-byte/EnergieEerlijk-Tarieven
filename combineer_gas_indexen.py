@@ -12,8 +12,10 @@ import re
 from haal_engie_gasindex_op import MONTHS
 from pathlib import Path
 
-REF = {'ENGIE Flow Gas': (85.777, 'ZTPDAM (Heren)', 'ZTP DAM'),
-       'OCTA+ Boost Flex Gas': (87.893, 'ZTP RLP M', 'ZTP RLP Maand')}
+REF = {
+    'ENGIE Flow Gas': ('ZTPDAM (Heren)', 'ZTP DAM'),
+    'OCTA+ Boost Flex Gas': ('ZTP RLP M', 'ZTP RLP Maand')
+}
 
 def read_json(path):
     data = json.loads(Path(path).read_text(encoding='utf-8'))
@@ -39,7 +41,7 @@ def combine(leveranciers, luminus, current=None, genormaliseerd=None):
     contracts = leveranciers.get('contracten')
     if not isinstance(contracts, dict):
         contracts = {}
-    for name, (expected, index, definition) in REF.items():
+    for name, (index, definition) in REF.items():
         src = contracts.get(name, {})
         valid = (isinstance(src, dict)
                  and src.get('status') == 'HISTORISCHE_INDEX_GEVONDEN'
@@ -47,7 +49,10 @@ def combine(leveranciers, luminus, current=None, genormaliseerd=None):
                  and src.get('index_definitie') == definition
                  and isinstance(src.get('laatste_volledige_maand'), str)
                  and len(src['laatste_volledige_maand']) == 7
-                 and (src['laatste_volledige_maand'] > '2026-10' or close(src.get('waarde_eur_per_mwh'), expected))
+                 and src['laatste_volledige_maand'] == vorige_maand
+                 and type(src.get('waarde_eur_per_mwh')) in (int, float)
+                 and math.isfinite(src['waarde_eur_per_mwh'])
+                 and 0 < src['waarde_eur_per_mwh'] <= 1000
                  and close(src.get('waarde_ct_per_kwh'), src.get('waarde_eur_per_mwh', -999) / 10, 0.000051)
                  and isinstance(src.get('bron_url'), str)
                  and src['bron_url'].startswith('https://'))
