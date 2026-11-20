@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Veilige publicatiepoort voor gas: uitsluitend status, nooit onvolledige jaarprijzen."""
+"""Resultaatgestuurde bronvrijgave voor gas; persoonlijke kostenberekening in Android."""
 import json
+import math
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 SOURCE = Path('gas_archiefformules_vergelijking.json')
 OUTPUT = Path('gas_app_publicatie_status.json')
@@ -11,7 +12,9 @@ INDEX = Path('gas_indexen_gecombineerd.json')
 REQUIRED = {'ENGIE Flow Gas', 'Luminus BasicFlex Online Gas', 'OCTA+ Boost Flex Gas'}
 
 
-def check(data, fixed, index):
+def check(data, fixed, index, month=None):
+    month = month or datetime.now(timezone.utc).strftime("%Y-%m")
+    previous = (datetime.strptime(month + "-01", "%Y-%m-%d").date().replace(day=1) - timedelta(days=1)).strftime("%Y-%m")
     rows = data.get('contracten', {})
     fixed_rows = fixed.get('contracten', {})
     index_rows = index.get('contracten', {})
@@ -22,25 +25,25 @@ def check(data, fixed, index):
         if not isinstance(item, dict):
             issues.append('Geen vergelijking beschikbaar')
         else:
-            if item.get('tariefmaand_archief') != '2026-11':
-                issues.append('Tariefmaand niet bevestigd als 2026-11')
+            if item.get('tariefmaand_archief') != month:
+                issues.append(f"Tariefmaand niet bevestigd als {month}")
             if item.get('status') != 'formule_gelijk_aan_referentie' or item.get('formule_gelijk') is not True:
                 issues.append('Formulevergelijking niet geslaagd')
             if not item.get('contract_herkend') or not item.get('maand_vermeld'):
                 issues.append('Contract of maand niet herkend')
             if item.get('formule_gevonden') != item.get('referentieformule'):
                 issues.append('Formule wijkt af van referentie')
-        # Deze gegevens zijn NIET aanwezig in het bronrapport. Nooit automatisch goedkeuren.
+        # Controleer bronresultaten, niet vooraf vastgelegde publicatiestatussen.
         index_item = index_rows.get(name, {})
         index_ok = (
             index.get('alle_broncontroles_geslaagd') is True
             and index.get('actueel_voor_huidige_maand') is True
-            and index.get('huidige_kalendermaand_utc') == '2026-11'
+            and index.get('huidige_kalendermaand_utc') == month
             and index_item.get('status') in (
                 'HISTORISCHE_BRONWAARDE_GECONTROLEERD',
                 'HISTORISCHE_EN_FORWARD_BRONWAARDEN_GECONTROLEERD',
             )
-            and index_item.get('historische_indexmaand') == '2026-10'
+            and index_item.get('historische_indexmaand') == previous
             and isinstance(index_item.get('historische_waarde_eur_per_mwh'), (int, float))
         )
         if not index_ok:
@@ -48,16 +51,31 @@ def check(data, fixed, index):
         if index_item.get('jaarprognose_gevalideerd') is not True:
             issues.append('Jaarprognose index niet gevalideerd')
         fixed_item = fixed_rows.get(name, {})
-        if fixed.get('referentiemaand') != '2026-11' or fixed_item.get('vaste_vergoeding_volledig_gevalideerd') is not True:
+        if fixed.get('referentiemaand') != month or fixed_item.get('vaste_vergoeding_volledig_gevalideerd') is not True:
             issues.append('Vaste leveranciersvergoeding niet volledig geverifieerd')
         if fixed_item.get('voorwaarden_automatisch_gevalideerd') is not True:
             issues.append('Contractvoorwaarden niet automatisch gevalideerd')
-        issues.append('Volledige netkosten, accijnzen en btw niet als jaarprijs geverifieerd')
+        forward = index_item.get('geschatte_jaarparameter_eur_per_mwh')
+        if type(forward) not in (int, float) or not math.isfinite(forward) or forward <= 0:
+            issues.append('Bruikbare jaarparameter ontbreekt')
+        formula = (item or {}).get('formule_gevonden') or {} if isinstance(item, dict) else {}
+        normalize = lambda value: ''.join(c for c in str(value).upper() if c.isalnum())
+        if not normalize(formula.get('index', '')) or normalize(formula.get('index')) != normalize(index_item.get('index', '')):
+            issues.append('Indexnaam wijkt af van tariefformule')
+        for key in ('factor', 'toeslag'):
+            value = formula.get(key)
+            if type(value) not in (int, float) or not math.isfinite(value):
+                issues.append('Ongeldige formulecomponent: ' + key)
+        try:
+            fee = float(fixed_item.get('vast_bedrag_eur_incl_btw_per_jaar'))
+            if not math.isfinite(fee) or fee < 0: raise ValueError()
+        except (ValueError, TypeError):
+            issues.append('Ongeldig vast bedrag')
         result[name] = {
             'historische_indexbron_gecontroleerd': index_ok,
             'jaarprognose_gevalideerd': index_item.get('jaarprognose_gevalideerd') is True,
             'formule_gecontroleerd': not any(x for x in issues if x.startswith(('Geen vergelijking','Tariefmaand','Formulevergelijking','Contract of','Formule wijkt'))),
-            'geschikt_voor_automatische_jaarprijs': False,
+            'geschikt_voor_automatische_jaarprijs': not issues,
             'blokkades': issues,
         }
     return result
@@ -79,19 +97,24 @@ def main():
     index = json.loads(INDEX.read_text(encoding='utf-8'))
     if index.get('schema_version') != 1 or not isinstance(index.get('contracten'), dict):
         raise SystemExit('Onbekend formaat gas_indexen_gecombineerd.json')
+    month = datetime.now(timezone.utc).strftime('%Y-%m')
+    contracts = check(data, fixed, index, month)
+    released = any(c['geschikt_voor_automatische_jaarprijs'] for c in contracts.values())
     report = {
         'schema_version': 1,
         'gegenereerd_op_utc': datetime.now(timezone.utc).isoformat(),
         'bron': SOURCE.name,
         'aanvullende_bronnen': [FIXED.name, INDEX.name],
-        'status': 'BRONCONTROLES_GEEN_AUTOMATISCHE_JAARPRIJZEN',
-        'voor_android_app': False,
-        'contracten': check(data, fixed, index),
+        'status': 'BRONVRIJGAVE' if released else 'BRONCONTROLES_GEEN_AUTOMATISCHE_JAARPRIJZEN',
+        'referentiemaand': month,
+        'kostenberekening': 'Android',
+        'voor_android_app': released,
+        'contracten': contracts,
     }
     OUTPUT.write_text(json.dumps(report, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
     print(f'Rapport geschreven: {OUTPUT}')
     for name, item in report['contracten'].items():
-        print(f'{name}: formule={item["formule_gecontroleerd"]}; automatische jaarprijs=GEBLOKKEERD')
+        print(f'{name}: formule={item["formule_gecontroleerd"]}; automatische jaarprijs={item["geschikt_voor_automatische_jaarprijs"]}')
 
 
 if __name__ == '__main__':
