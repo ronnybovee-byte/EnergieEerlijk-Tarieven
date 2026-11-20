@@ -1,12 +1,14 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-19T22:43:43.974555+00:00",
+  "gegenereerd_op_utc": "2026-11-20T08:17:31.790799+00:00",
   "bron": "gas_archiefformules_vergelijking.json",
   "aanvullende_bronnen": [
     "gas_vaste_vergoedingen_validatie.json",
     "gas_indexen_gecombineerd.json"
   ],
   "status": "BRONCONTROLES_GEEN_AUTOMATISCHE_JAARPRIJZEN",
+  "referentiemaand": "2026-11",
+  "kostenberekening": "Android",
   "voor_android_app": false,
   "contracten": {
     "ENGIE Flow Gas": {
@@ -16,8 +18,7 @@
       "geschikt_voor_automatische_jaarprijs": false,
       "blokkades": [
         "Jaarprognose index niet gevalideerd",
-        "Contractvoorwaarden niet automatisch gevalideerd",
-        "Volledige netkosten, accijnzen en btw niet als jaarprijs geverifieerd"
+        "Contractvoorwaarden niet automatisch gevalideerd"
       ]
     },
     "Luminus BasicFlex Online Gas": {
@@ -27,8 +28,7 @@
       "geschikt_voor_automatische_jaarprijs": false,
       "blokkades": [
         "Jaarprognose index niet gevalideerd",
-        "Contractvoorwaarden niet automatisch gevalideerd",
-        "Volledige netkosten, accijnzen en btw niet als jaarprijs geverifieerd"
+        "Contractvoorwaarden niet automatisch gevalideerd"
       ]
     },
     "OCTA+ Boost Flex Gas": {
@@ -40,7 +40,7 @@
         "Jaarprognose index niet gevalideerd",
         "Vaste leveranciersvergoeding niet volledig geverifieerd",
         "Contractvoorwaarden niet automatisch gevalideerd",
-        "Volledige netkosten, accijnzen en btw niet als jaarprijs geverifieerd"
+        "Bruikbare jaarparameter ontbreekt"
       ]
     }
   }
