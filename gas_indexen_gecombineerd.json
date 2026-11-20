@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-20T17:13:41.949418+00:00",
+  "gegenereerd_op_utc": "2026-11-20T17:22:12.731089+00:00",
   "status": "GECOMBINEERDE_BRONGEGEVENS_GEEN_JAARPRIJSVALIDATIE",
   "voor_android_app": false,
   "geschikt_voor_automatische_jaarprijs": false,
@@ -28,19 +28,21 @@
       "blokkades": []
     },
     "OCTA+ Boost Flex Gas": {
-      "status": "HISTORISCHE_BRONWAARDE_GECONTROLEERD",
+      "status": "HISTORISCHE_EN_FORWARD_BRONWAARDEN_GECONTROLEERD",
       "index": "ZTP RLP M",
       "historische_indexmaand": "2026-10",
       "historische_waarde_eur_per_mwh": 87.893,
-      "geschatte_jaarparameter_eur_per_mwh": null,
-      "herkomst_jaarparameter": null,
+      "geschatte_jaarparameter_eur_per_mwh": 89.194,
+      "herkomst_jaarparameter": "https://files.octaplus.be/tariffs/parameters_forward_nl.pdf",
       "bron_url": "https://files.octaplus.be/tariffs/parameters_aardgas_nl.pdf",
-      "jaarprognose_gevalideerd": false,
-      "jaarparameter_bronbewijs": null,
+      "jaarprognose_gevalideerd": true,
+      "jaarparameter_bronbewijs": {
+        "bron": "https://files.octaplus.be/tariffs/parameters_forward_nl.pdf",
+        "tariefmaand": "2026-11",
+        "bronbewijs_consistent": true
+      },
       "geschikt_voor_automatische_jaarprijs": false,
-      "blokkades": [
-        "Jaarprognose niet gevalideerd"
-      ]
+      "blokkades": []
     },
     "Luminus BasicFlex Online Gas": {
       "status": "HISTORISCHE_EN_FORWARD_BRONWAARDEN_GECONTROLEERD",

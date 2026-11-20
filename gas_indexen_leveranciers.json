@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-20T17:13:34.088949+00:00",
+  "gegenereerd_op_utc": "2026-11-20T17:22:04.858500+00:00",
   "voor_android_app": false,
   "status": "HISTORISCHE_BRONCONTROLE_GEEN_JAARPRIJS",
   "contracten": {
@@ -28,9 +28,12 @@
       "waarde_eur_per_mwh": 87.893,
       "waarde_ct_per_kwh": 8.7893,
       "aantal_historische_maanden": 25,
-      "jaarprognose_gevalideerd": false,
+      "jaarprognose_gevalideerd": true,
       "geschikt_voor_automatische_jaarprijs": false,
-      "jaarprognose_reden": "Geen eenduidige actuele OCTA+ jaarparameter gevonden"
+      "jaarparameter_tariefmaand": "2026-11",
+      "geschatte_jaarparameter_eur_per_mwh": 89.194,
+      "jaarparameter_bron_url": "https://files.octaplus.be/tariffs/parameters_forward_nl.pdf",
+      "herkomst_jaarparameter": "OCTA+ officiële PDF"
     }
   }
 }
