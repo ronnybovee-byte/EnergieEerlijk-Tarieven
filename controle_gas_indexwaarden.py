@@ -35,7 +35,49 @@ def bewijs_uit_pdf(pdf):
                     waarderegels.append({'pagina': nr, 'regel': i+1, 'tekst': context[:650],
                                         'getallen_met_eenheid': GETAL.findall(context)})
     return indexregels[:45], waarderegels[:35]
+    
+def lees_totalenergies_prijs(pdf):
+    prijzen = set()
 
+    with pdfplumber.open(io.BytesIO(pdf)) as doc:
+        for pagina in doc.pages:
+            tekst = ' '.join((pagina.extract_text() or '').split())
+
+            if 'TTF_M_RLP' not in tekst:
+                continue
+
+            if not re.search(r'BTW\s+6\s*%\s*inbegrepen', tekst, re.I):
+                continue
+
+            if 'geschat voor de energieafname' not in tekst:
+                continue
+
+            for tabel in pagina.extract_tables():
+                if len(tabel) != 3:
+                    continue
+
+                if not all(len(rij) == 1 for rij in tabel):
+                    continue
+
+                label = ' '.join((tabel[0][0] or '').split())
+                waarde = (tabel[1][0] or '').strip()
+                formule = tabel[2][0] or ''
+
+                if not label.startswith('Verbruik'):
+                    continue
+
+                if 'c€/kWh' not in label:
+                    continue
+
+                if 'TTF_M_RLP' not in formule:
+                    continue
+
+                if re.fullmatch(r'\d+[,.]\d{2}', waarde):
+                    prijs = float(waarde.replace(',', '.'))
+                    if prijs > 0:
+                        prijzen.add(prijs)
+
+    return prijzen.pop() if len(prijzen) == 1 else None
 
 def inspecteer(naam, info, sessie):
     result = {'tariefmaand': info.get('tariefmaand_archief'),
@@ -61,6 +103,10 @@ def inspecteer(naam, info, sessie):
         if digest != sha or digest != info.get('sha256'):
             raise ValueError('sha256_verschilt')
         indexregels, waarderegels = bewijs_uit_pdf(pdf)
+        if naam == 'TotalEnergies myEssential Variabel Gas':
+            prijs = lees_totalenergies_prijs(pdf)
+            if prijs is not None:
+                result['geschatte_energieprijs_ct_per_kwh_incl_btw'] = prijs
         result.update({'pdf_sha256': digest, 'index_bronregels': indexregels,
                        'waarde_bronregels': waarderegels,
                        'formule_uit_archief': info.get('formule_gevonden'),
