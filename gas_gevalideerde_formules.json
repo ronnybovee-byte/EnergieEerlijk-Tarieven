@@ -51,8 +51,8 @@
       "toeslag": 0.574
     }
   },
-  "gegenereerd_op_utc": "2026-11-20T08:49:04.000698+00:00",
-  "laatst_gecontroleerd_utc": "2026-11-20T08:49:44.701210+00:00",
+  "gegenereerd_op_utc": "2026-11-20T08:56:00.902553+00:00",
+  "laatst_gecontroleerd_utc": "2026-11-20T08:56:40.087639+00:00",
   "schema_version": 1,
   "status": "alleen_gevalideerde_prijsformules",
   "waarschuwing": "Geldigheidsmaanden zijn alleen herkend bij expliciete contractperiodes. Dit bevestigt geen actuele bronbeschikbaarheid, indexdefinitie, indexwaarde, vaste vergoeding of totale jaarprijs."

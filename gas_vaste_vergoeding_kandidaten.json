@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "gegenereerd_op_utc": "2026-11-20T08:49:19.648501+00:00",
+  "gegenereerd_op_utc": "2026-11-20T08:56:15.015044+00:00",
   "status": "PDF_TABEL_EN_TEKST_KANDIDATEN_GEEN_AUTOMATISCHE_GOEDKEURING",
   "voor_android_app": false,
   "waarschuwing": "Tabelkandidaten, btw en voorwaarden blijven handmatig te valideren.",
@@ -88,6 +88,237 @@
           "tekst": "engie.be. vergoeding aangerekend pro rata het aantal effectieve"
         }
       ],
+      "geschiktheid_bronregels": [
+        {
+          "pagina": 1,
+          "regel": 2,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "(Type : Variabel)",
+          "context": "Flow | (Type : Variabel) | Variabele prijzen aardgas voor contracten afgesloten in November 2026 (looptijd van 2 jaar) | Voor particulieren in het Vlaamse Gewest"
+        },
+        {
+          "pagina": 1,
+          "regel": 3,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "Variabele prijzen aardgas voor contracten afgesloten in November 2026 (looptijd van 2 jaar)",
+          "context": "(Type : Variabel) | Variabele prijzen aardgas voor contracten afgesloten in November 2026 (looptijd van 2 jaar) | Voor particulieren in het Vlaamse Gewest | Prijzen inclusief 6% btw(9)"
+        },
+        {
+          "pagina": 1,
+          "regel": 4,
+          "criteria": [
+            "particuliere_klant",
+            "netgebied"
+          ],
+          "tekst": "Voor particulieren in het Vlaamse Gewest",
+          "context": "Variabele prijzen aardgas voor contracten afgesloten in November 2026 (looptijd van 2 jaar) | Voor particulieren in het Vlaamse Gewest | Prijzen inclusief 6% btw(9) | Samenstelling van je energieprijs(6) Jouw voordelen Gratis Diensten"
+        },
+        {
+          "pagina": 1,
+          "regel": 7,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "- Variabele prijs, maandelijks - On-& Offline 5*",
+          "context": "Samenstelling van je energieprijs(6) Jouw voordelen Gratis Diensten | - Variabele prijs, maandelijks - On-& Offline 5* | aangepast klantendienst | - Gegarandeerde prijsformule - Volg de prijzen en beheer"
+        },
+        {
+          "pagina": 1,
+          "regel": 13,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "Variabele energieprijs",
+          "context": "e-mail | Variabele energieprijs | Prijs per kWh(1) (c€/kWh) | Vaste vergoeding (€/jaar)(11)"
+        },
+        {
+          "pagina": 1,
+          "regel": 34,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "FLUVIUS ANTWERPEN 15,68 2,257 83,22 0,905 562,63 0,586 18,92 0,165",
+          "context": "€/jaar €/jaar €/jaar | FLUVIUS ANTWERPEN 15,68 2,257 83,22 0,905 562,63 0,586 18,92 0,165 | FLUVIUS HALLE-VILVOORDE 17,59 2,496 93,38 0,981 631,27 0,621 18,92 0,165 | FLUVIUS IMEWO 18,61 2,628 98,81 1,024 668,02 0,644 18,92 0,165"
+        },
+        {
+          "pagina": 1,
+          "regel": 35,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "FLUVIUS HALLE-VILVOORDE 17,59 2,496 93,38 0,981 631,27 0,621 18,92 0,165",
+          "context": "FLUVIUS ANTWERPEN 15,68 2,257 83,22 0,905 562,63 0,586 18,92 0,165 | FLUVIUS HALLE-VILVOORDE 17,59 2,496 93,38 0,981 631,27 0,621 18,92 0,165 | FLUVIUS IMEWO 18,61 2,628 98,81 1,024 668,02 0,644 18,92 0,165 | FLUVIUS KEMPEN 16,17 2,275 85,83 0,882 580,25 0,552 18,92 0,165"
+        },
+        {
+          "pagina": 1,
+          "regel": 36,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "FLUVIUS IMEWO 18,61 2,628 98,81 1,024 668,02 0,644 18,92 0,165",
+          "context": "FLUVIUS HALLE-VILVOORDE 17,59 2,496 93,38 0,981 631,27 0,621 18,92 0,165 | FLUVIUS IMEWO 18,61 2,628 98,81 1,024 668,02 0,644 18,92 0,165 | FLUVIUS KEMPEN 16,17 2,275 85,83 0,882 580,25 0,552 18,92 0,165 | FLUVIUS LIMBURG 14,59 2,240 77,46 0,983 523,72 0,686 18,92 0,165"
+        },
+        {
+          "pagina": 1,
+          "regel": 37,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "FLUVIUS KEMPEN 16,17 2,275 85,83 0,882 580,25 0,552 18,92 0,165",
+          "context": "FLUVIUS IMEWO 18,61 2,628 98,81 1,024 668,02 0,644 18,92 0,165 | FLUVIUS KEMPEN 16,17 2,275 85,83 0,882 580,25 0,552 18,92 0,165 | FLUVIUS LIMBURG 14,59 2,240 77,46 0,983 523,72 0,686 18,92 0,165 | FLUVIUS MIDDEN-VLAANDEREN 16,33 2,317 86,71 0,909 586,19 0,577 18,92 0,165"
+        },
+        {
+          "pagina": 1,
+          "regel": 38,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "FLUVIUS LIMBURG 14,59 2,240 77,46 0,983 523,72 0,686 18,92 0,165",
+          "context": "FLUVIUS KEMPEN 16,17 2,275 85,83 0,882 580,25 0,552 18,92 0,165 | FLUVIUS LIMBURG 14,59 2,240 77,46 0,983 523,72 0,686 18,92 0,165 | FLUVIUS MIDDEN-VLAANDEREN 16,33 2,317 86,71 0,909 586,19 0,577 18,92 0,165 | FLUVIUS WEST 19,03 2,695 101,02 1,055 682,96 0,667 18,92 0,165"
+        },
+        {
+          "pagina": 1,
+          "regel": 39,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "FLUVIUS MIDDEN-VLAANDEREN 16,33 2,317 86,71 0,909 586,19 0,577 18,92 0,165",
+          "context": "FLUVIUS LIMBURG 14,59 2,240 77,46 0,983 523,72 0,686 18,92 0,165 | FLUVIUS MIDDEN-VLAANDEREN 16,33 2,317 86,71 0,909 586,19 0,577 18,92 0,165 | FLUVIUS WEST 19,03 2,695 101,02 1,055 682,96 0,667 18,92 0,165 | FLUVIUS ZENNE-DIJLE 18,40 2,602 97,72 1,017 660,65 0,641 18,92 0,165"
+        },
+        {
+          "pagina": 1,
+          "regel": 40,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "FLUVIUS WEST 19,03 2,695 101,02 1,055 682,96 0,667 18,92 0,165",
+          "context": "FLUVIUS MIDDEN-VLAANDEREN 16,33 2,317 86,71 0,909 586,19 0,577 18,92 0,165 | FLUVIUS WEST 19,03 2,695 101,02 1,055 682,96 0,667 18,92 0,165 | FLUVIUS ZENNE-DIJLE 18,40 2,602 97,72 1,017 660,65 0,641 18,92 0,165"
+        },
+        {
+          "pagina": 1,
+          "regel": 41,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "FLUVIUS ZENNE-DIJLE 18,40 2,602 97,72 1,017 660,65 0,641 18,92 0,165",
+          "context": "FLUVIUS WEST 19,03 2,695 101,02 1,055 682,96 0,667 18,92 0,165 | FLUVIUS ZENNE-DIJLE 18,40 2,602 97,72 1,017 660,65 0,641 18,92 0,165"
+        },
+        {
+          "pagina": 2,
+          "regel": 2,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "(Type : Variabel)",
+          "context": "Flow | (Type : Variabel) | Variabele prijzen aardgas voor contracten afgesloten in November 2026 (looptijd van 2 jaar) | Voor particulieren in het Vlaamse Gewest"
+        },
+        {
+          "pagina": 2,
+          "regel": 3,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "Variabele prijzen aardgas voor contracten afgesloten in November 2026 (looptijd van 2 jaar)",
+          "context": "(Type : Variabel) | Variabele prijzen aardgas voor contracten afgesloten in November 2026 (looptijd van 2 jaar) | Voor particulieren in het Vlaamse Gewest | Prijzen inclusief 6% btw(9)"
+        },
+        {
+          "pagina": 2,
+          "regel": 4,
+          "criteria": [
+            "particuliere_klant",
+            "netgebied"
+          ],
+          "tekst": "Voor particulieren in het Vlaamse Gewest",
+          "context": "Variabele prijzen aardgas voor contracten afgesloten in November 2026 (looptijd van 2 jaar) | Voor particulieren in het Vlaamse Gewest | Prijzen inclusief 6% btw(9) | Supplementen"
+        },
+        {
+          "pagina": 2,
+          "regel": 13,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Vlaamse Nutsregulator.",
+          "context": "van de 6de maand na intekening op het contract. (2) De netwerkkosten worden goedgekeurd door de CREG en door de | Vlaamse Nutsregulator. | De prijs voor aardgas wordt maandelijks geïndexeerd. De | indexatieparameter is het rekenkundig gemiddelde van de (3) Op deze kost betaal je geen btw."
+        },
+        {
+          "pagina": 2,
+          "regel": 14,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "De prijs voor aardgas wordt maandelijks geïndexeerd. De",
+          "context": "Vlaamse Nutsregulator. | De prijs voor aardgas wordt maandelijks geïndexeerd. De | indexatieparameter is het rekenkundig gemiddelde van de (3) Op deze kost betaal je geen btw. | dagelijkse quoteringen op \"European Spot Gas Markets\" (\"ESGM\")"
+        },
+        {
+          "pagina": 2,
+          "regel": 15,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "indexatieparameter is het rekenkundig gemiddelde van de (3) Op deze kost betaal je geen btw.",
+          "context": "De prijs voor aardgas wordt maandelijks geïndexeerd. De | indexatieparameter is het rekenkundig gemiddelde van de (3) Op deze kost betaal je geen btw. | dagelijkse quoteringen op \"European Spot Gas Markets\" (\"ESGM\") | gepubliceerd door ICIS-Heren Energy Ltd., onder de naam \"ZTP (6) De berekening is gemaakt in januari 2024 voor een EASY Variabel"
+        },
+        {
+          "pagina": 2,
+          "regel": 17,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "gepubliceerd door ICIS-Heren Energy Ltd., onder de naam \"ZTP (6) De berekening is gemaakt in januari 2024 voor een EASY Variabel",
+          "context": "dagelijkse quoteringen op \"European Spot Gas Markets\" (\"ESGM\") | gepubliceerd door ICIS-Heren Energy Ltd., onder de naam \"ZTP (6) De berekening is gemaakt in januari 2024 voor een EASY Variabel | Price Assessment Day-Ahead\" voor de weekdagen en onder de contract op basis van een particulier verbruik van 16000 kWh/jaar in | naam \"ZTP Price Assessment Weekend\" voor weekenddagen tijdens Vlaanderen. Prijzen inclusief 6% btw."
+        },
+        {
+          "pagina": 2,
+          "regel": 18,
+          "criteria": [
+            "particuliere_klant"
+          ],
+          "tekst": "Price Assessment Day-Ahead\" voor de weekdagen en onder de contract op basis van een particulier verbruik van 16000 kWh/jaar in",
+          "context": "gepubliceerd door ICIS-Heren Energy Ltd., onder de naam \"ZTP (6) De berekening is gemaakt in januari 2024 voor een EASY Variabel | Price Assessment Day-Ahead\" voor de weekdagen en onder de contract op basis van een particulier verbruik van 16000 kWh/jaar in | naam \"ZTP Price Assessment Weekend\" voor weekenddagen tijdens Vlaanderen. Prijzen inclusief 6% btw. | de maand van levering. De parameter ZTPDAM (Heren), uitgedrukt"
+        },
+        {
+          "pagina": 2,
+          "regel": 19,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "naam \"ZTP Price Assessment Weekend\" voor weekenddagen tijdens Vlaanderen. Prijzen inclusief 6% btw.",
+          "context": "Price Assessment Day-Ahead\" voor de weekdagen en onder de contract op basis van een particulier verbruik van 16000 kWh/jaar in | naam \"ZTP Price Assessment Weekend\" voor weekenddagen tijdens Vlaanderen. Prijzen inclusief 6% btw. | de maand van levering. De parameter ZTPDAM (Heren), uitgedrukt | (7) Meer informatie over je betalingen vind je op"
+        },
+        {
+          "pagina": 2,
+          "regel": 34,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "89,2144 €/MWh voor deze maand volgens de Vlaamse schrikkeljaar).",
+          "context": "De geschatte jaarlijkse parameter ZTPDAM (Heren) bedraagt leveringsdagen (per 365 dagen of per 366 dagen in een | 89,2144 €/MWh voor deze maand volgens de Vlaamse schrikkeljaar). | Nutsregulator methodologie: | https://www.vlaamsenutsregulator.be/elektriciteit-en-aardgas/energ"
+        },
+        {
+          "pagina": 2,
+          "regel": 36,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "https://www.vlaamsenutsregulator.be/elektriciteit-en-aardgas/energ",
+          "context": "Nutsregulator methodologie: | https://www.vlaamsenutsregulator.be/elektriciteit-en-aardgas/energ | ieprijzen-en-facturen/waaruit-bestaat-de-energieprijs-voor-elektricite | it-en-aardgas Kosten voor herinneringen en ingebrekestellingen (3) (7)"
+        }
+      ],
+      "geschiktheid": {
+        "domiciliering_verplicht": "onbekend",
+        "aandelen_verplicht": "onbekend",
+        "groepsaankoop_verplicht": "onbekend",
+        "digitale_meter_verplicht": "onbekend",
+        "zonnepanelen_verplicht": "onbekend",
+        "analoge_meter_toegelaten": "onbekend",
+        "variabel_contract": "onbekend",
+        "particuliere_klant": "onbekend",
+        "netgebied": "onbekend"
+      },
       "pdf_sha256": "dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
       "ocr_paginas": 0,
       "reden": "pdf_gecontroleerd_bedragen_nog_niet_gevalideerd"
@@ -159,6 +390,181 @@
           "tekst": "(= in het eerste half jaar na de start van levering), is de klant de helft van de jaarlijkse vaste vergoeding omzettingscoëfficiënt van ton CO 2 naar MWh × CarP. De CarP wordt bepaald op basis van de"
         }
       ],
+      "geschiktheid_bronregels": [
+        {
+          "pagina": 1,
+          "regel": 1,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "BasicFlex Online Gas Regio: Vlaanderen",
+          "context": "BasicFlex Online Gas Regio: Vlaanderen | Verbruikers: residentieel | (november 2026) Tarief: variabel"
+        },
+        {
+          "pagina": 1,
+          "regel": 3,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "(november 2026) Tarief: variabel",
+          "context": "Verbruikers: residentieel | (november 2026) Tarief: variabel | Bijzondere voorwaarden: (GBFL2C2.0) Duur van het contract: 2 jaar | Geldig voor Consumenten met een jaarlijks gasverbruik < 100 MWh en aansluitingen op het lagedrukaardgasnet met jaarlijkse meteropname.Anders behoudt Luminus zich het"
+        },
+        {
+          "pagina": 1,
+          "regel": 39,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "Variabel Vast Variabel Vast Variabel Vast (c€/kWh)",
+          "context": "<= 5.000 kWh > 5.000 en <= 150.000 kWh > 150.000 kWh Transportkosten | Variabel Vast Variabel Vast Variabel Vast (c€/kWh) | (c€/kWh) (€/jaar) (c€/kWh) (€/jaar) (c€/kWh) (€/jaar) | Fluvius Antwerpen 2,26 15,68 0,91 83,22 0,59 562,63 0,1654"
+        },
+        {
+          "pagina": 1,
+          "regel": 41,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius Antwerpen 2,26 15,68 0,91 83,22 0,59 562,63 0,1654",
+          "context": "(c€/kWh) (€/jaar) (c€/kWh) (€/jaar) (c€/kWh) (€/jaar) | Fluvius Antwerpen 2,26 15,68 0,91 83,22 0,59 562,63 0,1654 | Fluvius Halle-Vilvoorde 2,50 17,59 0,98 93,38 0,62 631,27 0,1654 | Fluvius Imewo 2,63 18,61 1,02 98,81 0,64 668,02 0,1654"
+        },
+        {
+          "pagina": 1,
+          "regel": 42,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius Halle-Vilvoorde 2,50 17,59 0,98 93,38 0,62 631,27 0,1654",
+          "context": "Fluvius Antwerpen 2,26 15,68 0,91 83,22 0,59 562,63 0,1654 | Fluvius Halle-Vilvoorde 2,50 17,59 0,98 93,38 0,62 631,27 0,1654 | Fluvius Imewo 2,63 18,61 1,02 98,81 0,64 668,02 0,1654 | Fluvius Kempen 2,27 16,17 0,88 85,83 0,55 580,25 0,1654"
+        },
+        {
+          "pagina": 1,
+          "regel": 43,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius Imewo 2,63 18,61 1,02 98,81 0,64 668,02 0,1654",
+          "context": "Fluvius Halle-Vilvoorde 2,50 17,59 0,98 93,38 0,62 631,27 0,1654 | Fluvius Imewo 2,63 18,61 1,02 98,81 0,64 668,02 0,1654 | Fluvius Kempen 2,27 16,17 0,88 85,83 0,55 580,25 0,1654 | VL"
+        },
+        {
+          "pagina": 1,
+          "regel": 44,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius Kempen 2,27 16,17 0,88 85,83 0,55 580,25 0,1654",
+          "context": "Fluvius Imewo 2,63 18,61 1,02 98,81 0,64 668,02 0,1654 | Fluvius Kempen 2,27 16,17 0,88 85,83 0,55 580,25 0,1654 | VL | Fluvius Limburg 2,24 14,59 0,98 77,46 0,69 523,72 0,1654"
+        },
+        {
+          "pagina": 1,
+          "regel": 46,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius Limburg 2,24 14,59 0,98 77,46 0,69 523,72 0,1654",
+          "context": "VL | Fluvius Limburg 2,24 14,59 0,98 77,46 0,69 523,72 0,1654 | Fluvius Midden-Vlaanderen 2,32 16,33 0,91 86,71 0,58 586,19 0,1654 | Fluvius West 2,69 19,03 1,05 101,02 0,67 682,96 0,1654"
+        },
+        {
+          "pagina": 1,
+          "regel": 47,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius Midden-Vlaanderen 2,32 16,33 0,91 86,71 0,58 586,19 0,1654",
+          "context": "Fluvius Limburg 2,24 14,59 0,98 77,46 0,69 523,72 0,1654 | Fluvius Midden-Vlaanderen 2,32 16,33 0,91 86,71 0,58 586,19 0,1654 | Fluvius West 2,69 19,03 1,05 101,02 0,67 682,96 0,1654 | Fluvius Zenne-Dijle 2,60 18,40 1,02 97,72 0,64 660,65 0,1654"
+        },
+        {
+          "pagina": 1,
+          "regel": 48,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius West 2,69 19,03 1,05 101,02 0,67 682,96 0,1654",
+          "context": "Fluvius Midden-Vlaanderen 2,32 16,33 0,91 86,71 0,58 586,19 0,1654 | Fluvius West 2,69 19,03 1,05 101,02 0,67 682,96 0,1654 | Fluvius Zenne-Dijle 2,60 18,40 1,02 97,72 0,64 660,65 0,1654 | 3 Taksen en heffingen:"
+        },
+        {
+          "pagina": 1,
+          "regel": 49,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius Zenne-Dijle 2,60 18,40 1,02 97,72 0,64 660,65 0,1654",
+          "context": "Fluvius West 2,69 19,03 1,05 101,02 0,67 682,96 0,1654 | Fluvius Zenne-Dijle 2,60 18,40 1,02 97,72 0,64 660,65 0,1654 | 3 Taksen en heffingen: | VL"
+        },
+        {
+          "pagina": 2,
+          "regel": 4,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Index (excl. BTW): TTF DAH M = 86,104 €/MWh (indexwaarde van oktober 2026) goedgekeurd door de regulator (Vlaamse Nutsregulator) en de waarden van de taksen, heffingen,",
+          "context": "verandert gedurende de looptijd van uw contract, dan wijzigen ook de prijzen en promoties. slotfactuur. De hierboven vermelde kosten voor het gebruik van de netten zijn de kosten die zijn | Index (excl. BTW): TTF DAH M = 86,104 €/MWh (indexwaarde van oktober 2026) goedgekeurd door de regulator (Vlaamse Nutsregulator) en de waarden van de taksen, heffingen, | Tariefformule energiekost (excl. BTW): 0,1001 x TTF DAH M + 0,5279 bijdragen en toeslagen zijn de meest recent gekende waarden op het moment van creatie van deze | Vermelde bedragen zijn afgerond. Uw tarief wordt maandelijks geïndexeerd. De indexatieparameter bijzondere voorwaarden. Eventuele wijzigingen van deze elementen worden volledig aangerekend"
+        },
+        {
+          "pagina": 2,
+          "regel": 6,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "Vermelde bedragen zijn afgerond. Uw tarief wordt maandelijks geïndexeerd. De indexatieparameter bijzondere voorwaarden. Eventuele wijzigingen van deze elementen worden volledig aangerekend",
+          "context": "Tariefformule energiekost (excl. BTW): 0,1001 x TTF DAH M + 0,5279 bijdragen en toeslagen zijn de meest recent gekende waarden op het moment van creatie van deze | Vermelde bedragen zijn afgerond. Uw tarief wordt maandelijks geïndexeerd. De indexatieparameter bijzondere voorwaarden. Eventuele wijzigingen van deze elementen worden volledig aangerekend | is gebaseerd op het rekenkundig gemiddelde van de dagelijkse quoteringen Bid en Offer TTF Day tegen de kostprijs. | Ahead (voor De indexatieparameter is gebaseerd op het gewogen gemiddelde van de dagelijkse"
+        },
+        {
+          "pagina": 2,
+          "regel": 8,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "Ahead (voor De indexatieparameter is gebaseerd op het gewogen gemiddelde van de dagelijkse",
+          "context": "is gebaseerd op het rekenkundig gemiddelde van de dagelijkse quoteringen Bid en Offer TTF Day tegen de kostprijs. | Ahead (voor De indexatieparameter is gebaseerd op het gewogen gemiddelde van de dagelijkse | quoteringen Bid en Offer TTF Day Ahead (voor werdagen) en Weekend (voor niet-werkdagen) Exclusief online tarief | tijdens de maand van levering (beschikbaar op www.icis.com in het rapport European Spot Gas Luminus BasicFlex Online Gas is een exclusief online contract waarbij u uitdrukkelijk aanvaardt dat:"
+        },
+        {
+          "pagina": 2,
+          "regel": 18,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "De energiekost, die varieert naargelang de evolutie van de parameters waaruit de geïndexeerde Vanaf 1 januari 2028 zal Luminus onderworpen zijn aan het nieuwe emissiehandelssysteem (ETS2).",
+          "context": "Luminus zal trachten om het gemiddelde prijsniveau gelijk te houden. | De energiekost, die varieert naargelang de evolutie van de parameters waaruit de geïndexeerde Vanaf 1 januari 2028 zal Luminus onderworpen zijn aan het nieuwe emissiehandelssysteem (ETS2). | tariefformule bestaat, wordt berekend op basis van de index die van toepassing is tijdens de periode Dit systeem verplicht ons om emissierechten voor CO 2 te kopen en in te leveren ter compensatie van | waarvoor u wordt gefactureerd bij de afrekening van uw reële verbruik. De bedragen vermeld in de CO 2 -uitstoot bij aardgaslevering. De hiermee verbonden kosten zullen, overeenkomstig artikel"
+        },
+        {
+          "pagina": 2,
+          "regel": 30,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "het Vlaams Gewest, dat automatisch verlengd wordt met opeenvolgende perioden van 2 jaar frequentie (maandelijks, tweemaandelijks of driemaandelijks) die u zelf bepaalt in uw online",
+          "context": "Luminus BasicFlex Online Gas is een contract met een duurtijd van 2 jaar voor leverpunten in U betaalt vooraf regelmatig voorschotten en krijgt hiervoor voorschotfacturen volgens de | het Vlaams Gewest, dat automatisch verlengd wordt met opeenvolgende perioden van 2 jaar frequentie (maandelijks, tweemaandelijks of driemaandelijks) die u zelf bepaalt in uw online | overeenkomstig artikel 4.2 van onze Algemene Voorwaarden. klantenzone (de standaardfrequentie is maandelijks). U kiest ook uw betaalwijze (domiciliëring, | Indien u een nieuwe klant van ons bent, dan begint de duurtijd van dit contract op de startdatum overschrijving of enige andere door Luminus aangeboden betaalwijze). Indien u kiest voor"
+        },
+        {
+          "pagina": 2,
+          "regel": 31,
+          "criteria": [
+            "domiciliering_verplicht"
+          ],
+          "tekst": "overeenkomstig artikel 4.2 van onze Algemene Voorwaarden. klantenzone (de standaardfrequentie is maandelijks). U kiest ook uw betaalwijze (domiciliëring,",
+          "context": "het Vlaams Gewest, dat automatisch verlengd wordt met opeenvolgende perioden van 2 jaar frequentie (maandelijks, tweemaandelijks of driemaandelijks) die u zelf bepaalt in uw online | overeenkomstig artikel 4.2 van onze Algemene Voorwaarden. klantenzone (de standaardfrequentie is maandelijks). U kiest ook uw betaalwijze (domiciliëring, | Indien u een nieuwe klant van ons bent, dan begint de duurtijd van dit contract op de startdatum overschrijving of enige andere door Luminus aangeboden betaalwijze). Indien u kiest voor | van levering. Indien u reeds gassklant van ons bent voor het Leverpunt en in overeenstemming met domiciliëring, ontvangt u enkel uw jaarafrekening en geen voorschotfacturen. U ontvangt al uw"
+        },
+        {
+          "pagina": 2,
+          "regel": 33,
+          "criteria": [
+            "domiciliering_verplicht"
+          ],
+          "tekst": "van levering. Indien u reeds gassklant van ons bent voor het Leverpunt en in overeenstemming met domiciliëring, ontvangt u enkel uw jaarafrekening en geen voorschotfacturen. U ontvangt al uw",
+          "context": "Indien u een nieuwe klant van ons bent, dan begint de duurtijd van dit contract op de startdatum overschrijving of enige andere door Luminus aangeboden betaalwijze). Indien u kiest voor | van levering. Indien u reeds gassklant van ons bent voor het Leverpunt en in overeenstemming met domiciliëring, ontvangt u enkel uw jaarafrekening en geen voorschotfacturen. U ontvangt al uw | artikel 11.4 van de Algemene Voorwaarden wenst over te gaan op het contract Luminus BasicFlex facturen uitsluitend via e-mail. Al uw facturen zullen wel online beschikbaar zijn via de klantenzone | Online Gas, dan start het nieuwe contract 21 kalenderdagen na tekendatum, tenzij in samenspraak op www.luminus.be."
+        }
+      ],
+      "geschiktheid": {
+        "domiciliering_verplicht": "onbekend",
+        "aandelen_verplicht": "onbekend",
+        "groepsaankoop_verplicht": "onbekend",
+        "digitale_meter_verplicht": "onbekend",
+        "zonnepanelen_verplicht": "onbekend",
+        "analoge_meter_toegelaten": "onbekend",
+        "variabel_contract": "onbekend",
+        "particuliere_klant": "onbekend",
+        "netgebied": "onbekend"
+      },
       "pdf_sha256": "d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
       "ocr_paginas": 0,
       "reden": "pdf_gecontroleerd_bedragen_nog_niet_gevalideerd"
@@ -230,6 +636,154 @@
           "tekst": "volgen op de ingang ervan. In dit laatste geval wordt de vaste vergoeding aangerekend voor een periode van 6 maanden."
         }
       ],
+      "geschiktheid_bronregels": [
+        {
+          "pagina": 1,
+          "regel": 3,
+          "criteria": [
+            "particuliere_klant"
+          ],
+          "tekst": "GELDIG VOOR RESIDENTIËLE KLANTEN",
+          "context": "TARIEFFICHE NOVEMBER 2026 | GELDIG VOOR RESIDENTIËLE KLANTEN | • | VLAANDEREN"
+        },
+        {
+          "pagina": 1,
+          "regel": 5,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "VLAANDEREN",
+          "context": "• | VLAANDEREN | • | INCL. BTW"
+        },
+        {
+          "pagina": 1,
+          "regel": 9,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "Variabel aardgastarief SLIM GEREGELD VIA JE KLANTENZONE",
+          "context": "• | Variabel aardgastarief SLIM GEREGELD VIA JE KLANTENZONE | Aardgas tegen een scherp basistarief, afgestemd op de groothandelsmarkt | 24/7 beschikbaar"
+        },
+        {
+          "pagina": 2,
+          "regel": 11,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Vlaams Gewest",
+          "context": "€/jaar c€/kWh €/jaar c€/kWh €/jaar | Vlaams Gewest | Fluvius Kempen 16,17 2,27 85,83 0,88 18,92 0,165 | Fluvius Imewo 18,61 2,63 98,81 1,02 18,92 0,165"
+        },
+        {
+          "pagina": 2,
+          "regel": 12,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius Kempen 16,17 2,27 85,83 0,88 18,92 0,165",
+          "context": "Vlaams Gewest | Fluvius Kempen 16,17 2,27 85,83 0,88 18,92 0,165 | Fluvius Imewo 18,61 2,63 98,81 1,02 18,92 0,165 | Fluvius Limburg 14,59 2,24 77,46 0,98 18,92 0,165"
+        },
+        {
+          "pagina": 2,
+          "regel": 13,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius Imewo 18,61 2,63 98,81 1,02 18,92 0,165",
+          "context": "Fluvius Kempen 16,17 2,27 85,83 0,88 18,92 0,165 | Fluvius Imewo 18,61 2,63 98,81 1,02 18,92 0,165 | Fluvius Limburg 14,59 2,24 77,46 0,98 18,92 0,165 | Fluvius Halle-Vilvoorde 17,59 2,50 93,38 0,98 18,92 0,165"
+        },
+        {
+          "pagina": 2,
+          "regel": 14,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius Limburg 14,59 2,24 77,46 0,98 18,92 0,165",
+          "context": "Fluvius Imewo 18,61 2,63 98,81 1,02 18,92 0,165 | Fluvius Limburg 14,59 2,24 77,46 0,98 18,92 0,165 | Fluvius Halle-Vilvoorde 17,59 2,50 93,38 0,98 18,92 0,165 | Fluvius West 19,03 2,69 101,02 1,05 18,92 0,165"
+        },
+        {
+          "pagina": 2,
+          "regel": 15,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius Halle-Vilvoorde 17,59 2,50 93,38 0,98 18,92 0,165",
+          "context": "Fluvius Limburg 14,59 2,24 77,46 0,98 18,92 0,165 | Fluvius Halle-Vilvoorde 17,59 2,50 93,38 0,98 18,92 0,165 | Fluvius West 19,03 2,69 101,02 1,05 18,92 0,165 | Fluvius Antwerpen 15,68 2,26 83,22 0,91 18,92 0,165"
+        },
+        {
+          "pagina": 2,
+          "regel": 16,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius West 19,03 2,69 101,02 1,05 18,92 0,165",
+          "context": "Fluvius Halle-Vilvoorde 17,59 2,50 93,38 0,98 18,92 0,165 | Fluvius West 19,03 2,69 101,02 1,05 18,92 0,165 | Fluvius Antwerpen 15,68 2,26 83,22 0,91 18,92 0,165 | Fluvius Zenne-Dijle 18,40 2,60 97,72 1,02 18,92 0,165"
+        },
+        {
+          "pagina": 2,
+          "regel": 17,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius Antwerpen 15,68 2,26 83,22 0,91 18,92 0,165",
+          "context": "Fluvius West 19,03 2,69 101,02 1,05 18,92 0,165 | Fluvius Antwerpen 15,68 2,26 83,22 0,91 18,92 0,165 | Fluvius Zenne-Dijle 18,40 2,60 97,72 1,02 18,92 0,165 | Fluvius Midden-Vlaanderen 16,33 2,32 86,71 0,91 18,92 0,165"
+        },
+        {
+          "pagina": 2,
+          "regel": 18,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius Zenne-Dijle 18,40 2,60 97,72 1,02 18,92 0,165",
+          "context": "Fluvius Antwerpen 15,68 2,26 83,22 0,91 18,92 0,165 | Fluvius Zenne-Dijle 18,40 2,60 97,72 1,02 18,92 0,165 | Fluvius Midden-Vlaanderen 16,33 2,32 86,71 0,91 18,92 0,165 | Waals Gewest"
+        },
+        {
+          "pagina": 2,
+          "regel": 19,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius Midden-Vlaanderen 16,33 2,32 86,71 0,91 18,92 0,165",
+          "context": "Fluvius Zenne-Dijle 18,40 2,60 97,72 1,02 18,92 0,165 | Fluvius Midden-Vlaanderen 16,33 2,32 86,71 0,91 18,92 0,165 | Waals Gewest | ORES (Mouscron) 31,91 4,29 140,93 2,21 - 0,165"
+        },
+        {
+          "pagina": 3,
+          "regel": 1,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "Voor dit product worden de gasprijzen maandelijks geïndexeerd, en dit op basis van de parameter \"ZTP RLP M\", waarvan de laatst gekende",
+          "context": "Voor dit product worden de gasprijzen maandelijks geïndexeerd, en dit op basis van de parameter \"ZTP RLP M\", waarvan de laatst gekende | waarden beschikbaar zijn op octaplus.be/prijzengas. Deze parameter vertegenwoordigt het gewogen gemiddelde van de EGSI-indexen van de ZTP | voor elke leveringsmaand, waarbij de weging gebaseerd is op het RLP-profiel (gepubliceerd door Synergrid). De prijsformule is als volgt, in"
+        },
+        {
+          "pagina": 3,
+          "regel": 7,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "EUR/MWh, volstaat het om de waarde te delen door 10 voor de toepassing van de prijsindexatieformule in cEUR/kWh. Bijvoorbeeld, een waarde",
+          "context": "doel de verwachte gemiddelde prijzen voor de komende 12 maanden te weerspiegelen. Mocht een parameterwaarde zijn uitgedrukt in | EUR/MWh, volstaat het om de waarde te delen door 10 voor de toepassing van de prijsindexatieformule in cEUR/kWh. Bijvoorbeeld, een waarde | van 100 EUR/MWh is gelijk aan 10 cEUR/kWh. | De vermelde prijzen zijn geldig voor aansluitingspunten die aangesloten zijn op het laagspanningsnet en die beschikken over een jaarlijks of"
+        },
+        {
+          "pagina": 3,
+          "regel": 24,
+          "criteria": [
+            "variabel_contract"
+          ],
+          "tekst": "Alle kosten verbonden aan het gebruik van de netten, net zoals de taksen, vergoedingen, bijdragen en toeslagen, blijven variabel, aanpasbaar en",
+          "context": "tariefkaart wordt opgesteld, wordt in dit stadium uitgevoerd zonder rekening te houden met de ETS2-kost. | Alle kosten verbonden aan het gebruik van de netten, net zoals de taksen, vergoedingen, bijdragen en toeslagen, blijven variabel, aanpasbaar en | volledig doorrekenbaar aan de klant, zelfs retro-actief. Deze prijsonderdelen zijn degene die de Regulatoren hebben goedgekeurd op het moment | van opmaak van deze tariefkaart. In het geval dat er een verschil zou zijn tussen de tarieven van OCTA+ enerzijds en de wettelijke bijdragen en"
+        }
+      ],
+      "geschiktheid": {
+        "domiciliering_verplicht": "onbekend",
+        "aandelen_verplicht": "onbekend",
+        "groepsaankoop_verplicht": "onbekend",
+        "digitale_meter_verplicht": "onbekend",
+        "zonnepanelen_verplicht": "onbekend",
+        "analoge_meter_toegelaten": "onbekend",
+        "variabel_contract": "onbekend",
+        "particuliere_klant": "onbekend",
+        "netgebied": "onbekend"
+      },
       "pdf_sha256": "432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
       "ocr_paginas": 0,
       "reden": "pdf_gecontroleerd_bedragen_nog_niet_gevalideerd"
