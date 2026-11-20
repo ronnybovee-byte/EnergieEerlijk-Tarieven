@@ -117,9 +117,6 @@ def extract_evidence(pdf_bytes, name):
                     r'\(?\s*€\s*/\s*jaar\s*\)?',
                     heading, re.I
                 )
-                    r'vaste\s+vergoeding\s*\(?\s*€\s*/\s*jaar\s*\)?',
-                    heading, re.I
-                )
                 if label:
                     amounts = [
                         w for w in page.extract_words()
