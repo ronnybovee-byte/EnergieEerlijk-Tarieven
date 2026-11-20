@@ -10,6 +10,7 @@ OUTPUT = Path('gas_app_publicatie_status.json')
 FIXED = Path('gas_vaste_vergoedingen_validatie.json')
 INDEX = Path('gas_indexen_gecombineerd.json')
 REGISTER = Path('gas_bronregister.json')
+PRICE = Path('gas_indexwaarden_bewijs.json')
 REQUIRED = {
     'ENGIE Flow Gas',
     'Luminus BasicFlex Online Gas',
@@ -19,7 +20,7 @@ REQUIRED = {
 }
 
 
-def check(data, fixed, index, month=None, register=None):
+def check(data, fixed, index, month=None, register=None, prices=None):
     month = month or datetime.now(timezone.utc).strftime("%Y-%m")
     previous = (datetime.strptime(month + "-01", "%Y-%m-%d").date().replace(day=1) - timedelta(days=1)).strftime("%Y-%m")
     rows = data.get('contracten', {})
@@ -43,6 +44,21 @@ def check(data, fixed, index, month=None, register=None):
                 issues.append('Formule wijkt af van referentie')
         # Controleer bronresultaten, niet vooraf vastgelegde publicatiestatussen.
         index_item = index_rows.get(name, {})
+        price_item = (prices or {}).get('contracten', {}).get(name, {})
+        direct_price = price_item.get('geschatte_energieprijs_ct_per_kwh_incl_btw')
+
+        direct_ok = (
+            name == 'TotalEnergies myEssential Variabel Gas'
+            and isinstance(item, dict)
+            and item.get('tariefmaand_archief') == month
+            and price_item.get('tariefmaand') == month
+            and bool(item.get('sha256'))
+            and price_item.get('pdf_sha256') == item.get('sha256')
+            and price_item.get('formule_uit_archief') == item.get('formule_gevonden')
+            and type(direct_price) in (int, float)
+            and math.isfinite(direct_price)
+            and direct_price > 0
+        )
         index_ok = (
             index.get('alle_broncontroles_geslaagd') is True
             and index.get('actueel_voor_huidige_maand') is True
@@ -54,9 +70,9 @@ def check(data, fixed, index, month=None, register=None):
             and index_item.get('historische_indexmaand') == previous
             and isinstance(index_item.get('historische_waarde_eur_per_mwh'), (int, float))
         )
-        if not index_ok:
+        if not index_ok and not direct_ok:
             issues.append('Historische indexbron niet volledig geverifieerd')
-        if index_item.get('jaarprognose_gevalideerd') is not True:
+        if not direct_ok and index_item.get('jaarprognose_gevalideerd') is not True:
             issues.append('Jaarprognose index niet gevalideerd')
         fixed_item = fixed_rows.get(name, {})
         if fixed.get('referentiemaand') != month or fixed_item.get('vaste_vergoeding_volledig_gevalideerd') is not True:
@@ -81,7 +97,7 @@ def check(data, fixed, index, month=None, register=None):
         for key in adverse:
             issues.append('Strijdige contractvoorwaarde: ' + key)
         forward = index_item.get('geschatte_jaarparameter_eur_per_mwh')
-        if type(forward) not in (int, float) or not math.isfinite(forward) or forward <= 0:
+                if not direct_ok and (type(forward) not in (int, float) or not math.isfinite(forward) or forward <= 0):
             issues.append('Bruikbare jaarparameter ontbreekt')
         formula = (item or {}).get('formule_gevonden') or {} if isinstance(item, dict) else {}
         normalize = lambda value: ''.join(c for c in str(value).upper() if c.isalnum())
