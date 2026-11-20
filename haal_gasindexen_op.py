@@ -57,7 +57,9 @@ def collect_octaplus_forward():
                     value = str(row[6] or '').strip()
 
                     if re.fullmatch(r'\d+(?:[,.]\d+)?', value):
-                        found.add(float(value.replace(',', '.')))
+                        number = float(value.replace(',', '.'))
+                        if 1 <= number <= 1000:
+                            found.add(number)
 
     if len(found) != 1:
         raise ValueError(
