@@ -107,6 +107,29 @@ def extract_evidence(pdf_bytes, name):
                                            'positie': {'x': round(amount['x0'], 1),
                                                        'y': round(amount['top'], 1)},
                                            'status': 'visuele_kandidaat_niet_gevalideerd'})
+                if name == 'Ecofix Flexy Online' and page_no == 1:
+                heading, _ = lees_pdf(pdf_bytes)
+                heading = clean(heading)
+                label = re.search(
+                    r'vaste\s+vergoeding\s*\(?\s*€\s*/\s*jaar\s*\)?',
+                    heading, re.I
+                )
+                if label:
+                    amounts = [
+                        w for w in page.extract_words()
+                        if 0.18 < w['x0'] / page.width < 0.37
+                        and 0.51 < w['top'] / page.height < 0.56
+                        and re.fullmatch(r'\d{1,4}[,.]\d{2}', w['text'])
+                    ]
+                    if len(amounts) == 1:
+                        candidates.append({
+                            'bron': 'visuele_kolom',
+                            'pagina': page_no,
+                            'labelcel': label.group(0),
+                            'jaareenheid_bevestigd': True,
+                            'bedrag': amounts[0]['text'].replace(',', '.'),
+                            'status': 'visuele_kandidaat_niet_gevalideerd'
+                        })           
             for table_no, table in enumerate(page.extract_tables() or [], 1):
                 for row_no, row in enumerate(table or [], 1):
                     cells = [clean(c) for c in (row or [])]
