@@ -2,6 +2,7 @@
 """Onderzoek vaste gasvergoeding in gehashte tariefkaart-PDF's.
 
 Rapport is bewijsmateriaal, geen automatische prijsgoedkeuring.
+Jaareenheid moet expliciet uit de PDF blijken.
 Vervangt controle_gas_vaste_vergoeding.py; workflow blijft ongewijzigd.
 """
 import hashlib
@@ -58,6 +59,10 @@ def extract_evidence(pdf_bytes, name):
                     same_line = [w for w in words if abs(w['top'] - label['top']) < 9 and label['x0'] <= w['x0'] < 310]
                     if not any('vergoeding' in w['text'].lower() for w in same_line):
                         continue
+                    # Use actual printed text in the heading area, not an invented unit.
+                    heading = clean(page.crop((label['x0'] - 2, max(0, label['top'] - 3), 310, min(page.height, label['top'] + 12))).extract_text() or '')
+                    if not LABEL.search(heading) or not ANNUAL.search(heading):
+                        continue
                     amounts = [w for w in words
                                if label['top'] + 12 < w['top'] < min(label['top'] + 90, 490)
                                and 70 < w['x0'] < 310
@@ -65,7 +70,8 @@ def extract_evidence(pdf_bytes, name):
                     if len(amounts) == 1:
                         amount = amounts[0]
                         candidates.append({'bron': 'visuele_kolom', 'pagina': page_no,
-                                           'labelcel': 'Vaste vergoeding (€/jaar)',
+                                           'labelcel': heading,
+                                           'jaareenheid_bevestigd': True,
                                            'bedrag': amount['text'].replace(',', '.'),
                                            'positie': {'x': round(amount['x0'], 1),
                                                        'y': round(amount['top'], 1)},
@@ -83,14 +89,14 @@ def extract_evidence(pdf_bytes, name):
                         adjacent_numbers = MONEY.findall(adjacent)
                         amount = None
                         confidence = 'handmatige_controle_nodig'
-                        if not own_numbers and re.fullmatch(r'\s*€?\s*\d{1,4}(?:[.,]\d{1,2})?\s*€?\s*', adjacent):
+                        if ANNUAL.search(cell) and not own_numbers and re.fullmatch(r'\s*€?\s*\d{1,4}(?:[.,]\d{1,2})?\s*€?\s*', adjacent):
                             amount = adjacent.replace('€', '').strip().replace(',', '.')
                             confidence = 'tabelcel_kandidaat_niet_gevalideerd'
                         candidates.append({'bron': 'tabel', 'pagina': page_no,
                                            'tabel': table_no, 'rij': row_no,
                                            'labelcel': cell[:250], 'naastliggende_cel': adjacent[:250],
                                            'rijtekst': ' | '.join(cells)[:650],
-                                           'bedrag': amount, 'status': confidence})
+                                           'bedrag': amount, 'jaareenheid_bevestigd': bool(ANNUAL.search(cell)), 'status': confidence})
     return candidates[:70], vat_evidence[:15], condition_evidence[:20]
 
 
