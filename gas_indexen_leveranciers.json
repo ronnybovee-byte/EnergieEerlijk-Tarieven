@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-20T12:22:02.267339+00:00",
+  "gegenereerd_op_utc": "2026-11-20T17:13:34.088949+00:00",
   "voor_android_app": false,
   "status": "HISTORISCHE_BRONCONTROLE_GEEN_JAARPRIJS",
   "contracten": {
@@ -29,7 +29,8 @@
       "waarde_ct_per_kwh": 8.7893,
       "aantal_historische_maanden": 25,
       "jaarprognose_gevalideerd": false,
-      "geschikt_voor_automatische_jaarprijs": false
+      "geschikt_voor_automatische_jaarprijs": false,
+      "jaarprognose_reden": "Geen eenduidige actuele OCTA+ jaarparameter gevonden"
     }
   }
 }
