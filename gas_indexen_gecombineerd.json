@@ -1,28 +1,31 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-20T10:28:59.130944+00:00",
+  "gegenereerd_op_utc": "2026-11-20T11:02:00.135239+00:00",
   "status": "GECOMBINEERDE_BRONGEGEVENS_GEEN_JAARPRIJSVALIDATIE",
   "voor_android_app": false,
   "geschikt_voor_automatische_jaarprijs": false,
   "bronnen": [
     "gas_indexen_leveranciers.json",
-    "gas_luminus_index.json"
+    "gas_luminus_index.json",
+    "gas_indexwaarden_genormaliseerd.json"
   ],
   "contracten": {
     "ENGIE Flow Gas": {
-      "status": "HISTORISCHE_BRONWAARDE_GECONTROLEERD",
+      "status": "HISTORISCHE_EN_FORWARD_BRONWAARDEN_GECONTROLEERD",
       "index": "ZTPDAM (Heren)",
       "historische_indexmaand": "2026-10",
       "historische_waarde_eur_per_mwh": 85.777,
-      "geschatte_jaarparameter_eur_per_mwh": null,
-      "herkomst_jaarparameter": null,
+      "geschatte_jaarparameter_eur_per_mwh": 89.2144,
+      "herkomst_jaarparameter": "gas_indexwaarden_genormaliseerd.json",
       "bron_url": "https://www.engie.be/nl/energie/elektriciteit-gas/prijzen-voorwaarden/indexatieparameters/indexatieparameters-gas",
-      "jaarprognose_gevalideerd": false,
-      "jaarparameter_bronbewijs": null,
+      "jaarprognose_gevalideerd": true,
+      "jaarparameter_bronbewijs": {
+        "bron": "gas_indexwaarden_genormaliseerd.json",
+        "tariefmaand": "2026-11",
+        "bronbewijs_consistent": true
+      },
       "geschikt_voor_automatische_jaarprijs": false,
-      "blokkades": [
-        "Jaarprognose niet gevalideerd"
-      ]
+      "blokkades": []
     },
     "OCTA+ Boost Flex Gas": {
       "status": "HISTORISCHE_BRONWAARDE_GECONTROLEERD",
