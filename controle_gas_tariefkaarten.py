@@ -13,7 +13,7 @@ from pathlib import Path
 import re
 import sys
 
-import fitz
+import pymupdf as fitz
 import pdfplumber
 import pytesseract
 import requests
