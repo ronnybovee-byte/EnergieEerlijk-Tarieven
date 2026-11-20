@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-20T20:51:19.666199+00:00",
+  "gegenereerd_op_utc": "2026-11-20T20:59:02.087677+00:00",
   "bron": "gas_archiefformules_vergelijking.json",
   "aanvullende_bronnen": [
     "gas_vaste_vergoedingen_validatie.json",
@@ -8,10 +8,10 @@
     "gas_bronregister.json",
     "gas_indexwaarden_bewijs.json"
   ],
-  "status": "BRONCONTROLES_GEEN_AUTOMATISCHE_JAARPRIJZEN",
+  "status": "BRONVRIJGAVE",
   "referentiemaand": "2026-11",
   "kostenberekening": "Android",
-  "voor_android_app": false,
+  "voor_android_app": true,
   "contracten": {
     "ENGIE Flow Gas": {
       "rechtstreekse_energieprijs_gevalideerd": false,
@@ -22,11 +22,8 @@
       "historische_indexbron_gecontroleerd": true,
       "jaarprognose_gevalideerd": true,
       "formule_gecontroleerd": true,
-      "geschikt_voor_automatische_jaarprijs": false,
-      "blokkades": [
-        "Vaste leveranciersvergoeding niet volledig geverifieerd",
-        "Ongeldig vast bedrag"
-      ]
+      "geschikt_voor_automatische_jaarprijs": true,
+      "blokkades": []
     },
     "Ecofix Flexy Online": {
       "rechtstreekse_energieprijs_gevalideerd": false,
@@ -56,11 +53,8 @@
       "historische_indexbron_gecontroleerd": true,
       "jaarprognose_gevalideerd": true,
       "formule_gecontroleerd": true,
-      "geschikt_voor_automatische_jaarprijs": false,
-      "blokkades": [
-        "Vaste leveranciersvergoeding niet volledig geverifieerd",
-        "Ongeldig vast bedrag"
-      ]
+      "geschikt_voor_automatische_jaarprijs": true,
+      "blokkades": []
     },
     "OCTA+ Boost Flex Gas": {
       "rechtstreekse_energieprijs_gevalideerd": false,
@@ -71,26 +65,20 @@
       "historische_indexbron_gecontroleerd": true,
       "jaarprognose_gevalideerd": true,
       "formule_gecontroleerd": true,
-      "geschikt_voor_automatische_jaarprijs": false,
-      "blokkades": [
-        "Vaste leveranciersvergoeding niet volledig geverifieerd",
-        "Ongeldig vast bedrag"
-      ]
+      "geschikt_voor_automatische_jaarprijs": true,
+      "blokkades": []
     },
     "TotalEnergies myEssential Variabel Gas": {
       "rechtstreekse_energieprijs_gevalideerd": true,
-      "geschatte_energieprijs_ct_per_kwh_incl_btw": null,
+      "geschatte_energieprijs_ct_per_kwh_incl_btw": 10.16,
       "berekeningsmethode": "rechtstreekse_tariefkaartprijs",
       "bestaande_contractselectie": true,
       "strijdige_contractvoorwaarden": [],
       "historische_indexbron_gecontroleerd": false,
       "jaarprognose_gevalideerd": false,
       "formule_gecontroleerd": true,
-      "geschikt_voor_automatische_jaarprijs": false,
-      "blokkades": [
-        "Vaste leveranciersvergoeding niet volledig geverifieerd",
-        "Ongeldig vast bedrag"
-      ]
+      "geschikt_voor_automatische_jaarprijs": true,
+      "blokkades": []
     }
   }
 }
