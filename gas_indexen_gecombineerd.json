@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-20T10:06:16.825373+00:00",
+  "gegenereerd_op_utc": "2026-11-20T10:28:59.130944+00:00",
   "status": "GECOMBINEERDE_BRONGEGEVENS_GEEN_JAARPRIJSVALIDATIE",
   "voor_android_app": false,
   "geschikt_voor_automatische_jaarprijs": false,
@@ -14,13 +14,14 @@
       "index": "ZTPDAM (Heren)",
       "historische_indexmaand": "2026-10",
       "historische_waarde_eur_per_mwh": 85.777,
-      "geschatte_jaarparameter_eur_per_mwh": 89.2144,
-      "herkomst_jaarparameter": "tariefkaart_november_2026",
+      "geschatte_jaarparameter_eur_per_mwh": null,
+      "herkomst_jaarparameter": null,
       "bron_url": "https://www.engie.be/nl/energie/elektriciteit-gas/prijzen-voorwaarden/indexatieparameters/indexatieparameters-gas",
       "jaarprognose_gevalideerd": false,
+      "jaarparameter_bronbewijs": null,
       "geschikt_voor_automatische_jaarprijs": false,
       "blokkades": [
-        "Jaarprijs en contractvoorwaarden niet gevalideerd"
+        "Jaarprognose niet gevalideerd"
       ]
     },
     "OCTA+ Boost Flex Gas": {
@@ -32,9 +33,10 @@
       "herkomst_jaarparameter": null,
       "bron_url": "https://files.octaplus.be/tariffs/parameters_aardgas_nl.pdf",
       "jaarprognose_gevalideerd": false,
+      "jaarparameter_bronbewijs": null,
       "geschikt_voor_automatische_jaarprijs": false,
       "blokkades": [
-        "Jaarprijs en contractvoorwaarden niet gevalideerd"
+        "Jaarprognose niet gevalideerd"
       ]
     },
     "Luminus BasicFlex Online Gas": {
