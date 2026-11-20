@@ -22,7 +22,7 @@ def read_json(path):
 def close(a, b, tolerance=0.00051):
     return type(a) in (int, float) and abs(a-b) <= tolerance
 
-def combine(leveranciers, luminus, current=None):
+def combine(leveranciers, luminus, current=None, genormaliseerd=None):
     current = current or dt.datetime.now(dt.timezone.utc).strftime('%Y-%m')
     vorige_maand = (dt.date.fromisoformat(current + '-01') - dt.timedelta(days=1)).strftime('%Y-%m')
     result = {
@@ -31,7 +31,7 @@ def combine(leveranciers, luminus, current=None):
         'status': 'GECOMBINEERDE_BRONGEGEVENS_GEEN_JAARPRIJSVALIDATIE',
         'voor_android_app': False,
         'geschikt_voor_automatische_jaarprijs': False,
-        'bronnen': ['gas_indexen_leveranciers.json', 'gas_luminus_index.json'],
+        'bronnen': ['gas_indexen_leveranciers.json', 'gas_luminus_index.json', 'gas_indexwaarden_genormaliseerd.json'],
         'contracten': {}
     }
     contracts = leveranciers.get('contracten')
@@ -49,22 +49,29 @@ def combine(leveranciers, luminus, current=None):
                  and close(src.get('waarde_ct_per_kwh'), src.get('waarde_eur_per_mwh', -999) / 10, 0.000051)
                  and isinstance(src.get('bron_url'), str)
                  and src['bron_url'].startswith('https://'))
-        forward = src.get('geschatte_jaarparameter_eur_per_mwh')
-        evidence = src.get('jaarparameter_bronbewijs')
+        norm = genormaliseerd or {}
+        n = norm.get('contracten', {}).get(name, {})
+        forward = n.get('geschatte_jaarparameter_eur_per_mwh')
         eforward = (name == 'ENGIE Flow Gas' and valid
+                    and norm.get('schema_version') == 1
+                    and norm.get('referentiemaand') == current
+                    and n.get('tariefmaand') == current
+                    and n.get('index') == index
+                    and n.get('bronbewijs_consistent') is True
+                    and n.get('historische_indexmaand') == vorige_maand
                     and src.get('laatste_volledige_maand') == vorige_maand
-                    and src.get('jaarprognose_gevalideerd') is True
-                    and src.get('jaarparameter_tariefmaand') == current
+                    and close(n.get('historische_waarde_eur_per_mwh'), src.get('waarde_eur_per_mwh', -999))
                     and type(forward) in (int, float) and math.isfinite(forward)
-                    and forward > 0 and isinstance(evidence, dict)
-                    and evidence.get('tariefmaand') == current)
+                    and forward > 0)
+        evidence = {'bron': 'gas_indexwaarden_genormaliseerd.json',
+                    'tariefmaand': current, 'bronbewijs_consistent': True} if eforward else None
         result['contracten'][name] = {
             'status': 'HISTORISCHE_EN_FORWARD_BRONWAARDEN_GECONTROLEERD' if eforward else ('HISTORISCHE_BRONWAARDE_GECONTROLEERD' if valid else 'BRONCONTROLE_MISLUKT'),
             'index': index,
             'historische_indexmaand': src.get('laatste_volledige_maand') if valid else None,
             'historische_waarde_eur_per_mwh': src.get('waarde_eur_per_mwh') if valid else None,
             'geschatte_jaarparameter_eur_per_mwh': forward if eforward else None,
-            'herkomst_jaarparameter': src.get('herkomst_jaarparameter') if eforward else None,
+            'herkomst_jaarparameter': 'gas_indexwaarden_genormaliseerd.json' if eforward else None,
             'bron_url': src.get('bron_url') if valid else None,
             'jaarprognose_gevalideerd': eforward,
             'jaarparameter_bronbewijs': evidence if eforward else None,
@@ -117,10 +124,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--leveranciers', default='gas_indexen_leveranciers.json')
     parser.add_argument('--luminus', default='gas_luminus_index.json')
+    parser.add_argument('--genormaliseerd', default='gas_indexwaarden_genormaliseerd.json')
     parser.add_argument('--output', default='gas_indexen_gecombineerd.json')
     args = parser.parse_args()
     try:
-        result = combine(read_json(args.leveranciers), read_json(args.luminus))
+        try:
+            norm = read_json(args.genormaliseerd)
+        except (OSError, ValueError):
+            norm = {}
+        result = combine(read_json(args.leveranciers), read_json(args.luminus), genormaliseerd=norm)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         result = {'schema_version': 1, 'status': 'BRONBESTAND_ONLEESBAAR',
                   'voor_android_app': False, 'geschikt_voor_automatische_jaarprijs': False,
