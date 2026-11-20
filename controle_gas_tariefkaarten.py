@@ -22,30 +22,35 @@ from PIL import Image
 GAS_CONTRACTEN = {
     "Ecofix Flexy Online": {
         "archief_identificatie": ["Ecofix", "Flexy Online"],
+        "vaste_vergoeding_methode": "visuele_kolom",
         "url": "https://portal.ecofixgp.be/docs/prices/current/GAS_Ecofix_Flexy_Online_NL.pdf",
         "verwachte_formule": {"index": "TTF-RLP-M", "factor": 0.1010, "toeslag": 0.2200},
         "vereiste_woorden": ["Ecofix", "Flexy Online", "Onze tariefformule voor aardgas"],
     },
     "TotalEnergies myEssential Variabel Gas": {
         "archief_identificatie": ["TotalEnergies", "myEssential Variabel"],
+        "vaste_vergoeding_methode": "visuele_kolom",
         "url": "https://totalenergies.be/static/marketing-documents/b2c/tariff-card/latest/MYESSENTIAL_GAS_VL_NL.pdf",
         "verwachte_formule": {"index": "TTF_M_RLP", "factor": 0.1010, "toeslag": 0.5740},
         "vereiste_woorden": ["myEssential"],
     },
     "Luminus BasicFlex Online Gas": {
         "archief_identificatie": ["Luminus", "BasicFlex Online"],
+        "vaste_vergoeding_methode": "visuele_kolom",
         "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
         "verwachte_formule": {"index": "TTF DAH M", "factor": 0.1001, "toeslag": 0.5279},
         "vereiste_woorden": ["BasicFlex"],
     },
     "ENGIE Flow Gas": {
         "archief_identificatie": ["ENGIE", "Flow"],
+        "vaste_vergoeding_methode": "visuele_kolom",
         "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
         "verwachte_formule": {"index": "ZTPDAM(HEREN)", "factor": 0.1020, "toeslag": 1.0095},
         "vereiste_woorden": ["Flow"],
     },
     "OCTA+ Boost Flex Gas": {
         "archief_identificatie": ["OCTA+", "Boost Flex"],
+        "vaste_vergoeding_methode": "visuele_kolom",
         "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
         "verwachte_formule": {"index": "ZTP RLP M", "factor": 1.020, "toeslag": 0.3200},
         "vereiste_woorden": ["Boost Flex"],
