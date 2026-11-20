@@ -13,6 +13,35 @@ METHODS = {'ENGIE Flow Gas': 'visuele_kolom', 'Luminus BasicFlex Online Gas': 't
 ANNUAL = re.compile(r'(?:€\s*/\s*jaar|euro\s*/\s*jaar|per\s+jaar|jaarlijkse)', re.I)
 VAT = re.compile(r'incl(?:usief)?\.?\s*(?:6\s*%\s*)?btw', re.I)
 
+def eligibility(row, source_ok):
+    keys = ('domiciliering_verplicht', 'aandelen_verplicht', 'groepsaankoop_verplicht',
+            'digitale_meter_verplicht', 'zonnepanelen_verplicht', 'analoge_meter_toegelaten',
+            'variabel_contract', 'particuliere_klant', 'netgebied')
+    values = dict.fromkeys(keys, 'onbekend')
+    evidence = {}
+    rules = row.get('geschiktheid_bronregels', []) if source_ok else []
+    patterns = {
+        'variabel_contract': ('ja', r'\(type\s*:\s*variabel\)|tarief\s*:\s*variabel|variabel aardgastarief'),
+        'particuliere_klant': ('ja', r'voor particulieren|geldig voor residentiële klanten|verbruikers\s*:\s*residentieel'),
+        'netgebied': ('ja', r'^fluvius antwerpen\s+\d'),
+        'domiciliering_verplicht': ('nee', r'u kiest ook uw betaalwijze\s*\(domiciliëring,\s*(?:[^|]{0,180}?contract op de startdatum\s+)?overschrijving of enige andere door luminus aangeboden betaalwijze\)'),
+    }
+    for key, (value, pattern) in patterns.items():
+        for rule in rules:
+            # Context is needed for clauses split across lines. Other checks use
+            # the actual line, except the residential heading in its local context.
+            field = 'context' if key in ('domiciliering_verplicht', 'particuliere_klant') else 'tekst'
+            content = re.sub(r'\s*(?:\|\s*)+', ' ', str(rule.get(field, '')))
+            if re.search(pattern, content, re.I):
+                values[key] = value
+                evidence[key] = rule
+                break
+    # Positive proof of the basic profile does not establish absence of restrictions.
+    expected = {k: 'nee' for k in keys[:5]}
+    expected.update({k: 'ja' for k in keys[5:]})
+    missing = [k for k in keys if values[k] != expected[k]]
+    return values, evidence, missing
+
 def check(name, row, method, month):
     row = row if isinstance(row, dict) else {}
     problems = []
@@ -40,14 +69,18 @@ def check(name, row, method, month):
     if not any(VAT.search(str(v.get('tekst', ''))) and v.get('pagina') == 1 for v in row.get('btw_bronregels', [])):
         problems.append('Inclusief btw niet bevestigd op prijspagina')
     ok = not problems
+    values, evidence, missing = eligibility(row, ok)
+    eligibility_ok = ok and not missing
     return {'vast_bedrag_eur_incl_btw_per_jaar': format(matches[0], '.2f') if ok else None,
             'bedrag_en_pdf_bewijs_gecontroleerd': ok,
             'vaste_vergoeding_volledig_gevalideerd': ok,
             'pdf_sha256': digest, 'pdf_url': row.get('pdf_url'),
             'voorwaarden_bronregels': row.get('voorwaarden_bronregels', []),
-            'voorwaarden_automatisch_gevalideerd': False,
+            'geschiktheid': values, 'geschiktheid_bewijs': evidence,
+            'geschiktheid_openstaande_criteria': missing,
+            'voorwaarden_automatisch_gevalideerd': eligibility_ok,
             'geschikt_voor_automatische_jaarprijs': False,
-            'blokkades': problems + ['Contractgeschiktheid afzonderlijk te valideren']}
+            'blokkades': problems + (['Contractgeschiktheid: ' + k for k in missing] if not eligibility_ok else [])}
 
 def main():
     data = json.loads(SOURCE.read_text(encoding='utf-8'))
