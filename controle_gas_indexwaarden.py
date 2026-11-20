@@ -96,7 +96,39 @@ def lees_ecofix_prijs(pdf):
         r'incl(?:usief)?\.?\s*6\s*%\s*btw',
         tekst, re.I
     ))
+    if not jaarprijs_ok:
+        with fitz.open(stream=pdf, filetype='pdf') as doc:
+            pagina = doc[0]
+            breedte = pagina.rect.width
+            hoogte = pagina.rect.height
 
+            uitsnede = fitz.Rect(
+                breedte * 0.35,
+                hoogte * 0.44,
+                breedte * 0.95,
+                hoogte * 0.59
+            )
+
+            pix = pagina.get_pixmap(
+                matrix=fitz.Matrix(5, 5),
+                clip=uitsnede,
+                alpha=False
+            )
+
+            afbeelding = Image.frombytes(
+                'RGB', (pix.width, pix.height), pix.samples
+            )
+
+            detailtekst = pytesseract.image_to_string(
+                afbeelding, lang='nld+eng', config='--psm 6'
+            )
+
+            jaarprijs_ok = bool(re.search(
+                r'verwachte\s+jaar\s*prijs',
+                detailtekst, re.I
+            ))
+
+            print('ECOFIX detail-OCR:', detailtekst)
     print('ECOFIX jaarprijslabel:', jaarprijs_ok)
     print('ECOFIX btw-label:', btw_ok)
     print('ECOFIX OCR:', tekst[:1800])
