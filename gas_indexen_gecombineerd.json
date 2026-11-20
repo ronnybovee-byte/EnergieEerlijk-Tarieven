@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-20T08:39:32.012788+00:00",
+  "gegenereerd_op_utc": "2026-11-20T08:49:32.010650+00:00",
   "status": "GECOMBINEERDE_BRONGEGEVENS_GEEN_JAARPRIJSVALIDATIE",
   "voor_android_app": false,
   "geschikt_voor_automatische_jaarprijs": false,
@@ -45,11 +45,9 @@
       "geschatte_jaarparameter_eur_per_mwh": 89.218,
       "herkomst_jaarparameter": "luminus_indexen_pdf_2026-11",
       "bron_url": "https://www.luminus.be/api-next/download/?fileId=file-e4aef677dbb655712c005c2be43bd4767dff0338-pdf&openFile=true",
-      "jaarprognose_gevalideerd": false,
+      "jaarprognose_gevalideerd": true,
       "geschikt_voor_automatische_jaarprijs": false,
-      "blokkades": [
-        "Jaarprijs en contractvoorwaarden niet gevalideerd"
-      ]
+      "blokkades": []
     }
   },
   "alle_broncontroles_geslaagd": true,

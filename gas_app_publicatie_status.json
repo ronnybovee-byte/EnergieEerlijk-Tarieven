@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-20T08:39:46.709631+00:00",
+  "gegenereerd_op_utc": "2026-11-20T08:49:44.810629+00:00",
   "bron": "gas_archiefformules_vergelijking.json",
   "aanvullende_bronnen": [
     "gas_vaste_vergoedingen_validatie.json",
@@ -23,11 +23,10 @@
     },
     "Luminus BasicFlex Online Gas": {
       "historische_indexbron_gecontroleerd": true,
-      "jaarprognose_gevalideerd": false,
+      "jaarprognose_gevalideerd": true,
       "formule_gecontroleerd": true,
       "geschikt_voor_automatische_jaarprijs": false,
       "blokkades": [
-        "Jaarprognose index niet gevalideerd",
         "Contractvoorwaarden niet automatisch gevalideerd"
       ]
     },
