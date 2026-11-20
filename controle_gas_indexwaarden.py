@@ -9,6 +9,9 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 import pdfplumber
+import pymupdf as fitz
+import pytesseract
+from PIL import Image
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
