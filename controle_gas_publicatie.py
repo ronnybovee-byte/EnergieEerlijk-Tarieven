@@ -48,7 +48,10 @@ def check(data, fixed, index, month=None, register=None, prices=None):
         direct_price = price_item.get('geschatte_energieprijs_ct_per_kwh_incl_btw')
 
         direct_ok = (
-            name == 'TotalEnergies myEssential Variabel Gas'
+            name in (
+                'TotalEnergies myEssential Variabel Gas',
+                'Ecofix Flexy Online'
+            )
             and isinstance(item, dict)
             and item.get('tariefmaand_archief') == month
             and price_item.get('tariefmaand') == month
