@@ -10,7 +10,13 @@ OUTPUT = Path('gas_app_publicatie_status.json')
 FIXED = Path('gas_vaste_vergoedingen_validatie.json')
 INDEX = Path('gas_indexen_gecombineerd.json')
 REGISTER = Path('gas_bronregister.json')
-REQUIRED = {'ENGIE Flow Gas', 'Luminus BasicFlex Online Gas', 'OCTA+ Boost Flex Gas'}
+REQUIRED = {
+    'ENGIE Flow Gas',
+    'Luminus BasicFlex Online Gas',
+    'OCTA+ Boost Flex Gas',
+    'Ecofix Flexy Online',
+    'TotalEnergies myEssential Variabel Gas',
+}
 
 
 def check(data, fixed, index, month=None, register=None):
