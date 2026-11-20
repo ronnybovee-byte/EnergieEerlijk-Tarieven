@@ -13,7 +13,7 @@ METHODS = {
     'ENGIE Flow Gas': 'visuele_kolom',
     'Luminus BasicFlex Online Gas': 'tabel',
     'OCTA+ Boost Flex Gas': 'tabel',
-    'Ecofix Flexy Online': 'tabel',
+    'Ecofix Flexy Online': 'visuele_kolom',
     'TotalEnergies myEssential Variabel Gas': 'tabel',
 }
 ANNUAL = re.compile(r'(?:€\s*/\s*jaar|euro\s*/\s*jaar|per\s+jaar|jaarlijkse)', re.I)
