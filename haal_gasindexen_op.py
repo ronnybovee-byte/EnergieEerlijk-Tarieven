@@ -35,32 +35,27 @@ def collect_octaplus_forward():
 
     with pdfplumber.open(io.BytesIO(response.content)) as pdf:
         for page in pdf.pages:
-            for table in page.extract_tables():
-                if not table:
+            lines = (page.extract_text() or '').splitlines()
+
+            if not any('TTF ZTP' in line for line in lines):
+                continue
+
+            for line in lines:
+                parts = line.split()
+
+                if not parts or parts[0] != current_month:
                     continue
 
-                header = ' '.join(
-                    str(cell or '')
-                    for row in table[:4]
-                    for cell in row
-                )
-                if 'ZTP' not in header or 'TTF' not in header:
+                if len(parts) != 7:
                     continue
 
-                for row in table:
-                    if len(row) != 7:
-                        continue
+                if not all(re.fullmatch(r'\d+(?:[,.]\d+)?', v) for v in parts[1:]):
+                    continue
 
-                    if str(row[0] or '').strip() != current_month:
-                        continue
+                number = float(parts[-1].replace(',', '.'))
 
-                    value = str(row[6] or '').strip()
-
-                    if re.fullmatch(r'\d+(?:[,.]\d+)?', value):
-                        number = float(value.replace(',', '.'))
-                        if 1 <= number <= 1000:
-                            found.add(number)
-
+                if 1 <= number <= 1000:
+                    found.add(number)
     if len(found) != 1:
         raise ValueError(
             'Geen eenduidige actuele OCTA+ jaarparameter gevonden'
