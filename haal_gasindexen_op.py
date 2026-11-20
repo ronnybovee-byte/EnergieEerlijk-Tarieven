@@ -132,7 +132,7 @@ def main():
                   'OCTA+ Boost Flex Gas': {'status': 'BRON_NIET_BEREIKBAAR_OF_FORMAAT_ONBEKEND'}
               }}
     try:
-                entry = collect_octaplus()
+        entry = collect_octaplus()
 
         try:
             forward = collect_octaplus_forward()
@@ -144,7 +144,8 @@ def main():
             entry['jaarprognose_reden'] = str(exc)
 
         report['contracten']['OCTA+ Boost Flex Gas'] = entry
-    except (requests.RequestException, ValueError, Exception) as exc:
+
+    except Exception as exc:
         report['contracten']['OCTA+ Boost Flex Gas']['fout'] = f'{type(exc).__name__}: {str(exc)[:300]}'
     OUT.write_text(json.dumps(report, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
     print('Rapport:', OUT)
