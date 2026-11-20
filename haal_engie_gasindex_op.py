@@ -91,12 +91,11 @@ def parse_engie(html, today=None):
                     conflict = True
                     break
                 grouped[month] = value
-            if (not conflict and '2026-10' in grouped
-                    and abs(grouped['2026-10'] - 85.777) <= 0.002):
+            if not conflict and grouped:
                 valid_tables.append(grouped)
             break
     if not valid_tables:
-        raise ValueError('Geen ENGIE-tabel met juiste ZTP DAM-kolom en gecontroleerde oktoberreferentie')
+        raise ValueError('Geen consistente ENGIE-tabel met juiste ZTP DAM-kolom')
     # Alleen maanden accepteren waar alle bruikbare tabellen het over eens zijn.
     grouped = {}
     for month in set().union(*(t.keys() for t in valid_tables)):
@@ -111,8 +110,8 @@ def parse_engie(html, today=None):
     last = max(grouped)
     # Een oude publicatie mag nooit stilzwijgend als actuele index gelden.
     last_complete = (today.replace(day=1) - dt.timedelta(days=1)).strftime('%Y-%m')
-    if last > last_complete:
-        raise ValueError('ENGIE indexmaand nog niet afgesloten')
+    if last != last_complete:
+        raise ValueError('ENGIE-index van de vorige volledige maand ontbreekt')
     return {'status': 'HISTORISCHE_INDEX_GEVONDEN', 'bron_url': URL,
             'index': 'ZTPDAM (Heren)', 'index_definitie': 'ZTP DAM',
             'laatste_volledige_maand': last, 'waarde_eur_per_mwh': grouped[last],
