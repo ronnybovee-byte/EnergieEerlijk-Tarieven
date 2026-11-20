@@ -7,6 +7,7 @@ Output: gas_indexen_gecombineerd.json. Fail closed; geen jaarprijs/publicatie.
 import argparse
 import datetime as dt
 import json
+import math
 from pathlib import Path
 
 REF = {'ENGIE Flow Gas': (85.777, 'ZTPDAM (Heren)', 'ZTP DAM'),
@@ -48,17 +49,27 @@ def combine(leveranciers, luminus, current=None):
                  and close(src.get('waarde_ct_per_kwh'), src.get('waarde_eur_per_mwh', -999) / 10, 0.000051)
                  and isinstance(src.get('bron_url'), str)
                  and src['bron_url'].startswith('https://'))
+        forward = src.get('geschatte_jaarparameter_eur_per_mwh')
+        evidence = src.get('jaarparameter_bronbewijs')
+        eforward = (name == 'ENGIE Flow Gas' and valid
+                    and src.get('laatste_volledige_maand') == vorige_maand
+                    and src.get('jaarprognose_gevalideerd') is True
+                    and src.get('jaarparameter_tariefmaand') == current
+                    and type(forward) in (int, float) and math.isfinite(forward)
+                    and forward > 0 and isinstance(evidence, dict)
+                    and evidence.get('tariefmaand') == current)
         result['contracten'][name] = {
-            'status': 'HISTORISCHE_BRONWAARDE_GECONTROLEERD' if valid else 'BRONCONTROLE_MISLUKT',
+            'status': 'HISTORISCHE_EN_FORWARD_BRONWAARDEN_GECONTROLEERD' if eforward else ('HISTORISCHE_BRONWAARDE_GECONTROLEERD' if valid else 'BRONCONTROLE_MISLUKT'),
             'index': index,
             'historische_indexmaand': src.get('laatste_volledige_maand') if valid else None,
             'historische_waarde_eur_per_mwh': src.get('waarde_eur_per_mwh') if valid else None,
-            'geschatte_jaarparameter_eur_per_mwh': 89.2144 if valid and name == 'ENGIE Flow Gas' and current == '2026-11' and src.get('laatste_volledige_maand') == '2026-10' else None,
-            'herkomst_jaarparameter': 'tariefkaart_november_2026' if valid and name == 'ENGIE Flow Gas' and current == '2026-11' and src.get('laatste_volledige_maand') == '2026-10' else None,
+            'geschatte_jaarparameter_eur_per_mwh': forward if eforward else None,
+            'herkomst_jaarparameter': src.get('herkomst_jaarparameter') if eforward else None,
             'bron_url': src.get('bron_url') if valid else None,
-            'jaarprognose_gevalideerd': False,
+            'jaarprognose_gevalideerd': eforward,
+            'jaarparameter_bronbewijs': evidence if eforward else None,
             'geschikt_voor_automatische_jaarprijs': False,
-            'blokkades': ['Jaarprijs en contractvoorwaarden niet gevalideerd'] if valid else ['Historische brongegevens niet betrouwbaar bevestigd']
+            'blokkades': [] if eforward else (['Jaarprognose niet gevalideerd'] if valid else ['Historische brongegevens niet betrouwbaar bevestigd'])
         }
     lvalid = (luminus.get('status') == 'INDEX_EN_FORWARD_UIT_PDF_GEVONDEN'
               and luminus.get('index') == 'TTF DAH M'
