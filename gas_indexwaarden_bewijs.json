@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-20T21:12:59.239006+00:00",
+  "gegenereerd_op_utc": "2026-11-20T21:40:21.587212+00:00",
   "bron": "gas_archiefformules_vergelijking.json",
   "status": "INDEX_BEWIJS_GEEN_PRIJSVALIDATIE",
   "voor_android_app": false,
@@ -238,12 +238,36 @@
     },
     "TotalEnergies myEssential Variabel Gas": {
       "tariefmaand": "2026-11",
-      "status": "NIET_GEVERIFIEERD",
+      "status": "INDEX_NIET_GEVONDEN",
       "indexwaarde_gevalideerd": false,
       "geschikt_voor_automatische_jaarprijs": false,
       "index_bronregels": [],
-      "waarde_bronregels": [],
-      "reden": "pdf_controle_mislukt: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
+      "waarde_bronregels": [
+        {
+          "pagina": 2,
+          "regel": 37,
+          "tekst": "Fluvius Zenne-Dijle 2,60 1,02 0,64 18,40 97,72 660,64 0,17 18,92 0,00 Federale bijdrage 4 c€/kWh Verbruik tussen 0 & 12.000 kWh 1,09 > 12.000 kWh 1,18 Het aanbod TotalEnergies myEssential Variabel is onderworpen aan de bijzondere voorwaarden van het product myEssential Variabel",
+          "getallen_met_eenheid": [
+            "4 c€/kWh"
+          ]
+        },
+        {
+          "pagina": 2,
+          "regel": 38,
+          "tekst": "Federale bijdrage 4 c€/kWh Verbruik tussen 0 & 12.000 kWh 1,09 > 12.000 kWh 1,18 Het aanbod TotalEnergies myEssential Variabel is onderworpen aan de bijzondere voorwaarden van het product myEssential Variabel (https://totalenergies.be/nl/files/CGV-myEssential.pdf) en aan algemene voorwaarden van TotalEnergies. Als de contractvoorwaarden van",
+          "getallen_met_eenheid": [
+            "4 c€/kWh"
+          ]
+        }
+      ],
+      "geschatte_energieprijs_ct_per_kwh_incl_btw": 10.16,
+      "pdf_sha256": "8ff4e5eda77b3326f76062db7f131cd7b99dec9f467699e498f6accbb7d75971",
+      "formule_uit_archief": {
+        "index": "TTF_M_RLP",
+        "factor": 0.101,
+        "toeslag": 0.574
+      },
+      "reden": "Maandwaarde, jaarparameter, eenheden en definitie afzonderlijk controleren; geen automatische goedkeuring"
     }
   }
 }

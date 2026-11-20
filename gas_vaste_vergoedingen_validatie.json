@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-20T21:12:58.858542+00:00",
+  "gegenereerd_op_utc": "2026-11-20T21:40:21.277333+00:00",
   "bron": "gas_vaste_vergoeding_kandidaten.json",
   "referentiemaand": "2026-11",
   "status": "VASTE_VERGOEDING_BEWIJSCONTROLE_GEEN_JAARPRIJZEN",
@@ -231,9 +231,9 @@
       ]
     },
     "Ecofix Flexy Online": {
-      "vast_bedrag_eur_incl_btw_per_jaar": null,
-      "bedrag_en_pdf_bewijs_gecontroleerd": false,
-      "vaste_vergoeding_volledig_gevalideerd": false,
+      "vast_bedrag_eur_incl_btw_per_jaar": "10.00",
+      "bedrag_en_pdf_bewijs_gecontroleerd": true,
+      "vaste_vergoeding_volledig_gevalideerd": true,
       "pdf_sha256": "dff71fecec519c27bf6c74164133d8567be4e7ed0de4630f9e039d2d8b3fdc1d",
       "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=dff71fecec519c27bf6c74164133d8567be4e7ed0de4630f9e039d2d8b3fdc1d",
       "voorwaarden_bronregels": [],
@@ -246,9 +246,19 @@
         "analoge_meter_toegelaten": "onbekend",
         "variabel_contract": "onbekend",
         "particuliere_klant": "onbekend",
-        "netgebied": "onbekend"
+        "netgebied": "ja"
       },
-      "geschiktheid_bewijs": {},
+      "geschiktheid_bewijs": {
+        "netgebied": {
+          "pagina": 1,
+          "regel": 37,
+          "criteria": [
+            "netgebied"
+          ],
+          "tekst": "Fluvius Antwerpen 15,68 2,257 83,22 0,905 562,63 0,586 18,92 0,165",
+          "context": "netbeheerder | Fluvius Antwerpen 15,68 2,257 83,22 0,905 562,63 0,586 18,92 0,165 | Fluvius Halle-Vilvoorde 17,59 2,496 93,38 0,981 631,27 0,621 18,92 0,165 | Fluvius Imewo 18,61 2,628 98,81 1,024 668,02 0,644 18,92 0,165"
+        }
+      },
       "geschiktheid_openstaande_criteria": [
         "domiciliering_verplicht",
         "aandelen_verplicht",
@@ -257,13 +267,11 @@
         "zonnepanelen_verplicht",
         "analoge_meter_toegelaten",
         "variabel_contract",
-        "particuliere_klant",
-        "netgebied"
+        "particuliere_klant"
       ],
       "voorwaarden_automatisch_gevalideerd": false,
       "geschikt_voor_automatische_jaarprijs": false,
       "blokkades": [
-        "Geen uniek jaarlijks bedrag met bevestigd PDF-label",
         "Contractgeschiktheid: domiciliering_verplicht",
         "Contractgeschiktheid: aandelen_verplicht",
         "Contractgeschiktheid: groepsaankoop_verplicht",
@@ -271,8 +279,7 @@
         "Contractgeschiktheid: zonnepanelen_verplicht",
         "Contractgeschiktheid: analoge_meter_toegelaten",
         "Contractgeschiktheid: variabel_contract",
-        "Contractgeschiktheid: particuliere_klant",
-        "Contractgeschiktheid: netgebied"
+        "Contractgeschiktheid: particuliere_klant"
       ]
     },
     "TotalEnergies myEssential Variabel Gas": {
