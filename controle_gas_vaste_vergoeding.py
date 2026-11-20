@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-import fitz
+import pymupdf as fitz
 import pdfplumber
 import requests
 from controle_gas_tariefkaarten import lees_pdf
