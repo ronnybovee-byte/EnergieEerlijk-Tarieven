@@ -10,6 +10,7 @@ import pdfplumber
 import requests
 
 URL = 'https://files.octaplus.be/tariffs/parameters_aardgas_nl.pdf'
+OUT = Path('gas_indexen_leveranciers.json')
 FORWARD_URL = 'https://files.octaplus.be/tariffs/parameters_forward_nl.pdf'
 
 def collect_octaplus_forward():
