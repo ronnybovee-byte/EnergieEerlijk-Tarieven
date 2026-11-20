@@ -179,6 +179,24 @@ def inspect(name, info, session):
         # directly from the original PDF to preserve cell boundaries.
             ocr_text, ocr_pages = lees_pdf(raw)
         candidates, vat, conditions, eligibility = extract_evidence(raw, name)
+        if name == 'Ecofix Flexy Online':
+            eligibility.extend(geschiktheidsbewijs(ocr_text, None))
+            for line in ocr_text.splitlines():
+                line = clean(line)
+                if VAT.search(line):
+                    vat.append({
+                        'pagina': None,
+                        'tekst': line[:450],
+                        'bron': 'ocr'
+                    })
+                if CONDITIONS.search(line) and (
+                    LABEL.search(line) or 'vergoeding' in line.lower()
+                ):
+                    conditions.append({
+                        'pagina': None,
+                        'tekst': line[:450],
+                        'bron': 'ocr'
+                    })
         result.update({'pdf_sha256': digest, 'ocr_paginas': ocr_pages,
                        'kandidaten': candidates, 'btw_bronregels': vat,
                        'voorwaarden_bronregels': conditions,
