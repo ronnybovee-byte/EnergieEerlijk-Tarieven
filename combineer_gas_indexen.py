@@ -8,6 +8,8 @@ import argparse
 import datetime as dt
 import json
 import math
+import re
+from haal_engie_gasindex_op import MONTHS
 from pathlib import Path
 
 REF = {'ENGIE Flow Gas': (85.777, 'ZTPDAM (Heren)', 'ZTP DAM'),
@@ -52,11 +54,40 @@ def combine(leveranciers, luminus, current=None, genormaliseerd=None):
         norm = genormaliseerd or {}
         n = norm.get('contracten', {}).get(name, {})
         forward = n.get('geschatte_jaarparameter_eur_per_mwh')
+        historische_waarden = set()
+
+        for regel in n.get('index_bronregels', []):
+            tekst = regel.get('tekst', '')
+
+            patroon = (
+                r'laatst gekende waarde van\s+'
+                r'ZTPDAM\s*\(Heren\)\s*\('
+                r'([a-z]+)\s+(20\d{2}):\s*'
+                r'(\d{1,3}[,.]\d{1,4})'
+            )
+
+            for match in re.finditer(patroon, tekst, re.I):
+                maandnummer = MONTHS.get(match.group(1).lower())
+
+                if maandnummer:
+                    maand = f'{match.group(2)}-{maandnummer:02d}'
+                    waarde = float(match.group(3).replace(',', '.'))
+                    historische_waarden.add((maand, waarde))
+
+        historisch_ok = (
+            len(historische_waarden) == 1
+            and all(
+                maand == vorige_maand
+                and close(waarde, src.get('waarde_eur_per_mwh', -999))
+                for maand, waarde in historische_waarden
+            )
+        )
         eforward = (
             name == 'ENGIE Flow Gas'
             and valid
             and norm.get('schema_version') == 1
             and n.get('tariefmaand') == current
+            and historisch_ok
             and n.get('status') == 'BRONREGELS_GEVONDEN_HANDMATIGE_CONTROLE'
             and src.get('laatste_volledige_maand') == vorige_maand
             and type(forward) in (int, float)
