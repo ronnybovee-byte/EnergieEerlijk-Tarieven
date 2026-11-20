@@ -4,6 +4,7 @@ import json
 import math
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
+from controle_gas_tariefkaarten import GAS_CONTRACTEN
 
 SOURCE = Path('gas_archiefformules_vergelijking.json')
 OUTPUT = Path('gas_app_publicatie_status.json')
@@ -11,14 +12,6 @@ FIXED = Path('gas_vaste_vergoedingen_validatie.json')
 INDEX = Path('gas_indexen_gecombineerd.json')
 REGISTER = Path('gas_bronregister.json')
 PRICE = Path('gas_indexwaarden_bewijs.json')
-REQUIRED = {
-    'ENGIE Flow Gas',
-    'Luminus BasicFlex Online Gas',
-    'OCTA+ Boost Flex Gas',
-    'Ecofix Flexy Online',
-    'TotalEnergies myEssential Variabel Gas',
-}
-
 
 def check(data, fixed, index, month=None, register=None, prices=None):
     month = month or datetime.now(timezone.utc).strftime("%Y-%m")
@@ -28,7 +21,7 @@ def check(data, fixed, index, month=None, register=None, prices=None):
     index_rows = index.get('contracten', {})
     selected = (register or {}).get('contracten', {})
     result = {}
-    for name in sorted(REQUIRED):
+    for name in sorted(GAS_CONTRACTEN):
         item = rows.get(name)
         issues = []
         if not isinstance(item, dict):
