@@ -31,7 +31,7 @@ def combine(leveranciers, luminus, current=None, genormaliseerd=None):
         'status': 'GECOMBINEERDE_BRONGEGEVENS_GEEN_JAARPRIJSVALIDATIE',
         'voor_android_app': False,
         'geschikt_voor_automatische_jaarprijs': False,
-        'bronnen': ['gas_indexen_leveranciers.json', 'gas_luminus_index.json', 'gas_indexwaarden_genormaliseerd.json'],
+        'bronnen': ['gas_indexen_leveranciers.json', 'gas_luminus_index.json', 'gas_indexwaarden_bewijs.json'],
         'contracten': {}
     }
     contracts = leveranciers.get('contracten')
@@ -52,18 +52,18 @@ def combine(leveranciers, luminus, current=None, genormaliseerd=None):
         norm = genormaliseerd or {}
         n = norm.get('contracten', {}).get(name, {})
         forward = n.get('geschatte_jaarparameter_eur_per_mwh')
-        eforward = (name == 'ENGIE Flow Gas' and valid
-                    and norm.get('schema_version') == 1
-                    and norm.get('referentiemaand') == current
-                    and n.get('tariefmaand') == current
-                    and n.get('index') == index
-                    and n.get('bronbewijs_consistent') is True
-                    and n.get('historische_indexmaand') == vorige_maand
-                    and src.get('laatste_volledige_maand') == vorige_maand
-                    and close(n.get('historische_waarde_eur_per_mwh'), src.get('waarde_eur_per_mwh', -999))
-                    and type(forward) in (int, float) and math.isfinite(forward)
-                    and forward > 0)
-        evidence = {'bron': 'gas_indexwaarden_genormaliseerd.json',
+        eforward = (
+            name == 'ENGIE Flow Gas'
+            and valid
+            and norm.get('schema_version') == 1
+            and n.get('tariefmaand') == current
+            and n.get('status') == 'BRONREGELS_GEVONDEN_HANDMATIGE_CONTROLE'
+            and src.get('laatste_volledige_maand') == vorige_maand
+            and type(forward) in (int, float)
+            and math.isfinite(forward)
+            and 0 < forward <= 1000
+        )
+        evidence = {'bron': 'gas_indexwaarden_bewijs.json',
                     'tariefmaand': current, 'bronbewijs_consistent': True} if eforward else None
 
         if name == 'OCTA+ Boost Flex Gas':
@@ -149,7 +149,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--leveranciers', default='gas_indexen_leveranciers.json')
     parser.add_argument('--luminus', default='gas_luminus_index.json')
-    parser.add_argument('--genormaliseerd', default='gas_indexwaarden_genormaliseerd.json')
+    parser.add_argument('--genormaliseerd', default='gas_indexwaarden_bewijs.json')
     parser.add_argument('--output', default='gas_indexen_gecombineerd.json')
     args = parser.parse_args()
     try:
