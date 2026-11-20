@@ -112,6 +112,11 @@ def extract_evidence(pdf_bytes, name):
                 heading, _ = lees_pdf(pdf_bytes)
                 heading = clean(heading)
                 label = re.search(
+                    r'vaste\s+vergoed(?:ing)?\s*'
+                    r'(?:prijs\s+per\s+kwh\s*\(€\s*cent/kwh\)\s*)?'
+                    r'\(?\s*€\s*/\s*jaar\s*\)?',
+                    heading, re.I
+                )
                     r'vaste\s+vergoeding\s*\(?\s*€\s*/\s*jaar\s*\)?',
                     heading, re.I
                 )
