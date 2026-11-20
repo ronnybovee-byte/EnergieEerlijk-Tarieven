@@ -23,7 +23,7 @@ GAS_CONTRACTEN = {
     "Ecofix Flexy Online": {
         "url": "https://portal.ecofixgp.be/docs/prices/current/GAS_Ecofix_Flexy_Online_NL.pdf",
         "verwachte_formule": {"index": "TTF-RLP-M", "factor": 0.1010, "toeslag": 0.2200},
-        "vereiste_woorden": ["Ecofix Flexy Online", "Onze tariefformule voor aardgas"],
+        "vereiste_woorden": ["Ecofix", "Flexy Online", "Onze tariefformule voor aardgas"],
     },
     "TotalEnergies myEssential Variabel Gas": {
         "url": "https://totalenergies.be/static/marketing-documents/b2c/tariff-card/latest/MYESSENTIAL_GAS_VL_NL.pdf",
