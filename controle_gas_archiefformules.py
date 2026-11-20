@@ -61,6 +61,8 @@ def vergelijk(naam, kandidaat, referentie, sessie):
             resultaat['reden'] = 'geen_leesbare_tekst'
             return resultaat
         woorden = GAS_CONTRACTEN[naam].get('vereiste_woorden', [])
+        if naam == 'Ecofix Flexy Online':
+            woorden = ['Ecofix', 'Flexy Online']
         ontbrekend = [w for w in woorden if w.casefold() not in tekst.casefold()]
         resultaat['contract_herkend'] = not ontbrekend
         if ontbrekend:
