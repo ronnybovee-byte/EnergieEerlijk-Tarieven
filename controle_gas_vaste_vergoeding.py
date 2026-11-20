@@ -108,7 +108,7 @@ def extract_evidence(pdf_bytes, name):
                                            'positie': {'x': round(amount['x0'], 1),
                                                        'y': round(amount['top'], 1)},
                                            'status': 'visuele_kandidaat_niet_gevalideerd'})
-                if name == 'Ecofix Flexy Online' and page_no == 1:
+            if name == 'Ecofix Flexy Online' and page_no == 1:
                 heading, _ = lees_pdf(pdf_bytes)
                 heading = clean(heading)
                 label = re.search(
@@ -130,7 +130,7 @@ def extract_evidence(pdf_bytes, name):
                             'jaareenheid_bevestigd': True,
                             'bedrag': amounts[0]['text'].replace(',', '.'),
                             'status': 'visuele_kandidaat_niet_gevalideerd'
-                        })           
+                        })        
             for table_no, table in enumerate(page.extract_tables() or [], 1):
                 for row_no, row in enumerate(table or [], 1):
                     cells = [clean(c) for c in (row or [])]
