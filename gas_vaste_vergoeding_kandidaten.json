@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "gegenereerd_op_utc": "2026-11-20T20:58:13.182270+00:00",
+  "gegenereerd_op_utc": "2026-11-20T21:12:37.162633+00:00",
   "status": "PDF_TABEL_EN_TEKST_KANDIDATEN_GEEN_AUTOMATISCHE_GOEDKEURING",
   "voor_android_app": false,
   "waarschuwing": "Tabelkandidaten, btw en voorwaarden blijven handmatig te valideren.",
@@ -793,7 +793,16 @@
       "vaste_vergoeding_gevalideerd": false,
       "tariefmaand": "2026-11",
       "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=dff71fecec519c27bf6c74164133d8567be4e7ed0de4630f9e039d2d8b3fdc1d",
-      "kandidaten": [],
+      "kandidaten": [
+        {
+          "bron": "visuele_kolom",
+          "pagina": 1,
+          "labelcel": "Vaste vergoed Prijs per kWh (€ cent/kWh) (€/jaar)",
+          "jaareenheid_bevestigd": true,
+          "bedrag": "10.00",
+          "status": "visuele_kandidaat_niet_gevalideerd"
+        }
+      ],
       "btw_bronregels": [
         {
           "pagina": 1,
