@@ -12,15 +12,14 @@ from urllib.parse import parse_qs, urljoin, urlparse
 
 import requests
 from bs4 import BeautifulSoup
+from controle_gas_tariefkaarten import GAS_CONTRACTEN
 
 URL = 'https://energieplatform-vlaanderen.be/tariefkaartarchief?energie=Gas&segment=Woning'
 OUTPUT = Path('gas_gevonden_tariefkaarten.json')
 TARGETS = {
-    'ENGIE Flow Gas': ('ENGIE', 'Flow'),
-    'Luminus BasicFlex Online Gas': ('Luminus', 'BasicFlex Online'),
-    'OCTA+ Boost Flex Gas': ('OCTA+', 'Boost Flex'),
-    'Ecofix Flexy Online': ('Ecofix', 'Flexy Online'),
-    'TotalEnergies myEssential Variabel Gas': ('TotalEnergies', 'myEssential Variabel'),
+    naam: tuple(gegevens['archief_identificatie'])
+    for naam, gegevens in GAS_CONTRACTEN.items()
+    if 'archief_identificatie' in gegevens
 }
 MONTHS = {'jan': 1, 'feb': 2, 'mrt': 3, 'apr': 4, 'mei': 5, 'jun': 6,
           'jul': 7, 'aug': 8, 'sep': 9, 'okt': 10, 'nov': 11, 'dec': 12}
