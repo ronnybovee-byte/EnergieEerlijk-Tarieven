@@ -149,11 +149,12 @@ def main():
     register = json.loads(REGISTER.read_text(encoding='utf-8'))
     if register.get('schema_version') != 1 or not isinstance(register.get('contracten'), dict):
         raise SystemExit('Onbekend formaat gas_bronregister.json')
+
     prices = {}
     if PRICE.exists():
         prices = json.loads(PRICE.read_text(encoding='utf-8'))
         if not isinstance(prices.get('contracten'), dict):
-        prices = {}
+            prices = {}
 
     contracts = check(data, fixed, index, month, register, prices)
     released = any(c['geschikt_voor_automatische_jaarprijs'] for c in contracts.values())
