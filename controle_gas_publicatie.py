@@ -9,15 +9,17 @@ SOURCE = Path('gas_archiefformules_vergelijking.json')
 OUTPUT = Path('gas_app_publicatie_status.json')
 FIXED = Path('gas_vaste_vergoedingen_validatie.json')
 INDEX = Path('gas_indexen_gecombineerd.json')
+REGISTER = Path('gas_bronregister.json')
 REQUIRED = {'ENGIE Flow Gas', 'Luminus BasicFlex Online Gas', 'OCTA+ Boost Flex Gas'}
 
 
-def check(data, fixed, index, month=None):
+def check(data, fixed, index, month=None, register=None):
     month = month or datetime.now(timezone.utc).strftime("%Y-%m")
     previous = (datetime.strptime(month + "-01", "%Y-%m-%d").date().replace(day=1) - timedelta(days=1)).strftime("%Y-%m")
     rows = data.get('contracten', {})
     fixed_rows = fixed.get('contracten', {})
     index_rows = index.get('contracten', {})
+    selected = (register or {}).get('contracten', {})
     result = {}
     for name in sorted(REQUIRED):
         item = rows.get(name)
@@ -53,8 +55,25 @@ def check(data, fixed, index, month=None):
         fixed_item = fixed_rows.get(name, {})
         if fixed.get('referentiemaand') != month or fixed_item.get('vaste_vergoeding_volledig_gevalideerd') is not True:
             issues.append('Vaste leveranciersvergoeding niet volledig geverifieerd')
-        if fixed_item.get('voorwaarden_automatisch_gevalideerd') is not True:
-            issues.append('Contractvoorwaarden niet automatisch gevalideerd')
+        selected_ok = isinstance(selected.get(name), dict)
+        if not selected_ok:
+            issues.append('Contract ontbreekt in bestaande selectie')
+        suitability = fixed_item.get('geschiktheid', {})
+        adverse = []
+        for key in ('domiciliering_verplicht', 'aandelen_verplicht',
+                    'groepsaankoop_verplicht', 'digitale_meter_verplicht',
+                    'zonnepanelen_verplicht'):
+            if suitability.get(key) == 'ja':
+                adverse.append(key)
+        for key in ('analoge_meter_toegelaten', 'variabel_contract',
+                    'particuliere_klant', 'netgebied'):
+            if suitability.get(key) == 'nee':
+                adverse.append(key)
+        for key, value in suitability.items():
+            if value in ('tegenstrijdig', 'conflict'):
+                adverse.append(key)
+        for key in adverse:
+            issues.append('Strijdige contractvoorwaarde: ' + key)
         forward = index_item.get('geschatte_jaarparameter_eur_per_mwh')
         if type(forward) not in (int, float) or not math.isfinite(forward) or forward <= 0:
             issues.append('Bruikbare jaarparameter ontbreekt')
@@ -72,6 +91,8 @@ def check(data, fixed, index, month=None):
         except (ValueError, TypeError):
             issues.append('Ongeldig vast bedrag')
         result[name] = {
+            'bestaande_contractselectie': selected_ok,
+            'strijdige_contractvoorwaarden': adverse,
             'historische_indexbron_gecontroleerd': index_ok,
             'jaarprognose_gevalideerd': index_item.get('jaarprognose_gevalideerd') is True,
             'formule_gecontroleerd': not any(x for x in issues if x.startswith(('Geen vergelijking','Tariefmaand','Formulevergelijking','Contract of','Formule wijkt'))),
@@ -98,13 +119,18 @@ def main():
     if index.get('schema_version') != 1 or not isinstance(index.get('contracten'), dict):
         raise SystemExit('Onbekend formaat gas_indexen_gecombineerd.json')
     month = datetime.now(timezone.utc).strftime('%Y-%m')
-    contracts = check(data, fixed, index, month)
+    if not REGISTER.exists():
+        raise SystemExit(f'Gasregister ontbreekt: {REGISTER}')
+    register = json.loads(REGISTER.read_text(encoding='utf-8'))
+    if register.get('schema_version') != 1 or not isinstance(register.get('contracten'), dict):
+        raise SystemExit('Onbekend formaat gas_bronregister.json')
+    contracts = check(data, fixed, index, month, register)
     released = any(c['geschikt_voor_automatische_jaarprijs'] for c in contracts.values())
     report = {
         'schema_version': 1,
         'gegenereerd_op_utc': datetime.now(timezone.utc).isoformat(),
         'bron': SOURCE.name,
-        'aanvullende_bronnen': [FIXED.name, INDEX.name],
+        'aanvullende_bronnen': [FIXED.name, INDEX.name, REGISTER.name],
         'status': 'BRONVRIJGAVE' if released else 'BRONCONTROLES_GEEN_AUTOMATISCHE_JAARPRIJZEN',
         'referentiemaand': month,
         'kostenberekening': 'Android',
