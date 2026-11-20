@@ -22,7 +22,7 @@ OUTPUT = Path('gas_vaste_vergoeding_kandidaten.json')
 LABEL = re.compile(r'vaste\s+(?:vergoeding|bijdrage|kosten)', re.I)
 ANNUAL = re.compile(r'(?:€\s*/\s*jaar|euro\s*/\s*jaar|per\s+jaar|jaarlijkse)', re.I)
 MONEY = re.compile(r'(?<![\d.,])(?:€\s*)?(\d{1,4}(?:[.,]\d{1,2})?)(?![\d.,])')
-VAT = re.compile(r'(?:incl(?:usief)?\.?\s*(?:6\s*%\s*)?btw|prijzen\s+.*incl\.?\s*6\s*%\s*btw)', re.I)
+VAT = re.compile(r'(?:incl(?:usief)?\.?\s*(?:6\s*%\s*)?btw|prijzen\s+.*incl\.?\s*6\s*%\s*btw|btw\s+6\s*%\s*inbegrepen)', re.I)
 CONDITIONS = re.compile(r'(?:vroegtijdig|beëindig|beeindig|6\s+maanden|half\s+jaar|aantal\s+dagen|pro\s*rata|leveringsdagen)', re.I)
 
 
@@ -116,6 +116,22 @@ def extract_evidence(pdf_bytes, name):
                         # The label's own cell and the immediately adjacent cell are evidence,
                         # but only a sole numeric cell qualifies as a plausible fee candidate.
                         adjacent = cells[col+1] if col+1 < len(cells) else ''
+                        if name == 'TotalEnergies myEssential Variabel Gas':
+                            if ANNUAL.search(cell) and len(cells) == 1:
+                                if row_no < len(table):
+                                    below = clean(table[row_no][col])
+                                    if re.fullmatch(r'\d{1,4}[,.]\d{2}', below):
+                                        candidates.append({
+                                            'bron': 'tabel',
+                                            'pagina': page_no,
+                                            'tabel': table_no,
+                                            'rij': row_no,
+                                            'labelcel': cell,
+                                            'onderliggende_cel': below,
+                                            'bedrag': below.replace(',', '.'),
+                                            'jaareenheid_bevestigd': True,
+                                            'status': 'tabelcel_kandidaat_niet_gevalideerd'
+                                        })
                         own_numbers = MONEY.findall(cell)
                         adjacent_numbers = MONEY.findall(adjacent)
                         amount = None
