@@ -201,7 +201,7 @@ def inspect(name, info, session):
             raise ValueError('pdf_hash_verschilt')
         # Keep compatibility with existing OCR path, while tables are extracted
         # directly from the original PDF to preserve cell boundaries.
-            ocr_text, ocr_pages = lees_pdf(raw)
+        ocr_text, ocr_pages = lees_pdf(raw)
         candidates, vat, conditions, eligibility = extract_evidence(raw, name)
         if name == 'Ecofix Flexy Online':
             with fitz.open(stream=raw, filetype='pdf') as document:
