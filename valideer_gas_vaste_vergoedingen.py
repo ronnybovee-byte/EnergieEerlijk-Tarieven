@@ -62,7 +62,13 @@ def check(name, row, method, month):
         if c.get('bron') != method or c.get('pagina') != 1:
             continue
         label = str(c.get('labelcel', ''))
-        if 'vaste vergoeding' not in label.lower() or c.get('jaareenheid_bevestigd') is not True or not ANNUAL.search(label):
+        label_ok = 'vaste vergoeding' in label.lower()
+        if name == 'Ecofix Flexy Online':
+            label_ok = label_ok or bool(re.fullmatch(
+                r'vaste\s+vergoed\s+prijs\s+per\s+kwh\s*\(€\s*cent/kwh\)\s*\(€\s*/\s*jaar\)',
+                label.strip(), re.I
+            ))
+        if not label_ok or c.get('jaareenheid_bevestigd') is not True or not ANNUAL.search(label):
             continue
         try:
             value = Decimal(str(c.get('bedrag')))
