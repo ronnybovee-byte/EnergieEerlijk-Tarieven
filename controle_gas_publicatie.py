@@ -97,11 +97,11 @@ def check(data, fixed, index, month=None, register=None, prices=None):
         for key in adverse:
             issues.append('Strijdige contractvoorwaarde: ' + key)
         forward = index_item.get('geschatte_jaarparameter_eur_per_mwh')
-                if not direct_ok and (type(forward) not in (int, float) or not math.isfinite(forward) or forward <= 0):
+        if not direct_ok and (type(forward) not in (int, float) or not math.isfinite(forward) or forward <= 0):
             issues.append('Bruikbare jaarparameter ontbreekt')
         formula = (item or {}).get('formule_gevonden') or {} if isinstance(item, dict) else {}
         normalize = lambda value: ''.join(c for c in str(value).upper() if c.isalnum())
-        if not normalize(formula.get('index', '')) or normalize(formula.get('index')) != normalize(index_item.get('index', '')):
+        if not direct_ok and (not normalize(formula.get('index', '')) or normalize(formula.get('index')) != normalize(index_item.get('index', ''))):
             issues.append('Indexnaam wijkt af van tariefformule')
         for key in ('factor', 'toeslag'):
             value = formula.get(key)
@@ -113,6 +113,9 @@ def check(data, fixed, index, month=None, register=None, prices=None):
         except (ValueError, TypeError):
             issues.append('Ongeldig vast bedrag')
         result[name] = {
+            'rechtstreekse_energieprijs_gevalideerd': direct_ok,
+            'geschatte_energieprijs_ct_per_kwh_incl_btw': direct_price if direct_ok and not issues else None,
+            'berekeningsmethode': 'rechtstreekse_tariefkaartprijs' if direct_ok else 'indexformule',
             'bestaande_contractselectie': selected_ok,
             'strijdige_contractvoorwaarden': adverse,
             'historische_indexbron_gecontroleerd': index_ok,
@@ -146,13 +149,19 @@ def main():
     register = json.loads(REGISTER.read_text(encoding='utf-8'))
     if register.get('schema_version') != 1 or not isinstance(register.get('contracten'), dict):
         raise SystemExit('Onbekend formaat gas_bronregister.json')
-    contracts = check(data, fixed, index, month, register)
+    prices = {}
+    if PRICE.exists():
+        prices = json.loads(PRICE.read_text(encoding='utf-8'))
+        if not isinstance(prices.get('contracten'), dict):
+        prices = {}
+
+    contracts = check(data, fixed, index, month, register, prices)
     released = any(c['geschikt_voor_automatische_jaarprijs'] for c in contracts.values())
     report = {
         'schema_version': 1,
         'gegenereerd_op_utc': datetime.now(timezone.utc).isoformat(),
         'bron': SOURCE.name,
-        'aanvullende_bronnen': [FIXED.name, INDEX.name, REGISTER.name],
+        'aanvullende_bronnen': [FIXED.name, INDEX.name, REGISTER.name, PRICE.name],
         'status': 'BRONVRIJGAVE' if released else 'BRONCONTROLES_GEEN_AUTOMATISCHE_JAARPRIJZEN',
         'referentiemaand': month,
         'kostenberekening': 'Android',
