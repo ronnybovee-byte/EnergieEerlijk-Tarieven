@@ -26,6 +26,34 @@ VAT = re.compile(r'(?:incl(?:usief)?\.?\s*(?:6\s*%\s*)?btw|prijzen\s+.*incl\.?\s
 CONDITIONS = re.compile(r'(?:vroegtijdig|beëindig|beeindig|6\s+maanden|half\s+jaar|aantal\s+dagen|pro\s*rata|leveringsdagen)', re.I)
 
 
+# Alleen bronpassages verzamelen: geen geschiktheid afleiden uit trefwoorden.
+GESCHIKTHEID = {
+    'domiciliering_verplicht': r'domicili[ëe]r|automatische\s+incasso|sepa',
+    'aandelen_verplicht': r'aandeel|aandelen|aandeelhouder|co[oö]perant',
+    'groepsaankoop_verplicht': r'groepsaankoop|groepscontract',
+    'digitale_meter_verplicht': r'digitale\s+(?:gas)?meter|slimme\s+meter',
+    'zonnepanelen_verplicht': r'zonnepanelen|fotovolta|prosument',
+    'analoge_meter_toegelaten': r'analog[e]?\s+meter|klassieke\s+meter|traditionele\s+meter|mechanische\s+meter',
+    'variabel_contract': r'variabel|indexatie|ge[iï]ndexeerd',
+    'particuliere_klant': r'particulier|residenti[ëe]l|huishoudelijk|priv[eé]',
+    'netgebied': r'vlaanderen|vlaams|fluvius|antwerpen',
+}
+
+
+def geschiktheidsbewijs(tekst, pagina):
+    regels = [clean(x) for x in tekst.splitlines() if clean(x)]
+    bewijs = []
+    for i, regel in enumerate(regels):
+        criteria = [k for k, patroon in GESCHIKTHEID.items()
+                    if re.search(patroon, regel, re.I)]
+        if criteria:
+            bewijs.append({'pagina': pagina, 'regel': i+1,
+                           'criteria': criteria,
+                           'tekst': regel,
+                           'context': ' | '.join(regels[max(0, i-1):i+3])})
+    return bewijs
+
+
 def clean(value):
     return re.sub(r'\s+', ' ', str(value or '')).strip()
 
@@ -35,9 +63,12 @@ def extract_evidence(pdf_bytes, name):
     candidates = []
     vat_evidence = []
     condition_evidence = []
+    eligibility_evidence = []
     with pdfplumber.open(io.BytesIO(pdf_bytes)) as document:
         for page_no, page in enumerate(document.pages, 1):
-            lines = (page.extract_text(layout=False) or '').splitlines()
+            page_text = page.extract_text(layout=False) or ''
+            eligibility_evidence.extend(geschiktheidsbewijs(page_text, page_no))
+            lines = page_text.splitlines()
             for i, line in enumerate(lines):
                 line = clean(line)
                 if VAT.search(line):
@@ -97,13 +128,15 @@ def extract_evidence(pdf_bytes, name):
                                            'labelcel': cell[:250], 'naastliggende_cel': adjacent[:250],
                                            'rijtekst': ' | '.join(cells)[:650],
                                            'bedrag': amount, 'jaareenheid_bevestigd': bool(ANNUAL.search(cell)), 'status': confidence})
-    return candidates[:70], vat_evidence[:15], condition_evidence[:20]
+    return candidates[:70], vat_evidence[:15], condition_evidence[:20], eligibility_evidence
 
 
 def inspect(name, info, session):
     result = {'status': 'handmatige_controle_nodig', 'vaste_vergoeding_gevalideerd': False,
               'tariefmaand': info.get('tariefmaand_archief'), 'pdf_url': info.get('pdf_url'),
-              'kandidaten': [], 'btw_bronregels': [], 'voorwaarden_bronregels': []}
+              'kandidaten': [], 'btw_bronregels': [], 'voorwaarden_bronregels': [],
+              'geschiktheid_bronregels': [],
+              'geschiktheid': {k: 'onbekend' for k in GESCHIKTHEID}}
     if info.get('status') != 'formule_gelijk_aan_referentie' or info.get('formule_gelijk') is not True:
         result['reden'] = 'formulevergelijking_niet_geslaagd'
         return result
@@ -129,10 +162,11 @@ def inspect(name, info, session):
         # Keep compatibility with existing OCR path, while tables are extracted
         # directly from the original PDF to preserve cell boundaries.
         _, ocr_pages = lees_pdf(raw)
-        candidates, vat, conditions = extract_evidence(raw, name)
+        candidates, vat, conditions, eligibility = extract_evidence(raw, name)
         result.update({'pdf_sha256': digest, 'ocr_paginas': ocr_pages,
                        'kandidaten': candidates, 'btw_bronregels': vat,
                        'voorwaarden_bronregels': conditions,
+                       'geschiktheid_bronregels': eligibility,
                        'reden': 'pdf_gecontroleerd_bedragen_nog_niet_gevalideerd'})
     except (requests.RequestException, ValueError, RuntimeError, Exception) as exc:
         result['reden'] = 'pdf_controle_mislukt: ' + str(exc)[:180]
