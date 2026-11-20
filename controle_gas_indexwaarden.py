@@ -83,30 +83,41 @@ def lees_ecofix_prijs(pdf):
     tekst, _ = lees_pdf(pdf)
     tekst = ' '.join(tekst.split())
 
-    if not re.search(
+    jaarprijs_ok = bool(re.search(
         r'verwachte\s+jaarprijs', tekst, re.I
-    ):
-        return None
+    ))
 
-    if not re.search(
+    btw_ok = bool(re.search(
         r'incl(?:usief)?\.?\s*6\s*%\s*btw',
         tekst, re.I
-    ):
-        return None
+    ))
+
+    print('ECOFIX jaarprijslabel:', jaarprijs_ok)
+    print('ECOFIX btw-label:', btw_ok)
+    print('ECOFIX OCR:', tekst[:1800])
 
     with pdfplumber.open(io.BytesIO(pdf)) as doc:
         pagina = doc.pages[0]
 
-        bedragen = [
-            w for w in pagina.extract_words()
-            if 0.59 < w['x0'] / pagina.width < 0.66
-            and 0.54 < w['top'] / pagina.height < 0.56
-            and re.fullmatch(
-                r'\d{1,4}[,.]\d{2}', w['text']
-            )
-        ]
+        bedragen = []
 
-        if len(bedragen) == 1:
+        for w in pagina.extract_words():
+            if re.fullmatch(
+                r'\d{1,4}[,.]\d{2}', w['text']
+            ):
+                x = w['x0'] / pagina.width
+                y = w['top'] / pagina.height
+
+                print(
+                    'ECOFIX bedrag:', w['text'],
+                    'x:', round(x, 5),
+                    'y:', round(y, 5)
+                )
+
+                if 0.59 < x < 0.66 and 0.54 < y < 0.56:
+                    bedragen.append(w)
+
+        if jaarprijs_ok and btw_ok and len(bedragen) == 1:
             prijs = float(
                 bedragen[0]['text'].replace(',', '.')
             )
