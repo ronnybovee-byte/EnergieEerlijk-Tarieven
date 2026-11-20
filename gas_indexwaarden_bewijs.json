@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-20T19:00:44.215729+00:00",
+  "gegenereerd_op_utc": "2026-11-20T20:50:42.696805+00:00",
   "bron": "gas_archiefformules_vergelijking.json",
   "status": "INDEX_BEWIJS_GEEN_PRIJSVALIDATIE",
   "voor_android_app": false,
@@ -223,12 +223,18 @@
     },
     "Ecofix Flexy Online": {
       "tariefmaand": "2026-11",
-      "status": "NIET_GEVERIFIEERD",
+      "status": "INDEX_NIET_GEVONDEN",
       "indexwaarde_gevalideerd": false,
       "geschikt_voor_automatische_jaarprijs": false,
       "index_bronregels": [],
       "waarde_bronregels": [],
-      "reden": "formule_niet_goedgekeurd"
+      "pdf_sha256": "dff71fecec519c27bf6c74164133d8567be4e7ed0de4630f9e039d2d8b3fdc1d",
+      "formule_uit_archief": {
+        "index": "TTF-RLP-M",
+        "factor": 0.101,
+        "toeslag": 0.22
+      },
+      "reden": "Maandwaarde, jaarparameter, eenheden en definitie afzonderlijk controleren; geen automatische goedkeuring"
     },
     "TotalEnergies myEssential Variabel Gas": {
       "tariefmaand": "2026-11",
