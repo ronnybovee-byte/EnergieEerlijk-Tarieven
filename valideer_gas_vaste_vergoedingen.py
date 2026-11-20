@@ -17,7 +17,7 @@ METHODS = {
     'TotalEnergies myEssential Variabel Gas': 'tabel',
 }
 ANNUAL = re.compile(r'(?:€\s*/\s*jaar|euro\s*/\s*jaar|per\s+jaar|jaarlijkse)', re.I)
-VAT = re.compile(r'incl(?:usief)?\.?\s*(?:6\s*%\s*)?btw', re.I)
+VAT = re.compile(r'(?:incl(?:usief)?\.?\s*(?:6\s*%\s*)?btw|btw\s+6\s*%\s*inbegrepen)', re.I)
 
 def eligibility(row, source_ok):
     keys = ('domiciliering_verplicht', 'aandelen_verplicht', 'groepsaankoop_verplicht',
