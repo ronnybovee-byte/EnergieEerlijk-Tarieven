@@ -10,6 +10,8 @@ from urllib.parse import parse_qs, urlparse
 
 import pdfplumber
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from controle_gas_tariefkaarten import lees_pdf
 
 BRON = Path('gas_archiefformules_vergelijking.json')
@@ -177,6 +179,13 @@ def main():
                'waarschuwing': 'Indexregels zijn bronbewijs; niet automatisch bruikbaar voor jaarprijs of Android.',
                'contracten': {}}
     with requests.Session() as sessie:
+        retry = Retry(
+            total=3,
+            backoff_factor=1,
+            status_forcelist=(429, 500, 502, 503, 504),
+            allowed_methods=frozenset(('GET',))
+        )
+        sessie.mount('https://', HTTPAdapter(max_retries=retry))
         sessie.headers['User-Agent'] = 'EerlijkeEnergie-GasIndexBewijs/1.0'
         for naam, info in data['contracten'].items():
             rapport['contracten'][naam] = inspecteer(naam, info, sessie)
