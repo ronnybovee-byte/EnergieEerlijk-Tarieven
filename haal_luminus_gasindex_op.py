@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Conservatieve Luminus TTFDAHM extractie; wijzigt bestaande JSON niet."""
+"""Luminus TTFDAHM bronvalidatie; geen vrijgave van volledige jaarprijzen."""
 import argparse
 import datetime as dt
 import io
@@ -101,25 +101,33 @@ def parse_pdf(data):
         raise ValueError('Tariefmaand ligt in de toekomst')
     return hist, forward, tariff, historic_month
 
+def officiele_url(url):
+    parsed = urlparse(url)
+    return parsed.scheme == "https" and parsed.hostname == "www.luminus.be"
+
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument('--pdf',help='Lokale Luminus PDF (voor controle/test)')
     ap.add_argument('--url',help='Expliciete directe Luminus PDF-download-URL')
     ap.add_argument('--output',default='gas_luminus_index.json')
     args=ap.parse_args()
-    out={'schema_version':1,'bron':'Luminus indexen PDF','status':'NIET_GEVALIDEERD','voor_android_app':False,'geschikt_voor_automatische_jaarprijs':False}
+    out={'schema_version':1,'bron':'Luminus indexen PDF','status':'NIET_GEVALIDEERD','voor_android_app':False,'geschikt_voor_automatische_jaarprijs':False,'jaarprognose_gevalideerd':False}
     try:
         if args.pdf:
             data=Path(args.pdf).read_bytes()
             out['bronbestand']=Path(args.pdf).name
         elif args.url:
             import requests
+            if not officiele_url(args.url):
+                raise ValueError("Geen officiële Luminus URL")
             r=requests.get(args.url,timeout=30,headers={'User-Agent':'Mozilla/5.0'})
             r.raise_for_status()
             if not r.content.startswith(b'%PDF'):
                 raise ValueError('URL levert geen PDF')
             data=r.content
-            out['bron_url']=args.url
+            if not officiele_url(r.url):
+                raise ValueError("Download omgeleid buiten officiële Luminus bron")
+            out['bron_url']=r.url
         else:
             import requests
             with requests.Session() as session:
@@ -129,10 +137,17 @@ def main():
                 if not r.content.startswith(b'%PDF'):
                     raise ValueError('Ontdekte URL levert geen PDF')
                 data = r.content
-                out['bron_url'] = download_url
+                if not officiele_url(r.url):
+                    raise ValueError('Download omgeleid buiten officiële Luminus bron')
+                out['bron_url'] = r.url
         hist,forward,tariff,historic_month=parse_pdf(data)
         out.update(status='INDEX_EN_FORWARD_UIT_PDF_GEVONDEN',index='TTF DAH M',tariefmaand=tariff,historische_indexmaand=historic_month,historische_waarde_eur_per_mwh=hist,geschatte_jaarparameter_eur_per_mwh=forward,bronbewijs_consistent=True,jaarprognose_gevalideerd=False)
         out['actueel_voor_huidige_maand'] = tariff == dt.datetime.now(dt.timezone.utc).strftime('%Y-%m')
+        out['jaarprognose_gevalideerd'] = bool(
+            out['actueel_voor_huidige_maand']
+            and out['bronbewijs_consistent']
+            and officiele_url(out.get('bron_url', ''))
+        )
         if not out['actueel_voor_huidige_maand']:
             out['status'] = 'HISTORISCHE_PDF_GEEN_ACTUELE_INDEX'
             out['reden'] = 'PDF is niet van de huidige kalendermaand'
