@@ -130,8 +130,7 @@ def lees_ecofix_prijs(pdf):
             detailtekst = pytesseract.image_to_string(
                 afbeelding, lang='nld+eng', config='--psm 7'
             )
-            )
-
+            
             jaarprijs_ok = bool(re.search(
                 r'verwachte\s+jaar\s*prijs',
                 detailtekst, re.I
