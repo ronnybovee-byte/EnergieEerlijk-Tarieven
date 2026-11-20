@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
+import fitz
 import pdfplumber
 import requests
 from controle_gas_tariefkaarten import lees_pdf
@@ -203,23 +204,37 @@ def inspect(name, info, session):
             ocr_text, ocr_pages = lees_pdf(raw)
         candidates, vat, conditions, eligibility = extract_evidence(raw, name)
         if name == 'Ecofix Flexy Online':
-            eligibility.extend(geschiktheidsbewijs(ocr_text, None))
-            for line in ocr_text.splitlines():
-                line = clean(line)
-                if VAT.search(line):
-                    vat.append({
-                        'pagina': None,
-                        'tekst': line[:450],
-                        'bron': 'ocr'
-                    })
-                if CONDITIONS.search(line) and (
-                    LABEL.search(line) or 'vergoeding' in line.lower()
-                ):
-                    conditions.append({
-                        'pagina': None,
-                        'tekst': line[:450],
-                        'bron': 'ocr'
-                    })
+            with fitz.open(stream=raw, filetype='pdf') as document:
+                for page_no in range(len(document)):
+                    with fitz.open() as single:
+                        single.insert_pdf(
+                            document,
+                            from_page=page_no,
+                            to_page=page_no
+                        )
+                        page_text, _ = lees_pdf(single.tobytes())
+
+                    eligibility.extend(
+                        geschiktheidsbewijs(page_text, page_no + 1)
+                    )
+
+                    for line in page_text.splitlines():
+                        line = clean(line)
+                        if VAT.search(line):
+                            vat.append({
+                                'pagina': page_no + 1,
+                                'tekst': line[:450],
+                                'bron': 'ocr'
+                            })
+                        if CONDITIONS.search(line) and (
+                            LABEL.search(line)
+                            or 'vergoeding' in line.lower()
+                        ):
+                            conditions.append({
+                                'pagina': page_no + 1,
+                                'tekst': line[:450],
+                                'bron': 'ocr'
+                            })
         result.update({'pdf_sha256': digest, 'ocr_paginas': ocr_pages,
                        'kandidaten': candidates, 'btw_bronregels': vat,
                        'voorwaarden_bronregels': conditions,
