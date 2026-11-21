@@ -27,7 +27,7 @@ GOEDGEKEURDE_PDFS = {
     ("2026-11", "10667"): "05baf31e5e714d2a44b314313bd11e162bc67776b11a2132e77ea329e39f8688",
     ("2026-11", "12710"): "80a63153926a39f1e5114dbb528604beb87867b3d955a3f4edaf925af4d52858",
     ("2026-11", "17280"): "7e2810ac0f05715cbc52605c65d2ae71819a820649a0ddce2527f208e69630a7",
-    ("2026-11", "18399"): "2464225ceba4f2778a4e3277abdea765a771d2ffcf1da5400cde00ed4249ef86",
+    ("2026-11", "18399"): "9d315b7ed7d666f45cd60aca723b946e8bf09cb44ea41e243ec26d83d951d2fe",
     ("2026-11", "10940"): "4b8095fad2633bc47bb55065e86c66806eaab72cdbb033c30128662cca8a231f",
     ("2026-11", "16065"): "7f604dc751787ee3bf0f70439bfa9cca338243ff924924ac37eef63a73a1493e",
     ("2026-11", "16083"): "92da547b008edf9ee1a6935bed94bac271af566d15cc4bdd723f239ea4ac7ae8",
@@ -38,10 +38,50 @@ GOEDGEKEURDE_PDFS = {
     ("2026-11", "17211"): "3cfcaacfa5b66541c66f2948bb5c1d6176be46125d475c3acf6360e2128c4862",
 }
 
-def overige_kosten(product_id, maand, inhoud):
-    verwacht = GOEDGEKEURDE_PDFS.get((maand, product_id))
-    if verwacht and hashlib.sha256(inhoud).hexdigest() == verwacht:
+
+# Vergelijk volledige uitgelezen tekst, behalve strikt herkenbare prijsregels
+# en maandkoppen. Onbekende wijzigingen blijven geblokkeerd.
+import re
+MAAND = r'(?:januari|februari|maart|april|mei|juni|juli|augustus|september|oktober|november|december) 20\d{2}'
+GETAL = r'\d+[,.]\d+'
+
+def kostenprofiel(paginas, product_id):
+    if not paginas or any(not p.strip() for p in paginas):
+        return None
+    regels = []
+    for pagina in paginas:
+        for regel in pagina.splitlines():
+            regel = ' '.join(regel.casefold().split())
+            if not regel:
+                continue
+            if re.fullmatch(r'tarieffiche '+MAAND, regel) or re.fullmatch(r'\('+MAAND+r'\) tarief: variabel', regel) or re.fullmatch(r'variabele prijzen elektriciteit voor contracten afgesloten in '+MAAND+r' \(looptijd van \d+ jaar\)', regel) or re.fullmatch(r'variabel .+ versie '+MAAND+r' particulier prijzen inclusief 6% btw', regel):
+                regel = re.sub(MAAND, '<maand>', regel)
+            elif re.fullmatch(r'tariefkaart 20\d{2}-\d{2}', regel):
+                regel = 'tariefkaart <maand>'
+            elif re.fullmatch(r'de tariefkaart is geldig van \d{2}/\d{2}/20\d{2} tot en met \d{2}/\d{2}/20\d{2}', regel):
+                regel = 'de tariefkaart is geldig van <datum> tot en met <datum>'
+            elif re.fullmatch(r'(?:vaste vergoeding(?: \(€/jaar\)(?:\(1\))?|\(1\))|abonnement \(€/jaar\)|enkelvoudige meter|tweevoudige meter - (?:piekuren|daluren)|uitsluitend nachtmeter|afname(?:\(2\))?|injectie(?:\(2\)|\(3\))?|bijdrage groene stroom \(c€/kwh\)|bijdrage warmtekrachtkoppeling \(c€/kwh\)) (?:'+GETAL+r'|-)(?: (?:'+GETAL+r'|-))*', regel):
+                regel = re.sub(GETAL,'<prijs>',regel)
+            elif re.fullmatch(GETAL+r' €/jaar type gebruik enkelvoudig \(c€/kwh\)',regel):
+                regel = re.sub(GETAL,'<prijs>',regel)
+            elif re.fullmatch(r'(?:maandelijkse )?afname\(2\) (?:'+GETAL+r' ){4}'+GETAL,regel):
+                regel = re.sub(GETAL,'<prijs>',regel)
+            elif re.fullmatch(r'prijzen injectie\(3\) (?:'+GETAL+r' ){2}'+GETAL,regel):
+                regel = re.sub(GETAL,'<prijs>',regel)
+            else:
+                # Alleen de specifieke injectiecoefficient van OCTA+.
+                regel = re.sub(r'(epex spp m \* )'+GETAL+r'( – 1,61\.)',r'\1<prijs>\2',regel) if product_id in ('18399','18582','10940','18405') else regel
+            regels.append(regel)
+        regels.append('<pagina>')
+    return hashlib.sha256('\n'.join(regels).encode('utf-8')).hexdigest()
+
+GOEDGEKEURDE_KOSTENPROFIELEN = {'15818': ['6d168fa2c3e0914a997ec8d970b282774e0e3cee7f48e1f82ffd322a4d896593'], '15824': ['a310afd3edfae0195d5e59d4feea2f357b2809160b211a9aa8825d417ae72eb7'], '10667': ['a920e1a1a1fde8b7eadafea2f91e973dd25e002d8de38dc21545970583da4ae6'], '12710': ['9553e546ac059f5700c3dadf3eaf808e2f30cfdaa697f4b501538bf8209ee892'], '17280': ['4e07239339486521fef49a2bda143fe2cf0513f33e3073054fdbb797c43863cc'], '18399': ['26b53d8cd63750a6b7d77f652230ea9d264eb480a13fdbc00bd1d63105b08d6a'], '10940': ['a49e7ed7d3956846df2a77d9f3bac1b8b33c2214277a1825de034406da1724fe'], '16065': ['98debac398a1943b8ad815e7cfea949bada85b88bcaf030af993d6dccdbed228'], '16083': ['44c6d3a0ffb6b7e9a44dc054704b08819b9f4ebb32472fe81cc02c9b6c39ed52'], '17100': ['42a35a4bbcb640a3e15bb1fd68be25404f0aa215c7bad70483f651ff2613966b'], '13419': ['7ed6a6ae2b313aff4dea5fff61512094f1f3748a7fdc0243462fb419c6b42aa9'], '18582': ['d16e5be619e779ab3e9473c49c8bcb786b558fa6896e50033218c55bc83e1eab'], '18405': ['d1d6eed6330cd997c6c58100be0a62e4f0005119ca0ac00a0cb298f3f50c11fc'], '17211': ['cf6d9f4dc8c2dffcce4d1d44544cb7cc2c73becbcd3748b46766340faf7cff32']}
+
+def overige_kosten(product_id, maand, inhoud, paginas=None):
+    profiel = kostenprofiel(paginas if paginas is not None else pdf_tekst(inhoud), product_id)
+    if profiel and profiel in GOEDGEKEURDE_KOSTENPROFIELEN.get(product_id, []):
         return "0.00", "ja"
+    print(f"Kostenvoorwaarden of documentstructuur gewijzigd: {product_id}; beoordeling nodig")
     return "", "nee"
 
 
@@ -108,7 +148,7 @@ def hoofdprogramma():
             gecontroleerd[veld] = waarde
 
         nieuwe_prijzen[product_id] = gecontroleerd
-        nieuwe_kosten[product_id] = overige_kosten(product_id, TARIEFMAAND.strftime("%Y-%m"), inhoud)
+        nieuwe_kosten[product_id] = overige_kosten(product_id, TARIEFMAAND.strftime("%Y-%m"), inhoud, paginas)
 
     tariefmaand = TARIEFMAAND.strftime("%Y-%m")
     wijzigingen = 0
