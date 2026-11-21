@@ -104,8 +104,15 @@ def hoofdprogramma():
                 )
 
         if product.get("tariefmaand") != tariefmaand:
-            product["tariefmaand"] = tariefmaand
-            wijzigingen += 1
+    product["tariefmaand"] = tariefmaand
+
+    if "overige_kosten_eur_incl_btw" in kolommen:
+        product["overige_kosten_eur_incl_btw"] = ""
+
+    if "overige_kosten_gevalideerd" in kolommen:
+        product["overige_kosten_gevalideerd"] = "nee"
+
+    wijzigingen += 1
 
     print(f"Tariefmaand: {tariefmaand}")
     print(f"Aantal wijzigingen: {wijzigingen}")
