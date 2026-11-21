@@ -40,10 +40,14 @@ def check(data, fixed, index, month=None, register=None, prices=None):
                 issues.append('Formulevergelijking niet geslaagd')
             if not item.get('contract_herkend') or not item.get('maand_vermeld'):
                 issues.append('Contract of maand niet herkend')
-            if (
-                item.get('coefficienten_gewijzigd') is True
-                and item.get('formule_eenheden_gevalideerd') is not True
-            ):
+        if (
+            isinstance(item, dict)
+            and not direct_ok
+            and item.get('coefficienten_gewijzigd') is not False
+            and item.get('formule_eenheden_gevalideerd') is not True
+        ):
+            issues.append('Formule wijkt af: eenheden nog niet bevestigd')        
+        index_ok = (
                 issues.append('Formule wijkt af: eenheden nog niet bevestigd')
         # Controleer bronresultaten, niet vooraf vastgelegde publicatiestatussen.
         index_item = index_rows.get(name, {})
