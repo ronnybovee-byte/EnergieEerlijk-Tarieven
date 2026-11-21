@@ -165,17 +165,26 @@ def combine(leveranciers, luminus, current=None, genormaliseerd=None):
         'geschikt_voor_automatische_jaarprijs': False,
         'blokkades': ([] if lforward else ['Jaarparameter niet actueel']) if lvalid else ['Luminus brongegevens niet betrouwbaar bevestigd']
     }
-    result['alle_broncontroles_geslaagd'] = all(x['status'] != 'BRONCONTROLE_MISLUKT' for x in result['contracten'].values())
-    result['huidige_kalendermaand_utc'] = current
-    result['actueel_voor_huidige_maand'] = (
-        lvalid and luminus['tariefmaand'] == current
-        and result['alle_broncontroles_geslaagd']
-        and all(c['historische_indexmaand'] == vorige_maand for c in result['contracten'].values())
+    for c in result['contracten'].values():
+        c['actueel_voor_huidige_maand'] = (
+            c['historische_indexmaand'] == vorige_maand
+            and c['jaarprognose_gevalideerd'] is True
+        )
+
+    result['alle_broncontroles_geslaagd'] = all(
+        c['status'] != 'BRONCONTROLE_MISLUKT'
+        for c in result['contracten'].values()
     )
+
+    result['huidige_kalendermaand_utc'] = current
+
+    result['actueel_voor_huidige_maand'] = all(
+        c['actueel_voor_huidige_maand']
+        for c in result['contracten'].values()
+    )
+
     if not result['actueel_voor_huidige_maand']:
-        result['status'] = 'ONVOLLEDIG_OF_HISTORISCH_GEEN_ACTUELE_GASPRIJZEN'
-        for c in result['contracten'].values():
-            c['blokkades'].append('Actuele tariefmaand niet voor alle leveranciers bevestigd')
+        result['status'] = 'GEDEELTELIJKE_OF_ONVOLLEDIGE_BRONGEGEVENS'
     # Volledige contractvrijgave blijft de taak van controle_gas_publicatie.py.
     result['waarschuwing'] = 'Bronindexen zijn geen volledige jaarprijzen; tariefkaarten en kosten moeten afzonderlijk worden gevalideerd.'
     return result
@@ -192,7 +201,21 @@ def main():
             norm = read_json(args.genormaliseerd)
         except (OSError, ValueError):
             norm = {}
-        result = combine(read_json(args.leveranciers), read_json(args.luminus), genormaliseerd=norm)
+          try:
+            leveranciers = read_json(args.leveranciers)
+        except (OSError, ValueError):
+            leveranciers = {}
+
+        try:
+            luminus = read_json(args.luminus)
+        except (OSError, ValueError):
+            luminus = {}
+
+        result = combine(
+            leveranciers,
+            luminus,
+            genormaliseerd=norm
+        )
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         result = {'schema_version': 1, 'status': 'BRONBESTAND_ONLEESBAAR',
                   'voor_android_app': False, 'geschikt_voor_automatische_jaarprijs': False,
