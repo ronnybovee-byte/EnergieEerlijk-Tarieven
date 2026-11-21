@@ -37,43 +37,40 @@ jobs:
 
       - name: Gastariefkaarten controleren
         run: python controle_gas_tariefkaarten.py
-        
-      - name: Geldigheidsmaand gastariefkaarten onderzoeken
-        run: python controle_gas_geldigheidsmaand.py
-        
+
       - name: Nieuwe gastariefkaarten zoeken
         run: python zoek_nieuwe_gaskaarten.py
-        
+
       - name: Gevonden gasarchiefkaarten controleren
         run: python controle_gas_archiefkandidaten.py
-        
+
       - name: Gasprijsformules uit archief vergelijken
         run: python controle_gas_archiefformules.py
-        
+
       - name: Vaste gasvergoedingen onderzoeken
         run: python controle_gas_vaste_vergoeding.py
-        
+
       - name: Vaste gasvergoedingen valideren
         run: python valideer_gas_vaste_vergoedingen.py
-        
+
       - name: Gasindexwaarden uit tariefkaarten controleren
         run: python controle_gas_indexwaarden.py
-            
+
       - name: Actuele gasindexen bij leveranciers ophalen
         run: python haal_gasindexen_op.py
-        
+
       - name: ENGIE historische gasindex ophalen
         run: python haal_engie_gasindex_op.py
-        
+
       - name: Luminus gasindex en forward ophalen
         run: python haal_luminus_gasindex_op.py
-        
+
       - name: Gasindexen van drie leveranciers combineren
         run: python combineer_gas_indexen.py
-     
+
       - name: Gasgeldigheid toevoegen aan JSON
         run: python verrijk_gas_geldigheid.py
-        
+
       - name: Gasprijzen controleren voor veilige publicatie
         run: python controle_gas_publicatie.py
 
