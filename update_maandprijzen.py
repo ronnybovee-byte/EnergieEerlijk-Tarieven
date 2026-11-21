@@ -1,4 +1,5 @@
 
+import hashlib
 import csv
 import io
 import os
@@ -16,6 +17,32 @@ from controle_alle_prijzen import (
     lees_prijzen,
     bedrag,
 )
+
+
+# Beoordeelde tariefkaarten: uitsluitend standaardafname zonder PV/energiedelen.
+# Bedragen omvatten geen reeds apart verwerkte vaste vergoeding of groen/WKK.
+GOEDGEKEURDE_PDFS = {
+    ("2026-11", "15818"): "2291fbcd3dbed79b159bfc70302bff3680e501e776f7aae5e27e2cb7b4a222b5",
+    ("2026-11", "15824"): "854b5c2615b7eb19018352363e0aeaff19e90f8fa31123442ac46992abb2e509",
+    ("2026-11", "10667"): "05baf31e5e714d2a44b314313bd11e162bc67776b11a2132e77ea329e39f8688",
+    ("2026-11", "12710"): "80a63153926a39f1e5114dbb528604beb87867b3d955a3f4edaf925af4d52858",
+    ("2026-11", "17280"): "7e2810ac0f05715cbc52605c65d2ae71819a820649a0ddce2527f208e69630a7",
+    ("2026-11", "18399"): "9d315b7ed7d666f45cd60aca723b946e8bf09cb44ea41e243ec26d83d951d2fe",
+    ("2026-11", "10940"): "4b8095fad2633bc47bb55065e86c66806eaab72cdbb033c30128662cca8a231f",
+    ("2026-11", "16065"): "7f604dc751787ee3bf0f70439bfa9cca338243ff924924ac37eef63a73a1493e",
+    ("2026-11", "16083"): "92da547b008edf9ee1a6935bed94bac271af566d15cc4bdd723f239ea4ac7ae8",
+    ("2026-11", "17100"): "3089a2a2d544dec9b8a48622cdcd4882b25760e8467343cbfcd21efe78a7b6c3",
+    ("2026-11", "13419"): "d182c75cefa9abd0eaddedc0794117ce4f903749393d6180e6c779db2c0f78d7",
+    ("2026-11", "18582"): "7b41dd538d299abf3be9808913fe1874c77ba3448a26152443844bf6d9287359",
+    ("2026-11", "18405"): "09c4a392b75af832c9aea5774fd61868b35903795ecc707acf4523531ed75b7f",
+    ("2026-11", "17211"): "3cfcaacfa5b66541c66f2948bb5c1d6176be46125d475c3acf6360e2128c4862",
+}
+
+def overige_kosten(product_id, maand, inhoud):
+    verwacht = GOEDGEKEURDE_PDFS.get((maand, product_id))
+    if verwacht and hashlib.sha256(inhoud).hexdigest() == verwacht:
+        return "0.00", "ja"
+    return "", "nee"
 
 
 def hoofdprogramma():
@@ -49,6 +76,7 @@ def hoofdprogramma():
         )
 
     nieuwe_prijzen = {}
+    nieuwe_kosten = {}
 
     for product in producten:
         product_id = product["id"].strip()
@@ -80,6 +108,7 @@ def hoofdprogramma():
             gecontroleerd[veld] = waarde
 
         nieuwe_prijzen[product_id] = gecontroleerd
+        nieuwe_kosten[product_id] = overige_kosten(product_id, TARIEFMAAND.strftime("%Y-%m"), inhoud)
 
     tariefmaand = TARIEFMAAND.strftime("%Y-%m")
     wijzigingen = 0
@@ -106,13 +135,18 @@ def hoofdprogramma():
         if product.get("tariefmaand") != tariefmaand:
             product["tariefmaand"] = tariefmaand
 
-            if "overige_kosten_eur_incl_btw" in kolommen:
-                product["overige_kosten_eur_incl_btw"] = ""
-
-            if "overige_kosten_gevalideerd" in kolommen:
-                product["overige_kosten_gevalideerd"] = "nee"
-
             wijzigingen += 1
+
+        for veld, waarde in zip(
+            ("overige_kosten_eur_incl_btw", "overige_kosten_gevalideerd"),
+            nieuwe_kosten[product_id],
+        ):
+            if veld in kolommen and product.get(veld) != waarde:
+                product[veld] = waarde
+                wijzigingen += 1
+                print(f"WIJZIGING {product_id} {veld}: {waarde}")
+
+        print(f"Overige kosten {product_id}: {nieuwe_kosten[product_id][1]}")
 
     print(f"Tariefmaand: {tariefmaand}")
     print(f"Aantal wijzigingen: {wijzigingen}")
