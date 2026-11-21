@@ -12,8 +12,8 @@ FIXED = Path('gas_vaste_vergoedingen_validatie.json')
 INDEX = Path('gas_indexen_gecombineerd.json')
 REGISTER = Path('gas_bronregister.json')
 PRICE = Path('gas_indexwaarden_bewijs.json')
-
-def check(data, fixed, index, month=None, register=None, prices=None):
+FORMULAS = Path('gas_gevalideerde_formules.json')
+def check(data, fixed, index, month=None, register=None, prices=None, formulas=None):
     month = month or datetime.now(timezone.utc).strftime("%Y-%m")
     previous = (datetime.strptime(month + "-01", "%Y-%m-%d").date().replace(day=1) - timedelta(days=1)).strftime("%Y-%m")
     rows = data.get('contracten', {})
@@ -47,6 +47,25 @@ def check(data, fixed, index, month=None, register=None, prices=None):
             and item.get('formule_eenheden_gevalideerd') is not True
         ):
             issues.append('Formule wijkt af: eenheden nog niet bevestigd')        
+        app_formula = (formulas or {}).get('contracten', {}).get(name, {})
+        archive_formula = item.get('formule_gevonden', {}) if isinstance(item, dict) else {}
+
+        if not (
+            isinstance(item, dict)
+            and isinstance(archive_formula, dict)
+            and isinstance(app_formula, dict)
+            and bool(item.get('sha256'))
+            and app_formula.get('pdf_sha256') == item.get('sha256')
+            and app_formula.get('tariefmaand') == month
+            and app_formula.get('is_huidige_maand') is True
+            and all(
+                key in app_formula
+                and key in archive_formula
+                and app_formula[key] == archive_formula[key]
+                for key in ('index', 'factor', 'toeslag')
+            )
+        ):
+            issues.append('Formulevergelijking met Android-bronbestand mislukt')
         index_ok = (
                 issues.append('Formule wijkt af: eenheden nog niet bevestigd')
         # Controleer bronresultaten, niet vooraf vastgelegde publicatiestatussen.
@@ -170,7 +189,15 @@ def main():
         if not isinstance(prices.get('contracten'), dict):
             prices = {}
 
-    contracts = check(data, fixed, index, month, register, prices)
+    if not FORMULAS.exists():
+        raise SystemExit(f'Formulebestand ontbreekt: {FORMULAS}')
+
+    formulas = json.loads(FORMULAS.read_text(encoding='utf-8'))
+
+    if formulas.get('schema_version') != 1 or not isinstance(formulas.get('contracten'), dict):
+        raise SystemExit('Onbekend formaat gas_gevalideerde_formules.json')
+
+    contracts = check(data, fixed, index, month, register, prices, formulas)
     released = any(c['geschikt_voor_automatische_jaarprijs'] for c in contracts.values())
     report = {
         'schema_version': 1,
