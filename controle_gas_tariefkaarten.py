@@ -32,7 +32,7 @@ GAS_CONTRACTEN = {
     },
     "TotalEnergies myEssential Variabel Gas": {
         "archief_identificatie": ["TotalEnergies", "myEssential Variabel"],
-        "vaste_vergoeding_methode": "visuele_kolom",
+        "vaste_vergoeding_methode": "tabel",
         "url": "https://totalenergies.be/static/marketing-documents/b2c/tariff-card/latest/MYESSENTIAL_GAS_VL_NL.pdf",
         "verwachte_formule": {"index": "TTF_M_RLP", "factor": 0.1010, "toeslag": 0.5740},
         "index_eenheid": "EUR/MWh",
@@ -41,7 +41,7 @@ GAS_CONTRACTEN = {
     },
     "Luminus BasicFlex Online Gas": {
         "archief_identificatie": ["Luminus", "BasicFlex Online"],
-        "vaste_vergoeding_methode": "visuele_kolom",
+        "vaste_vergoeding_methode": "tabel",
         "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
         "verwachte_formule": {"index": "TTF DAH M", "factor": 0.1001, "toeslag": 0.5279},
         "index_eenheid": "EUR/MWh",
@@ -59,7 +59,7 @@ GAS_CONTRACTEN = {
     },
     "OCTA+ Boost Flex Gas": {
         "archief_identificatie": ["OCTA+", "Boost Flex"],
-        "vaste_vergoeding_methode": "visuele_kolom",
+        "vaste_vergoeding_methode": "tabel",
         "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
         "verwachte_formule": {"index": "ZTP RLP M", "factor": 1.020, "toeslag": 0.3200},
         "index_eenheid": "ct/kWh",
