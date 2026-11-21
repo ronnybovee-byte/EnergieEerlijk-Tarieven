@@ -66,6 +66,17 @@ def check(data, fixed, index, month=None, register=None, prices=None, formulas=N
             )
         ):
             issues.append('Formulevergelijking met Android-bronbestand mislukt')
+        if not direct_ok and isinstance(item, dict):
+            omrekenfactor = app_formula.get('index_omrekenfactor') if isinstance(app_formula, dict) else None
+
+            if (
+                type(omrekenfactor) not in (int, float)
+                or not math.isfinite(omrekenfactor)
+                or omrekenfactor <= 0
+                or omrekenfactor != item.get('index_omrekenfactor')
+                or item.get('index_eenheid_gevalideerd') is not True
+            ):
+                issues.append('Indexeenheid of omrekenfactor niet bevestigd')            
         index_ok = (
                 issues.append('Formule wijkt af: eenheden nog niet bevestigd')
         # Controleer bronresultaten, niet vooraf vastgelegde publicatiestatussen.
