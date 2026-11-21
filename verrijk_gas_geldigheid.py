@@ -7,6 +7,7 @@ wordt geen maand toegekend. Dit script wijzigt geen prijsformules.
 from __future__ import annotations
 
 import json
+import hashlib
 import re
 from datetime import datetime, timezone
 from pathlib import Path
@@ -60,7 +61,7 @@ def vind_tariefmaand(tekst: str) -> tuple[str | None, str]:
     return None, "geen_eenduidige_contractperiode"
 
 
-def lees_bron(naam: str, url: str) -> str:
+def lees_bron(naam: str, url: str, verwachte_sha256: str) -> str:
     antwoord = requests.get(
         url, timeout=45, headers={"User-Agent": "EerlijkeEnergie/1.0"}
     )
@@ -69,6 +70,10 @@ def lees_bron(naam: str, url: str) -> str:
         raise ValueError(f"Geen PDF voor {naam}")
     if len(antwoord.content) > 15_000_000:
         raise ValueError(f"PDF te groot voor {naam}")
+    werkelijke_sha256 = hashlib.sha256(antwoord.content).hexdigest()
+
+    if not verwachte_sha256 or werkelijke_sha256 != verwachte_sha256:
+        raise ValueError(f"Tariefkaartcontrole SHA256 mislukt voor {naam}")
     tekst, _ = lees_pdf(antwoord.content)
     if not tekst.strip():
         raise ValueError(f"Geen PDF-tekst voor {naam}")
@@ -124,7 +129,8 @@ def main() -> None:
         formule["formule_eenheden_gevalideerd"] = (
             bron.get("formule_eenheden_gevalideerd") is True
         )
-        tekst = lees_bron(naam, url)
+        tekst = lees_bron(naam, url, bron.get("sha256"))
+        formule["pdf_sha256"] = bron["sha256"]
         maand, reden = vind_tariefmaand(tekst)
         formule["bron_url"] = url
         formule["tariefmaand"] = maand
