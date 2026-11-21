@@ -179,7 +179,11 @@ def inspect(name, info, session):
               'kandidaten': [], 'btw_bronregels': [], 'voorwaarden_bronregels': [],
               'geschiktheid_bronregels': [],
               'geschiktheid': {k: 'onbekend' for k in GESCHIKTHEID}}
-    if info.get('status') != 'formule_gelijk_aan_referentie' or info.get('formule_gelijk') is not True:
+    if (
+        info.get('formule_technisch_gevalideerd') is not True
+        or info.get('referentie_index_behouden') is not True
+        or info.get('tariefmaand_archief') != datetime.now(timezone.utc).strftime('%Y-%m')
+    ):
         result['reden'] = 'formulevergelijking_niet_geslaagd'
         return result
     url = info.get('pdf_url')
