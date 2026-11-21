@@ -40,45 +40,6 @@ def check(data, fixed, index, month=None, register=None, prices=None, formulas=N
                 issues.append('Formulevergelijking niet geslaagd')
             if not item.get('contract_herkend') or not item.get('maand_vermeld'):
                 issues.append('Contract of maand niet herkend')
-        if (
-            isinstance(item, dict)
-            and not direct_ok
-            and item.get('coefficienten_gewijzigd') is not False
-            and item.get('formule_eenheden_gevalideerd') is not True
-        ):
-            issues.append('Formule wijkt af: eenheden nog niet bevestigd')        
-        app_formula = (formulas or {}).get('contracten', {}).get(name, {})
-        archive_formula = item.get('formule_gevonden', {}) if isinstance(item, dict) else {}
-
-        if not (
-            isinstance(item, dict)
-            and isinstance(archive_formula, dict)
-            and isinstance(app_formula, dict)
-            and bool(item.get('sha256'))
-            and app_formula.get('pdf_sha256') == item.get('sha256')
-            and app_formula.get('tariefmaand') == month
-            and app_formula.get('is_huidige_maand') is True
-            and all(
-                key in app_formula
-                and key in archive_formula
-                and app_formula[key] == archive_formula[key]
-                for key in ('index', 'factor', 'toeslag')
-            )
-        ):
-            issues.append('Formulevergelijking met Android-bronbestand mislukt')
-        if not direct_ok and isinstance(item, dict):
-            omrekenfactor = app_formula.get('index_omrekenfactor') if isinstance(app_formula, dict) else None
-
-            if (
-                type(omrekenfactor) not in (int, float)
-                or not math.isfinite(omrekenfactor)
-                or omrekenfactor <= 0
-                or omrekenfactor != item.get('index_omrekenfactor')
-                or item.get('index_eenheid_gevalideerd') is not True
-            ):
-                issues.append('Indexeenheid of omrekenfactor niet bevestigd')            
-        index_ok = (
-                issues.append('Formule wijkt af: eenheden nog niet bevestigd')
         # Controleer bronresultaten, niet vooraf vastgelegde publicatiestatussen.
         index_item = index_rows.get(name, {})
         price_item = (prices or {}).get('contracten', {}).get(name, {})
@@ -99,6 +60,46 @@ def check(data, fixed, index, month=None, register=None, prices=None, formulas=N
             and math.isfinite(direct_price)
             and direct_price > 0
         )
+
+        if (
+            isinstance(item, dict)
+            and not direct_ok
+            and item.get('coefficienten_gewijzigd') is not False
+            and item.get('formule_eenheden_gevalideerd') is not True
+        ):
+            issues.append('Formule wijkt af: eenheden nog niet bevestigd')
+
+        app_formula = (formulas or {}).get('contracten', {}).get(name, {})
+        archive_formula = item.get('formule_gevonden', {}) if isinstance(item, dict) else {}
+
+        if not (
+            isinstance(item, dict)
+            and isinstance(archive_formula, dict)
+            and isinstance(app_formula, dict)
+            and bool(item.get('sha256'))
+            and app_formula.get('pdf_sha256') == item.get('sha256')
+            and app_formula.get('tariefmaand') == month
+            and app_formula.get('is_huidige_maand') is True
+            and all(
+                key in app_formula
+                and key in archive_formula
+                and app_formula[key] == archive_formula[key]
+                for key in ('index', 'factor', 'toeslag')
+            )
+        ):
+            issues.append('Formulevergelijking met Android-bronbestand mislukt')
+
+        if not direct_ok and isinstance(item, dict):
+            omrekenfactor = app_formula.get('index_omrekenfactor') if isinstance(app_formula, dict) else None
+
+            if (
+                type(omrekenfactor) not in (int, float)
+                or not math.isfinite(omrekenfactor)
+                or omrekenfactor <= 0
+                or omrekenfactor != item.get('index_omrekenfactor')
+                or item.get('index_eenheid_gevalideerd') is not True
+            ):
+                issues.append('Indexeenheid of omrekenfactor niet bevestigd')
         index_ok = (
             index_item.get('actueel_voor_huidige_maand') is True
             and index.get('huidige_kalendermaand_utc') == month
