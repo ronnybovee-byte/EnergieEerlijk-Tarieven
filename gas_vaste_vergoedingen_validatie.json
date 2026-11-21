@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-21T16:14:36.615864+00:00",
+  "gegenereerd_op_utc": "2026-11-21T16:24:33.563411+00:00",
   "bron": "gas_vaste_vergoeding_kandidaten.json",
   "referentiemaand": "2026-11",
   "status": "VASTE_VERGOEDING_BEWIJSCONTROLE_GEEN_JAARPRIJZEN",
@@ -12,6 +12,52 @@
       "vaste_vergoeding_volledig_gevalideerd": true,
       "overige_kosten_eur_incl_btw": null,
       "overige_kosten_gevalideerd": false,
+      "overige_kosten_classificatie": [
+        {
+          "pagina": 1,
+          "regel": 16,
+          "tekst": "3.Toeslagen en heffingen",
+          "context": "2.De netwerkkosten | (distributie & transport) | 3.Toeslagen en heffingen | (toeslagen, accijnzen & bijdragen) | @ Geleverde energie (Ecofix)",
+          "bron": "ocr",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 1,
+          "regel": 17,
+          "tekst": "(toeslagen, accijnzen & bijdragen)",
+          "context": "(distributie & transport) | 3.Toeslagen en heffingen | (toeslagen, accijnzen & bijdragen) | @ Geleverde energie (Ecofix) | variabele prijs - contract van 1 jaar Netwerkkosten (Netbeheerder) ;",
+          "bron": "ocr",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 18,
+          "tekst": "3. Toeslagen & heffingen",
+          "context": "ORES (Namur) 31,91 4,198 140,93 2,115 889,48 1,548 0,165 | TECTO - RESA 34,59 4,640 140,93 2,259 962,74 2,241 0165 | 3. Toeslagen & heffingen | Bijdrage op energie 0,10577 Verbruik tussen O & 12.000 kWh 0,87238 | Verbruik groter dan 12.000 kWh 0,96229",
+          "bron": "ocr",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 19,
+          "tekst": "Bijdrage op energie 0,10577 Verbruik tussen O & 12.000 kWh 0,87238",
+          "context": "TECTO - RESA 34,59 4,640 140,93 2,259 962,74 2,241 0165 | 3. Toeslagen & heffingen | Bijdrage op energie 0,10577 Verbruik tussen O & 12.000 kWh 0,87238 | Verbruik groter dan 12.000 kWh 0,96229 | Aansluitingsvergoeding 0,00750",
+          "bron": "ocr",
+          "categorie": "REEDS_VERREKEND",
+          "motivering": "Gereguleerde kost; niet als extra leverancierskost behandelen",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        }
+      ],
       "pdf_sha256": "dff71fecec519c27bf6c74164133d8567be4e7ed0de4630f9e039d2d8b3fdc1d",
       "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=dff71fecec519c27bf6c74164133d8567be4e7ed0de4630f9e039d2d8b3fdc1d",
       "voorwaarden_bronregels": [],
@@ -66,6 +112,151 @@
       "vaste_vergoeding_volledig_gevalideerd": true,
       "overige_kosten_eur_incl_btw": null,
       "overige_kosten_gevalideerd": false,
+      "overige_kosten_classificatie": [
+        {
+          "pagina": 2,
+          "regel": 2,
+          "tekst": "Federale bijdrage 4",
+          "context": "FAST | B2C-RFLN_myEssential Variabel_GAZ_NL | 18 septembre 2025 5:09 | Federale bijdrage 4 | c€/kWh | Verbruik tussen 0 & 12.000 kWh",
+          "bron": "pdf_tekst",
+          "categorie": "REEDS_VERREKEND",
+          "motivering": "Gereguleerde kost; niet als extra leverancierskost behandelen",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 34,
+          "tekst": "Bijdrage op",
+          "context": "telactiviteit | (€/jaar) | Bijdrage op | de energie | (c€/kWh)",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 72,
+          "tekst": "3 De taksen, heffingen en bijdragen zoals die van toepassing zijn bij het opmaken van deze tariefkaart (gepubliceerd op de officiële website www.vlaamsenutsregulator.be). Elke wettelijke wijziging van taksen, heffingen of",
+          "context": "2 TotalEnergies treedt op als tussenpersoon voor het innen van de distributienetkosten. De ontvangen bedragen worden integraal doorgestort aan de distributienetbeheerder (DNB). | Distributienettarieven zoals goedgekeurd door de gewestelijke regulator (Vlaamse Nutsregulator) en gepubliceerd op diens officiële website (www.vlaamsenutsregulator.be). | 3 De taksen, heffingen en bijdragen zoals die van toepassing zijn bij het opmaken van deze tariefkaart (gepubliceerd op de officiële website www.vlaamsenutsregulator.be). Elke wettelijke wijziging van taksen, heffingen of | bijdragen wordt zonder meerkosten doorgerekend aan de klant. | 4 De opbrengst van deze federale bijdrage is bestemd voor de financiering van drie fondsen, die worden beheerd door de CREG: het CREG-fonds, het Sociaal Energiefonds en het fonds",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 73,
+          "tekst": "bijdragen wordt zonder meerkosten doorgerekend aan de klant.",
+          "context": "Distributienettarieven zoals goedgekeurd door de gewestelijke regulator (Vlaamse Nutsregulator) en gepubliceerd op diens officiële website (www.vlaamsenutsregulator.be). | 3 De taksen, heffingen en bijdragen zoals die van toepassing zijn bij het opmaken van deze tariefkaart (gepubliceerd op de officiële website www.vlaamsenutsregulator.be). Elke wettelijke wijziging van taksen, heffingen of | bijdragen wordt zonder meerkosten doorgerekend aan de klant. | 4 De opbrengst van deze federale bijdrage is bestemd voor de financiering van drie fondsen, die worden beheerd door de CREG: het CREG-fonds, het Sociaal Energiefonds en het fonds | Beschermde Klanten. Het bedrag van deze bijdrage werd vastgelegd in een Koninklijk Besluit voor de toepassing van de wet van 12 april 1965 betreffende het vervoer van gasachtige",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 74,
+          "tekst": "4 De opbrengst van deze federale bijdrage is bestemd voor de financiering van drie fondsen, die worden beheerd door de CREG: het CREG-fonds, het Sociaal Energiefonds en het fonds",
+          "context": "3 De taksen, heffingen en bijdragen zoals die van toepassing zijn bij het opmaken van deze tariefkaart (gepubliceerd op de officiële website www.vlaamsenutsregulator.be). Elke wettelijke wijziging van taksen, heffingen of | bijdragen wordt zonder meerkosten doorgerekend aan de klant. | 4 De opbrengst van deze federale bijdrage is bestemd voor de financiering van drie fondsen, die worden beheerd door de CREG: het CREG-fonds, het Sociaal Energiefonds en het fonds | Beschermde Klanten. Het bedrag van deze bijdrage werd vastgelegd in een Koninklijk Besluit voor de toepassing van de wet van 12 april 1965 betreffende het vervoer van gasachtige | producten en andere door middel van leidingen. De CREG is gerechtigd om de correcte toepassing van de bepalingen met betrekking tot de federale bijdrage te controleren.",
+          "bron": "pdf_tekst",
+          "categorie": "REEDS_VERREKEND",
+          "motivering": "Gereguleerde kost; niet als extra leverancierskost behandelen",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 75,
+          "tekst": "Beschermde Klanten. Het bedrag van deze bijdrage werd vastgelegd in een Koninklijk Besluit voor de toepassing van de wet van 12 april 1965 betreffende het vervoer van gasachtige",
+          "context": "bijdragen wordt zonder meerkosten doorgerekend aan de klant. | 4 De opbrengst van deze federale bijdrage is bestemd voor de financiering van drie fondsen, die worden beheerd door de CREG: het CREG-fonds, het Sociaal Energiefonds en het fonds | Beschermde Klanten. Het bedrag van deze bijdrage werd vastgelegd in een Koninklijk Besluit voor de toepassing van de wet van 12 april 1965 betreffende het vervoer van gasachtige | producten en andere door middel van leidingen. De CREG is gerechtigd om de correcte toepassing van de bepalingen met betrekking tot de federale bijdrage te controleren. | Overeenkomstig artikel 6.4. van de algemene verkoopvoorwaarden voor de levering van elektriciteit en/of aardgas voor particulieren, kan een Klant die voldoet aan de voorwaarden van het",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 76,
+          "tekst": "producten en andere door middel van leidingen. De CREG is gerechtigd om de correcte toepassing van de bepalingen met betrekking tot de federale bijdrage te controleren.",
+          "context": "4 De opbrengst van deze federale bijdrage is bestemd voor de financiering van drie fondsen, die worden beheerd door de CREG: het CREG-fonds, het Sociaal Energiefonds en het fonds | Beschermde Klanten. Het bedrag van deze bijdrage werd vastgelegd in een Koninklijk Besluit voor de toepassing van de wet van 12 april 1965 betreffende het vervoer van gasachtige | producten en andere door middel van leidingen. De CREG is gerechtigd om de correcte toepassing van de bepalingen met betrekking tot de federale bijdrage te controleren. | Overeenkomstig artikel 6.4. van de algemene verkoopvoorwaarden voor de levering van elektriciteit en/of aardgas voor particulieren, kan een Klant die voldoet aan de voorwaarden van het | Sociaal Tarief conform artikel 2 van het Ministerieel Besluit van 30 maart 2007, of conform artikel 4 van de Programmawet van 27 april 2007, of conform de wetgeving die deze zou",
+          "bron": "pdf_tekst",
+          "categorie": "REEDS_VERREKEND",
+          "motivering": "Gereguleerde kost; niet als extra leverancierskost behandelen",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 81,
+          "tekst": "Overeenkomstig Europese wetgeving is TotalEnergies vanaf 1 januari 2028 gehouden om jaarlijks een hoeveelheid emissierechten in te leveren die overeenstemt met de CO₂-emissies verbonden aan het aardgasverbruik van haar",
+          "context": "vervangen, genieten van het Sociaal Tarief. Vanaf het moment dat het Sociaal Tarief wordt toegepast zal de Klant genieten van dit specifieke tarief en zullen de bijzondere voorwaarden van dit | Sociaal Tarief op de Klant van toepassing zijn. | Overeenkomstig Europese wetgeving is TotalEnergies vanaf 1 januari 2028 gehouden om jaarlijks een hoeveelheid emissierechten in te leveren die overeenstemt met de CO₂-emissies verbonden aan het aardgasverbruik van haar | eindklanten. Deze verplichting impliceert een bijkomende kost, die als volgt aan de klant zal worden doorgerekend overeenkomstig de wettelijke bepalingen: | ETS2-kost = Verbruik aardgas (in MWh) × Uitstootfactor (ton CO₂/MWh) × ETS2-quotaprijs (€/ton CO₂)",
+          "bron": "pdf_tekst",
+          "categorie": "TOEKOMSTIG",
+          "motivering": "Toekomstige emissiekost; ingangsdatum uit lokale broncontext",
+          "ingangsdatum": "2028-01-01",
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 82,
+          "tekst": "eindklanten. Deze verplichting impliceert een bijkomende kost, die als volgt aan de klant zal worden doorgerekend overeenkomstig de wettelijke bepalingen:",
+          "context": "Sociaal Tarief op de Klant van toepassing zijn. | Overeenkomstig Europese wetgeving is TotalEnergies vanaf 1 januari 2028 gehouden om jaarlijks een hoeveelheid emissierechten in te leveren die overeenstemt met de CO₂-emissies verbonden aan het aardgasverbruik van haar | eindklanten. Deze verplichting impliceert een bijkomende kost, die als volgt aan de klant zal worden doorgerekend overeenkomstig de wettelijke bepalingen: | ETS2-kost = Verbruik aardgas (in MWh) × Uitstootfactor (ton CO₂/MWh) × ETS2-quotaprijs (€/ton CO₂) | - De uitstootfactor wordt vastgesteld door de bevoegde overheid.",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 83,
+          "tekst": "ETS2-kost = Verbruik aardgas (in MWh) × Uitstootfactor (ton CO₂/MWh) × ETS2-quotaprijs (€/ton CO₂)",
+          "context": "Overeenkomstig Europese wetgeving is TotalEnergies vanaf 1 januari 2028 gehouden om jaarlijks een hoeveelheid emissierechten in te leveren die overeenstemt met de CO₂-emissies verbonden aan het aardgasverbruik van haar | eindklanten. Deze verplichting impliceert een bijkomende kost, die als volgt aan de klant zal worden doorgerekend overeenkomstig de wettelijke bepalingen: | ETS2-kost = Verbruik aardgas (in MWh) × Uitstootfactor (ton CO₂/MWh) × ETS2-quotaprijs (€/ton CO₂) | - De uitstootfactor wordt vastgesteld door de bevoegde overheid. | - De ETS2-quotaprijs wordt bepaald op basis van de marktprijs van CO₂-emissierechten, vermeerderd met de bevoorradingskosten van TotalEnergies.",
+          "bron": "pdf_tekst",
+          "categorie": "TOEKOMSTIG",
+          "motivering": "Toekomstige emissiekost; ingangsdatum uit lokale broncontext",
+          "ingangsdatum": "2028-01-01",
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 85,
+          "tekst": "- De ETS2-quotaprijs wordt bepaald op basis van de marktprijs van CO₂-emissierechten, vermeerderd met de bevoorradingskosten van TotalEnergies.",
+          "context": "ETS2-kost = Verbruik aardgas (in MWh) × Uitstootfactor (ton CO₂/MWh) × ETS2-quotaprijs (€/ton CO₂) | - De uitstootfactor wordt vastgesteld door de bevoegde overheid. | - De ETS2-quotaprijs wordt bepaald op basis van de marktprijs van CO₂-emissierechten, vermeerderd met de bevoorradingskosten van TotalEnergies. | De ETS2-kost zal afzonderlijk en transparant worden vermeld op de factuur van de klant, exclusief btw. De waarde van de ETS2-quotaprijs zal worden gepubliceerd op de website van TotalEnergies zodra de markt voor | ETS2-emissierechten operationeel is. Deze bepaling is onder voorbehoud van wijzigingen in de toepasselijke wet- en regelgeving. TotalEnergies behoudt zich het recht voor om de berekeningswijze en/of de toepasselijke",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 86,
+          "tekst": "De ETS2-kost zal afzonderlijk en transparant worden vermeld op de factuur van de klant, exclusief btw. De waarde van de ETS2-quotaprijs zal worden gepubliceerd op de website van TotalEnergies zodra de markt voor",
+          "context": "- De uitstootfactor wordt vastgesteld door de bevoegde overheid. | - De ETS2-quotaprijs wordt bepaald op basis van de marktprijs van CO₂-emissierechten, vermeerderd met de bevoorradingskosten van TotalEnergies. | De ETS2-kost zal afzonderlijk en transparant worden vermeld op de factuur van de klant, exclusief btw. De waarde van de ETS2-quotaprijs zal worden gepubliceerd op de website van TotalEnergies zodra de markt voor | ETS2-emissierechten operationeel is. Deze bepaling is onder voorbehoud van wijzigingen in de toepasselijke wet- en regelgeving. TotalEnergies behoudt zich het recht voor om de berekeningswijze en/of de toepasselijke | parameters aan te passen in overeenstemming met toekomstige wettelijke- of reglementaire evoluties.",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 87,
+          "tekst": "ETS2-emissierechten operationeel is. Deze bepaling is onder voorbehoud van wijzigingen in de toepasselijke wet- en regelgeving. TotalEnergies behoudt zich het recht voor om de berekeningswijze en/of de toepasselijke",
+          "context": "- De ETS2-quotaprijs wordt bepaald op basis van de marktprijs van CO₂-emissierechten, vermeerderd met de bevoorradingskosten van TotalEnergies. | De ETS2-kost zal afzonderlijk en transparant worden vermeld op de factuur van de klant, exclusief btw. De waarde van de ETS2-quotaprijs zal worden gepubliceerd op de website van TotalEnergies zodra de markt voor | ETS2-emissierechten operationeel is. Deze bepaling is onder voorbehoud van wijzigingen in de toepasselijke wet- en regelgeving. TotalEnergies behoudt zich het recht voor om de berekeningswijze en/of de toepasselijke | parameters aan te passen in overeenstemming met toekomstige wettelijke- of reglementaire evoluties. | Het aanbod TotalEnergies myEssential Variabel is onderworpen aan de bijzondere voorwaarden van het product myEssential Variabel",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        }
+      ],
       "pdf_sha256": "8ff4e5eda77b3326f76062db7f131cd7b99dec9f467699e498f6accbb7d75971",
       "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=8ff4e5eda77b3326f76062db7f131cd7b99dec9f467699e498f6accbb7d75971",
       "voorwaarden_bronregels": [
@@ -136,6 +327,107 @@
       "vaste_vergoeding_volledig_gevalideerd": true,
       "overige_kosten_eur_incl_btw": null,
       "overige_kosten_gevalideerd": false,
+      "overige_kosten_classificatie": [
+        {
+          "pagina": 1,
+          "regel": 145,
+          "tekst": "Bijdrage op de energie (c€/kWh)",
+          "context": "3 Taksen en heffingen: | VL | Bijdrage op de energie (c€/kWh) | Bijzondere accijns (*) (c€/kWh) | Aansluitingsvergoeding (c€/kWh)",
+          "bron": "pdf_tekst",
+          "categorie": "REEDS_VERREKEND",
+          "motivering": "Gereguleerde kost; niet als extra leverancierskost behandelen",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 30,
+          "tekst": "bijdragen en toeslagen zijn de meest recent gekende waarden op het moment van creatie van deze",
+          "context": "slotfactuur. De hierboven vermelde kosten voor het gebruik van de netten zijn de kosten die zijn | goedgekeurd door de regulator (Vlaamse Nutsregulator) en de waarden van de taksen, heffingen, | bijdragen en toeslagen zijn de meest recent gekende waarden op het moment van creatie van deze | bijzondere voorwaarden. Eventuele wijzigingen van deze elementen worden volledig aangerekend | tegen de kostprijs.",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 40,
+          "tekst": "Vanaf 1 januari 2028 zal Luminus onderworpen zijn aan het nieuwe emissiehandelssysteem (ETS2).",
+          "context": "alsnog papieren facturen wenst te ontvangen, dan kan dat enkel wanneer u instemt op een contract | waarbij wél telefonische klantendienst is inbegrepen. | Vanaf 1 januari 2028 zal Luminus onderworpen zijn aan het nieuwe emissiehandelssysteem (ETS2). | Dit systeem verplicht ons om emissierechten voor CO2 te kopen en in te leveren ter compensatie van | de CO2-uitstoot bij aardgaslevering. De hiermee verbonden kosten zullen, overeenkomstig artikel",
+          "bron": "pdf_tekst",
+          "categorie": "TOEKOMSTIG",
+          "motivering": "Toekomstige emissiekost; ingangsdatum uit lokale broncontext",
+          "ingangsdatum": "2028-01-01",
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 41,
+          "tekst": "Dit systeem verplicht ons om emissierechten voor CO2 te kopen en in te leveren ter compensatie van",
+          "context": "waarbij wél telefonische klantendienst is inbegrepen. | Vanaf 1 januari 2028 zal Luminus onderworpen zijn aan het nieuwe emissiehandelssysteem (ETS2). | Dit systeem verplicht ons om emissierechten voor CO2 te kopen en in te leveren ter compensatie van | de CO2-uitstoot bij aardgaslevering. De hiermee verbonden kosten zullen, overeenkomstig artikel | 6.4 van onze algemene voorwaarden, aan u worden doorgerekend met naleving van de geldende",
+          "bron": "pdf_tekst",
+          "categorie": "TOEKOMSTIG",
+          "motivering": "Toekomstige emissiekost; ingangsdatum uit lokale broncontext",
+          "ingangsdatum": "2028-01-01",
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 42,
+          "tekst": "de CO2-uitstoot bij aardgaslevering. De hiermee verbonden kosten zullen, overeenkomstig artikel",
+          "context": "Vanaf 1 januari 2028 zal Luminus onderworpen zijn aan het nieuwe emissiehandelssysteem (ETS2). | Dit systeem verplicht ons om emissierechten voor CO2 te kopen en in te leveren ter compensatie van | de CO2-uitstoot bij aardgaslevering. De hiermee verbonden kosten zullen, overeenkomstig artikel | 6.4 van onze algemene voorwaarden, aan u worden doorgerekend met naleving van de geldende | regelgeving.",
+          "bron": "pdf_tekst",
+          "categorie": "TOEKOMSTIG",
+          "motivering": "Toekomstige emissiekost; ingangsdatum uit lokale broncontext",
+          "ingangsdatum": "2028-01-01",
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 46,
+          "tekst": "omzettingscoëfficiënt van ton CO2 naar MWh × CarP. De CarP wordt bepaald op basis van de",
+          "context": "regelgeving. | Deze kosten worden berekend volgens de volgende formule: volume aardgasafname (in MWh) × | omzettingscoëfficiënt van ton CO2 naar MWh × CarP. De CarP wordt bepaald op basis van de | marktprijzen voor CO2-emissierechten en onze (administratieve) kosten, die momenteel nog niet | gekend zijn. De waarde van de CarP zal worden gepubliceerd op onze website www.luminus.be/",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 47,
+          "tekst": "marktprijzen voor CO2-emissierechten en onze (administratieve) kosten, die momenteel nog niet",
+          "context": "Deze kosten worden berekend volgens de volgende formule: volume aardgasafname (in MWh) × | omzettingscoëfficiënt van ton CO2 naar MWh × CarP. De CarP wordt bepaald op basis van de | marktprijzen voor CO2-emissierechten en onze (administratieve) kosten, die momenteel nog niet | gekend zijn. De waarde van de CarP zal worden gepubliceerd op onze website www.luminus.be/ | nl/ets2.",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 48,
+          "tekst": "gekend zijn. De waarde van de CarP zal worden gepubliceerd op onze website www.luminus.be/",
+          "context": "omzettingscoëfficiënt van ton CO2 naar MWh × CarP. De CarP wordt bepaald op basis van de | marktprijzen voor CO2-emissierechten en onze (administratieve) kosten, die momenteel nog niet | gekend zijn. De waarde van de CarP zal worden gepubliceerd op onze website www.luminus.be/ | nl/ets2. | DUUR VAN UW CONTRACT:",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 49,
+          "tekst": "nl/ets2.",
+          "context": "marktprijzen voor CO2-emissierechten en onze (administratieve) kosten, die momenteel nog niet | gekend zijn. De waarde van de CarP zal worden gepubliceerd op onze website www.luminus.be/ | nl/ets2. | DUUR VAN UW CONTRACT: | Luminus BasicFlex Online Gas is een contract met een duurtijd van 2 jaar voor leverpunten in",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        }
+      ],
       "pdf_sha256": "d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
       "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
       "voorwaarden_bronregels": [
@@ -216,6 +508,19 @@
       "vaste_vergoeding_volledig_gevalideerd": true,
       "overige_kosten_eur_incl_btw": null,
       "overige_kosten_gevalideerd": false,
+      "overige_kosten_classificatie": [
+        {
+          "pagina": 2,
+          "regel": 5,
+          "tekst": "Supplementen",
+          "context": "Voor particulieren in het Vlaamse Gewest | Prijzen inclusief 6% btw(9) | Supplementen | Federale Accijns(8) (c€/kWh) | Verbruik tussen 0 & 12.000 kWh",
+          "bron": "pdf_tekst",
+          "categorie": "REEDS_VERREKEND",
+          "motivering": "Gereguleerde kost; niet als extra leverancierskost behandelen",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        }
+      ],
       "pdf_sha256": "dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
       "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
       "voorwaarden_bronregels": [
@@ -289,6 +594,184 @@
       "vaste_vergoeding_volledig_gevalideerd": true,
       "overige_kosten_eur_incl_btw": null,
       "overige_kosten_gevalideerd": false,
+      "overige_kosten_classificatie": [
+        {
+          "pagina": 2,
+          "regel": 3,
+          "tekst": "Deze bijdragen worden integraal doorgestort aan de netbeheerders.",
+          "context": "OCTA+ Energie n.v. - Schaarbeeklei 600 1800 Vilvoorde T. 0800/43.001 (gratis) energie@octaplus.be www.octaplus.be | NETTARIEVEN (c€/kWh) | Deze bijdragen worden integraal doorgestort aan de netbeheerders. | Netbeheerder | Distributie",
+          "bron": "pdf_tekst",
+          "categorie": "REEDS_VERREKEND",
+          "motivering": "Gereguleerde kost; niet als extra leverancierskost behandelen",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 122,
+          "tekst": "TOESLAGEN",
+          "context": "- | 0,165 | TOESLAGEN | Deze bijdragen worden integraal doorgestort aan | de respectievelijke overheden",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 123,
+          "tekst": "Deze bijdragen worden integraal doorgestort aan",
+          "context": "0,165 | TOESLAGEN | Deze bijdragen worden integraal doorgestort aan | de respectievelijke overheden | Federale accijns (c€/kWh)",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 2,
+          "regel": 128,
+          "tekst": "Bijdrage",
+          "context": "Bijzondere | accijns | Bijdrage | energie | Verbruik tussen 0 & 12.000 kWh",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 3,
+          "regel": 13,
+          "tekst": "ETS2-kost: bijkomende kost vanaf 1 januari 2028.",
+          "context": "De vaste vergoeding wordt gefactureerd op basis van het aantal dagen energielevering, behalve als het contract eindigt binnen de 6 maanden die | volgen op de ingang ervan. In dit laatste geval wordt de vaste vergoeding aangerekend voor een periode van 6 maanden. | ETS2-kost: bijkomende kost vanaf 1 januari 2028. | Overeenkomstig de Europese regelgeving zullen alle aardgasleveranciers vanaf 1 januari 2028 jaarlijks een aantal emissierechten moeten | inleveren dat overeenstemt met de CO₂-emissies die voortvloeien uit het aardgasverbruik van hun klanten. Deze reglementaire verplichting",
+          "bron": "pdf_tekst",
+          "categorie": "TOEKOMSTIG",
+          "motivering": "Toekomstige emissiekost; ingangsdatum uit lokale broncontext",
+          "ingangsdatum": "2028-01-01",
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 3,
+          "regel": 14,
+          "tekst": "Overeenkomstig de Europese regelgeving zullen alle aardgasleveranciers vanaf 1 januari 2028 jaarlijks een aantal emissierechten moeten",
+          "context": "volgen op de ingang ervan. In dit laatste geval wordt de vaste vergoeding aangerekend voor een periode van 6 maanden. | ETS2-kost: bijkomende kost vanaf 1 januari 2028. | Overeenkomstig de Europese regelgeving zullen alle aardgasleveranciers vanaf 1 januari 2028 jaarlijks een aantal emissierechten moeten | inleveren dat overeenstemt met de CO₂-emissies die voortvloeien uit het aardgasverbruik van hun klanten. Deze reglementaire verplichting | brengt een bijkomende kost met zich mee, die overeenkomstig de toepasselijke regelgeving aan u zal worden aangerekend, en als volgt zal",
+          "bron": "pdf_tekst",
+          "categorie": "TOEKOMSTIG",
+          "motivering": "Toekomstige emissiekost; ingangsdatum uit lokale broncontext",
+          "ingangsdatum": "2028-01-01",
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 3,
+          "regel": 15,
+          "tekst": "inleveren dat overeenstemt met de CO₂-emissies die voortvloeien uit het aardgasverbruik van hun klanten. Deze reglementaire verplichting",
+          "context": "ETS2-kost: bijkomende kost vanaf 1 januari 2028. | Overeenkomstig de Europese regelgeving zullen alle aardgasleveranciers vanaf 1 januari 2028 jaarlijks een aantal emissierechten moeten | inleveren dat overeenstemt met de CO₂-emissies die voortvloeien uit het aardgasverbruik van hun klanten. Deze reglementaire verplichting | brengt een bijkomende kost met zich mee, die overeenkomstig de toepasselijke regelgeving aan u zal worden aangerekend, en als volgt zal | worden berekend:ETS2-kost = uw aardgasverbruik vanaf 2028 (MWh) × Emissiefactor gepubliceerd door de bevoegde autoriteit (ton CO₂/MWh) ×",
+          "bron": "pdf_tekst",
+          "categorie": "TOEKOMSTIG",
+          "motivering": "Toekomstige emissiekost; ingangsdatum uit lokale broncontext",
+          "ingangsdatum": "2028-01-01",
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 3,
+          "regel": 16,
+          "tekst": "brengt een bijkomende kost met zich mee, die overeenkomstig de toepasselijke regelgeving aan u zal worden aangerekend, en als volgt zal",
+          "context": "Overeenkomstig de Europese regelgeving zullen alle aardgasleveranciers vanaf 1 januari 2028 jaarlijks een aantal emissierechten moeten | inleveren dat overeenstemt met de CO₂-emissies die voortvloeien uit het aardgasverbruik van hun klanten. Deze reglementaire verplichting | brengt een bijkomende kost met zich mee, die overeenkomstig de toepasselijke regelgeving aan u zal worden aangerekend, en als volgt zal | worden berekend:ETS2-kost = uw aardgasverbruik vanaf 2028 (MWh) × Emissiefactor gepubliceerd door de bevoegde autoriteit (ton CO₂/MWh) × | CarP (€/ton CO₂).",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 3,
+          "regel": 17,
+          "tekst": "worden berekend:ETS2-kost = uw aardgasverbruik vanaf 2028 (MWh) × Emissiefactor gepubliceerd door de bevoegde autoriteit (ton CO₂/MWh) ×",
+          "context": "inleveren dat overeenstemt met de CO₂-emissies die voortvloeien uit het aardgasverbruik van hun klanten. Deze reglementaire verplichting | brengt een bijkomende kost met zich mee, die overeenkomstig de toepasselijke regelgeving aan u zal worden aangerekend, en als volgt zal | worden berekend:ETS2-kost = uw aardgasverbruik vanaf 2028 (MWh) × Emissiefactor gepubliceerd door de bevoegde autoriteit (ton CO₂/MWh) × | CarP (€/ton CO₂). | De Emissiefactor stemt overeen met de omrekeningscoëfficiënt van ton CO₂ naar MWh en zal worden bepaald door de bevoegde autoriteit. CarP",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 3,
+          "regel": 18,
+          "tekst": "CarP (€/ton CO₂).",
+          "context": "brengt een bijkomende kost met zich mee, die overeenkomstig de toepasselijke regelgeving aan u zal worden aangerekend, en als volgt zal | worden berekend:ETS2-kost = uw aardgasverbruik vanaf 2028 (MWh) × Emissiefactor gepubliceerd door de bevoegde autoriteit (ton CO₂/MWh) × | CarP (€/ton CO₂). | De Emissiefactor stemt overeen met de omrekeningscoëfficiënt van ton CO₂ naar MWh en zal worden bepaald door de bevoegde autoriteit. CarP | zal worden bepaald op basis van de prijzen van de CO₂-emissierechten en onze administratieve kosten. De waarde van de CarP zal beschikbaar",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 3,
+          "regel": 19,
+          "tekst": "De Emissiefactor stemt overeen met de omrekeningscoëfficiënt van ton CO₂ naar MWh en zal worden bepaald door de bevoegde autoriteit. CarP",
+          "context": "worden berekend:ETS2-kost = uw aardgasverbruik vanaf 2028 (MWh) × Emissiefactor gepubliceerd door de bevoegde autoriteit (ton CO₂/MWh) × | CarP (€/ton CO₂). | De Emissiefactor stemt overeen met de omrekeningscoëfficiënt van ton CO₂ naar MWh en zal worden bepaald door de bevoegde autoriteit. CarP | zal worden bepaald op basis van de prijzen van de CO₂-emissierechten en onze administratieve kosten. De waarde van de CarP zal beschikbaar | worden gesteld op www.octaplus.be nadat de markt voor ETS2-emissierechten operationeel zal zijn geworden. Deze bepaling kan worden",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 3,
+          "regel": 20,
+          "tekst": "zal worden bepaald op basis van de prijzen van de CO₂-emissierechten en onze administratieve kosten. De waarde van de CarP zal beschikbaar",
+          "context": "CarP (€/ton CO₂). | De Emissiefactor stemt overeen met de omrekeningscoëfficiënt van ton CO₂ naar MWh en zal worden bepaald door de bevoegde autoriteit. CarP | zal worden bepaald op basis van de prijzen van de CO₂-emissierechten en onze administratieve kosten. De waarde van de CarP zal beschikbaar | worden gesteld op www.octaplus.be nadat de markt voor ETS2-emissierechten operationeel zal zijn geworden. Deze bepaling kan worden | aangepast in functie van eventuele wijzigingen in de toepasselijke wet- of regelgeving. Elke eventuele prijssimulatie die op basis van deze",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 3,
+          "regel": 21,
+          "tekst": "worden gesteld op www.octaplus.be nadat de markt voor ETS2-emissierechten operationeel zal zijn geworden. Deze bepaling kan worden",
+          "context": "De Emissiefactor stemt overeen met de omrekeningscoëfficiënt van ton CO₂ naar MWh en zal worden bepaald door de bevoegde autoriteit. CarP | zal worden bepaald op basis van de prijzen van de CO₂-emissierechten en onze administratieve kosten. De waarde van de CarP zal beschikbaar | worden gesteld op www.octaplus.be nadat de markt voor ETS2-emissierechten operationeel zal zijn geworden. Deze bepaling kan worden | aangepast in functie van eventuele wijzigingen in de toepasselijke wet- of regelgeving. Elke eventuele prijssimulatie die op basis van deze | tariefkaart wordt opgesteld, wordt in dit stadium uitgevoerd zonder rekening te houden met de ETS2-kost.",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 3,
+          "regel": 23,
+          "tekst": "tariefkaart wordt opgesteld, wordt in dit stadium uitgevoerd zonder rekening te houden met de ETS2-kost.",
+          "context": "worden gesteld op www.octaplus.be nadat de markt voor ETS2-emissierechten operationeel zal zijn geworden. Deze bepaling kan worden | aangepast in functie van eventuele wijzigingen in de toepasselijke wet- of regelgeving. Elke eventuele prijssimulatie die op basis van deze | tariefkaart wordt opgesteld, wordt in dit stadium uitgevoerd zonder rekening te houden met de ETS2-kost. | Alle kosten verbonden aan het gebruik van de netten, net zoals de taksen, vergoedingen, bijdragen en toeslagen, blijven variabel, aanpasbaar en | volledig doorrekenbaar aan de klant, zelfs retro-actief. Deze prijsonderdelen zijn degene die de Regulatoren hebben goedgekeurd op het moment",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 3,
+          "regel": 24,
+          "tekst": "Alle kosten verbonden aan het gebruik van de netten, net zoals de taksen, vergoedingen, bijdragen en toeslagen, blijven variabel, aanpasbaar en",
+          "context": "aangepast in functie van eventuele wijzigingen in de toepasselijke wet- of regelgeving. Elke eventuele prijssimulatie die op basis van deze | tariefkaart wordt opgesteld, wordt in dit stadium uitgevoerd zonder rekening te houden met de ETS2-kost. | Alle kosten verbonden aan het gebruik van de netten, net zoals de taksen, vergoedingen, bijdragen en toeslagen, blijven variabel, aanpasbaar en | volledig doorrekenbaar aan de klant, zelfs retro-actief. Deze prijsonderdelen zijn degene die de Regulatoren hebben goedgekeurd op het moment | van opmaak van deze tariefkaart. In het geval dat er een verschil zou zijn tussen de tarieven van OCTA+ enerzijds en de wettelijke bijdragen en",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        },
+        {
+          "pagina": 3,
+          "regel": 26,
+          "tekst": "van opmaak van deze tariefkaart. In het geval dat er een verschil zou zijn tussen de tarieven van OCTA+ enerzijds en de wettelijke bijdragen en",
+          "context": "Alle kosten verbonden aan het gebruik van de netten, net zoals de taksen, vergoedingen, bijdragen en toeslagen, blijven variabel, aanpasbaar en | volledig doorrekenbaar aan de klant, zelfs retro-actief. Deze prijsonderdelen zijn degene die de Regulatoren hebben goedgekeurd op het moment | van opmaak van deze tariefkaart. In het geval dat er een verschil zou zijn tussen de tarieven van OCTA+ enerzijds en de wettelijke bijdragen en | nettarieven anderzijds, zijn het deze laatste die gelden. | Onze algemene verkoopsvoorwaarden zijn van toepassing. Deze kunt u raadplegen via www.octaplus.be – Tarieven & documenten.",
+          "bron": "pdf_tekst",
+          "categorie": "ONBEKEND",
+          "motivering": "Volledige tariefkaart en kosteneenheid controleren",
+          "ingangsdatum": null,
+          "bedrag_gevalideerd": false
+        }
+      ],
       "pdf_sha256": "432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
       "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
       "voorwaarden_bronregels": [
