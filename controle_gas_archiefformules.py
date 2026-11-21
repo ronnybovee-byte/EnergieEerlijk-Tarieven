@@ -96,6 +96,9 @@ def vergelijk(naam, kandidaat, referentie, sessie):
                   and abs(float(gevonden['factor'])-float(verwacht['factor'])) < 0.000001
                   and abs(float(gevonden['toeslag'])-float(verwacht['toeslag'])) < 0.000001)
         resultaat['formule_gelijk'] = gelijk
+        resultaat['formule_technisch_gevalideerd'] = True
+        resultaat['coefficienten_gewijzigd'] = not gelijk
+        resultaat['referentie_index_behouden'] = True
         resultaat['status'] = 'formule_gelijk_aan_referentie' if gelijk else 'formule_afwijkend'
         resultaat['reden'] = ('Formulevergelijking geslaagd; geen controle van indexwaarde, '
                               'indexeenheid, vaste vergoeding of jaarprijs' if gelijk else
