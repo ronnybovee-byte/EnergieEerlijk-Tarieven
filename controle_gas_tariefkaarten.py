@@ -199,14 +199,10 @@ def controleer_tariefkaart(naam: str, gegevens: dict) -> dict | None:
     print(f"Gevonden toeslag: {gevonden['toeslag']:.4f} c€/kWh")
 
     verwacht = gegevens["verwachte_formule"]
-    if (
-        gevonden["index"] != normaliseer_index(verwacht["index"])
-        or abs(gevonden["factor"] - verwacht["factor"]) > 0.000001
-        or abs(gevonden["toeslag"] - verwacht["toeslag"]) > 0.000001
-    ):
+
+    if not valideer_formule(gevonden, verwacht["index"]):
         raise ValueError(
-            f"FORMULE GEWIJZIGD: verwacht {verwacht}; gevonden {gevonden}. "
-            "Handmatige controle vereist"
+            f"ONGELDIGE FORMULE OF GEWIJZIGDE INDEX: {gevonden}"
         )
     print(f"PDF: {len(response.content)} bytes; OCR op {ocr_paginas} pagina('s)")
     print("STATUS: PRIJSFORMULE GEVALIDEERD")
