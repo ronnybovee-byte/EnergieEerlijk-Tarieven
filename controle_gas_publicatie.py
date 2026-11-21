@@ -72,6 +72,11 @@ def check(data, fixed, index, month=None, register=None, prices=None):
         fixed_item = fixed_rows.get(name, {})
         if fixed.get('referentiemaand') != month or fixed_item.get('vaste_vergoeding_volledig_gevalideerd') is not True:
             issues.append('Vaste leveranciersvergoeding niet volledig geverifieerd')
+        if isinstance(item, dict) and (
+            not item.get('sha256')
+            or fixed_item.get('pdf_sha256') != item.get('sha256')
+        ):
+            issues.append('Vaste vergoeding komt niet uit dezelfde tariefkaart')        
         selected_ok = isinstance(selected.get(name), dict)
         if not selected_ok:
             issues.append('Contract ontbreekt in bestaande selectie')
