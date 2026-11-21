@@ -116,12 +116,13 @@ def vergelijk(naam, kandidaat, referentie, sessie):
                 r'ttf\s+dah\s+m\s*=\s*\d+[,.]\d+\s*€/mwh',
                 tekst_norm
             ))
-      if (
+        if (
             naam in ('ENGIE Flow Gas', 'Luminus BasicFlex Online Gas')
             and resultaat['index_eenheid_gevalideerd']
         ):
-            resultaat['index_omrekenfactor'] = 1.0       
-      if naam == 'OCTA+ Boost Flex Gas':
+            resultaat['index_omrekenfactor'] = 1.0
+
+        if naam == 'OCTA+ Boost Flex Gas':
             uitkomst_bevestigd = bool(re.search(
                 r'prijsformule\s+is\s+als\s+volgt,\s+in\s+ceur/kwh\s+excl\.\s*btw',
                 tekst_norm
