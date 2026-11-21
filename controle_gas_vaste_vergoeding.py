@@ -224,10 +224,38 @@ def inspect(name, info, session):
                 for regel in page.get_text().splitlines():
                     regel = clean(regel)
                     if kostenpatroon.search(regel):
-                        overige_kosten_bronregels.append({
-                            'pagina': pagina,
-                            'tekst': regel
-                        })
+                                overige_kosten_bronregels = []
+        kostenpatroon = re.compile(
+            r'co[₂2]|co\s+2|carp|ets\s*2|koolstof|emissie|'
+            r'toeslag|bijdrage|bijkomende kost|'
+            r'administratiekost|extra kost|'
+            r'overige kost|supplement|biomethaan',
+            re.IGNORECASE
+        )
+
+        def verzamel_kosten(tekst, pagina, bron):
+            regels = [
+                clean(r) for r in tekst.splitlines()
+                if clean(r)
+            ]
+            for i, regel in enumerate(regels):
+                if kostenpatroon.search(regel):
+                    overige_kosten_bronregels.append({
+                        'pagina': pagina,
+                        'regel': i + 1,
+                        'tekst': regel,
+                        'context': ' | '.join(
+                            regels[max(0, i - 2):i + 3]
+                        ),
+                        'bron': bron
+                    })
+
+        with fitz.open(stream=raw, filetype='pdf') as document:
+            for pagina, page in enumerate(document, 1):
+                if name != 'Ecofix Flexy Online':
+                    verzamel_kosten(
+                        page.get_text(), pagina, 'pdf_tekst'
+                    )
 
         result['overige_kosten_bronregels'] = overige_kosten_bronregels
         if name == 'Ecofix Flexy Online':
@@ -240,7 +268,9 @@ def inspect(name, info, session):
                             to_page=page_no
                         )
                         page_text, _ = lees_pdf(single.tobytes())
-
+                    verzamel_kosten(
+                        page_text, page_no + 1, 'ocr'
+                    )
                     eligibility.extend(
                         geschiktheidsbewijs(page_text, page_no + 1)
                     )
