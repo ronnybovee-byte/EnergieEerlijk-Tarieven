@@ -93,7 +93,8 @@ def main() -> None:
 
         if (
             bron.get("tariefmaand_archief") != huidige_maand
-            or bron.get("status") != "formule_gelijk_aan_referentie"
+            or bron.get("formule_technisch_gevalideerd") is not True
+            or bron.get("referentie_index_behouden") is not True
             or not isinstance(url, str)
             or not url.startswith("https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=")
         ):
