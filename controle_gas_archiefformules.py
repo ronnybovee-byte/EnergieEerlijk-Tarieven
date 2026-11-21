@@ -101,7 +101,26 @@ def vergelijk(naam, kandidaat, referentie, sessie):
         resultaat['referentie_index_behouden'] = True
         resultaat['index_eenheid_verwacht'] = GAS_CONTRACTEN[naam]['index_eenheid']
         resultaat['formule_uitkomst_eenheid_verwacht'] = GAS_CONTRACTEN[naam]['formule_uitkomst_eenheid']
-        resultaat['formule_eenheden_gevalideerd'] = False   
+        resultaat['formule_eenheden_gevalideerd'] = False 
+        tekst_norm = re.sub(r'\s+', ' ', tekst).casefold()
+
+        if naam == 'OCTA+ Boost Flex Gas':
+            uitkomst_bevestigd = bool(re.search(
+                r'prijsformule\s+is\s+als\s+volgt,\s+in\s+ceur/kwh\s+excl\.\s*btw',
+                tekst_norm
+            ))
+
+            omrekening_bevestigd = bool(re.search(
+                r'eur/mwh,\s+volstaat\s+het\s+om\s+de\s+waarde\s+te\s+delen\s+door\s+10\s+voor\s+de\s+toepassing\s+van\s+de\s+prijsindexatieformule\s+in\s+ceur/kwh',
+                tekst_norm
+            ))
+
+            resultaat['formule_eenheden_gevalideerd'] = (
+                uitkomst_bevestigd and omrekening_bevestigd
+            )
+
+            if resultaat['formule_eenheden_gevalideerd']:
+                resultaat['index_omrekenfactor'] = 0.1      
         resultaat['formule_bronregels'] = [
             regel.strip()
             for regel in tekst.splitlines()
