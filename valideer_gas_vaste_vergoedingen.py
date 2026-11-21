@@ -78,6 +78,9 @@ def classify_costs(row, source_ok):
                        'ingangsdatum': start, 'bedrag_gevalideerd': False})
     return result
 
+# Inhoudelijk gecontroleerde tariefkaarten november 2026.
+GOEDGEKEURDE_OVERIGE_KOSTEN = {'Ecofix Flexy Online': 'dff71fecec519c27bf6c74164133d8567be4e7ed0de4630f9e039d2d8b3fdc1d', 'TotalEnergies myEssential Variabel Gas': '8ff4e5eda77b3326f76062db7f131cd7b99dec9f467699e498f6accbb7d75971', 'Luminus BasicFlex Online Gas': 'd1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65', 'ENGIE Flow Gas': 'dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1', 'OCTA+ Boost Flex Gas': '432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0'}
+
 def check(name, row, method, month):
     row = row if isinstance(row, dict) else {}
     problems = []
@@ -113,11 +116,14 @@ def check(name, row, method, month):
     ok = not problems
     values, evidence, missing = eligibility(row, ok)
     eligibility_ok = ok and not missing
+    extra_ok = (ok and month == "2026-11"
+                and row.get("tariefmaand") == month
+                and GOEDGEKEURDE_OVERIGE_KOSTEN.get(name) == digest)
     return {'vast_bedrag_eur_incl_btw_per_jaar': format(matches[0], '.2f') if ok else None,
             'bedrag_en_pdf_bewijs_gecontroleerd': ok,
             'vaste_vergoeding_volledig_gevalideerd': ok,
-            'overige_kosten_eur_incl_btw': None,
-            'overige_kosten_gevalideerd': False,
+            'overige_kosten_eur_incl_btw': 0.0 if extra_ok else None,
+            'overige_kosten_gevalideerd': extra_ok,
             'overige_kosten_classificatie': classify_costs(row, ok),
             'pdf_sha256': digest, 'pdf_url': row.get('pdf_url'),
             'voorwaarden_bronregels': row.get('voorwaarden_bronregels', []),
