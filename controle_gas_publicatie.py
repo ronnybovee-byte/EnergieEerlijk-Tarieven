@@ -4,7 +4,7 @@ import json
 import math
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
-from controle_gas_tariefkaarten import GAS_CONTRACTEN
+from controle_gas_tariefkaarten import GAS_CONTRACTEN, valideer_formule
 
 SOURCE = Path('gas_archiefformules_vergelijking.json')
 OUTPUT = Path('gas_app_publicatie_status.json')
@@ -29,12 +29,22 @@ def check(data, fixed, index, month=None, register=None, prices=None):
         else:
             if item.get('tariefmaand_archief') != month:
                 issues.append(f"Tariefmaand niet bevestigd als {month}")
-            if item.get('status') != 'formule_gelijk_aan_referentie' or item.get('formule_gelijk') is not True:
+            if (
+                item.get('formule_technisch_gevalideerd') is not True
+                or item.get('referentie_index_behouden') is not True
+                or not valideer_formule(
+                    item.get('formule_gevonden'),
+                    GAS_CONTRACTEN[name]['verwachte_formule']['index']
+                )
+            ):
                 issues.append('Formulevergelijking niet geslaagd')
             if not item.get('contract_herkend') or not item.get('maand_vermeld'):
                 issues.append('Contract of maand niet herkend')
-            if item.get('formule_gevonden') != item.get('referentieformule'):
-                issues.append('Formule wijkt af van referentie')
+            if (
+                item.get('coefficienten_gewijzigd') is True
+                and item.get('formule_eenheden_gevalideerd') is not True
+            ):
+                issues.append('Formule wijkt af: eenheden nog niet bevestigd')
         # Controleer bronresultaten, niet vooraf vastgelegde publicatiestatussen.
         index_item = index_rows.get(name, {})
         price_item = (prices or {}).get('contracten', {}).get(name, {})
