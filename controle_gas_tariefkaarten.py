@@ -26,6 +26,8 @@ GAS_CONTRACTEN = {
         "vaste_vergoeding_methode": "visuele_kolom",
         "url": "https://portal.ecofixgp.be/docs/prices/current/GAS_Ecofix_Flexy_Online_NL.pdf",
         "verwachte_formule": {"index": "TTF-RLP-M", "factor": 0.1010, "toeslag": 0.2200},
+        "index_eenheid": "EUR/MWh",
+        "formule_uitkomst_eenheid": "ct/kWh",        
         "vereiste_woorden": ["Ecofix", "Flexy Online", "Onze tariefformule voor aardgas"],
     },
     "TotalEnergies myEssential Variabel Gas": {
@@ -33,6 +35,8 @@ GAS_CONTRACTEN = {
         "vaste_vergoeding_methode": "visuele_kolom",
         "url": "https://totalenergies.be/static/marketing-documents/b2c/tariff-card/latest/MYESSENTIAL_GAS_VL_NL.pdf",
         "verwachte_formule": {"index": "TTF_M_RLP", "factor": 0.1010, "toeslag": 0.5740},
+        "index_eenheid": "EUR/MWh",
+        "formule_uitkomst_eenheid": "ct/kWh",    
         "vereiste_woorden": ["myEssential"],
     },
     "Luminus BasicFlex Online Gas": {
@@ -40,6 +44,8 @@ GAS_CONTRACTEN = {
         "vaste_vergoeding_methode": "visuele_kolom",
         "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
         "verwachte_formule": {"index": "TTF DAH M", "factor": 0.1001, "toeslag": 0.5279},
+        "index_eenheid": "EUR/MWh",
+        "formule_uitkomst_eenheid": "ct/kWh",
         "vereiste_woorden": ["BasicFlex"],
     },
     "ENGIE Flow Gas": {
@@ -47,6 +53,8 @@ GAS_CONTRACTEN = {
         "vaste_vergoeding_methode": "visuele_kolom",
         "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
         "verwachte_formule": {"index": "ZTPDAM(HEREN)", "factor": 0.1020, "toeslag": 1.0095},
+        "index_eenheid": "EUR/MWh",
+        "formule_uitkomst_eenheid": "ct/kWh",
         "vereiste_woorden": ["Flow"],
     },
     "OCTA+ Boost Flex Gas": {
@@ -54,6 +62,8 @@ GAS_CONTRACTEN = {
         "vaste_vergoeding_methode": "visuele_kolom",
         "url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
         "verwachte_formule": {"index": "ZTP RLP M", "factor": 1.020, "toeslag": 0.3200},
+        "index_eenheid": "ct/kWh",
+        "formule_uitkomst_eenheid": "ct/kWh",
         "vereiste_woorden": ["Boost Flex"],
     },
 }
