@@ -78,7 +78,25 @@ def combine(leveranciers, luminus, current=None, genormaliseerd=None):
                     maand = f'{match.group(2)}-{maandnummer:02d}'
                     waarde = float(match.group(3).replace(',', '.'))
                     historische_waarden.add((maand, waarde))
-
+       
+        # Bij een mislukte websitecontrole: actuele ENGIE-tariefkaart.
+        if (
+            name == 'ENGIE Flow Gas'
+            and not valid
+            and norm.get('schema_version') == 1
+            and n.get('tariefmaand') == current
+            and n.get('status') == 'BRONREGELS_GEVONDEN_HANDMATIGE_CONTROLE'
+            and re.fullmatch(r'[a-f0-9]{64}', n.get('pdf_sha256') or '')
+            and len(historische_waarden) == 1
+        ):
+            maand, waarde = next(iter(historische_waarden))
+            if maand == vorige_maand and 0 < waarde <= 1000:
+                src = {
+                    'laatste_volledige_maand': maand,
+                    'waarde_eur_per_mwh': waarde,
+                    'bron_url': 'https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=' + n['pdf_sha256'],
+                }
+                valid = True
         historisch_ok = (
             len(historische_waarden) == 1
             and all(
