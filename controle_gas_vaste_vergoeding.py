@@ -209,6 +209,27 @@ def inspect(name, info, session):
         # directly from the original PDF to preserve cell boundaries.
         ocr_text, ocr_pages = lees_pdf(raw)
         candidates, vat, conditions, eligibility = extract_evidence(raw, name)
+
+        overige_kosten_bronregels = []
+        kostenpatroon = re.compile(
+            r'co[₂2]|carp|ets\s*2|koolstof|emissie|'
+            r'toeslag|bijdrage|bijkomende kost|'
+            r'administratiekost|extra kost|'
+            r'overige kost|supplement|biomethaan',
+            re.IGNORECASE
+        )
+
+        with fitz.open(stream=raw, filetype='pdf') as document:
+            for pagina, page in enumerate(document, 1):
+                for regel in page.get_text().splitlines():
+                    regel = clean(regel)
+                    if kostenpatroon.search(regel):
+                        overige_kosten_bronregels.append({
+                            'pagina': pagina,
+                            'tekst': regel
+                        })
+
+        result['overige_kosten_bronregels'] = overige_kosten_bronregels
         if name == 'Ecofix Flexy Online':
             with fitz.open(stream=raw, filetype='pdf') as document:
                 for page_no in range(len(document)):
