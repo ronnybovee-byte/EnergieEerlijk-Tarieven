@@ -195,7 +195,11 @@ def inspecteer(naam, info, sessie):
               'status': 'NIET_GEVERIFIEERD', 'indexwaarde_gevalideerd': False,
               'geschikt_voor_automatische_jaarprijs': False,
               'index_bronregels': [], 'waarde_bronregels': []}
-    if info.get('status') != 'formule_gelijk_aan_referentie' or info.get('formule_gelijk') is not True:
+    if (
+        info.get('formule_technisch_gevalideerd') is not True
+        or info.get('referentie_index_behouden') is not True
+        or info.get('tariefmaand_archief') != datetime.now(timezone.utc).strftime('%Y-%m')
+    ):
         result['reden'] = 'formule_niet_goedgekeurd'
         return result
     url = info.get('pdf_url', '')
