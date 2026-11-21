@@ -47,6 +47,37 @@ def eligibility(row, source_ok):
     missing = [k for k in keys if values[k] != expected[k]]
     return values, evidence, missing
 
+def classify_costs(row, source_ok):
+    # Classifications are diagnostic only: no price or zero is approved.
+    rules = row.get('overige_kosten_bronregels', [])
+    if not source_ok or not isinstance(rules, list):
+        return []
+    result = []
+    for rule in rules:
+        if not isinstance(rule, dict):
+            continue
+        line = str(rule.get('tekst', ''))
+        context = str(rule.get('context', ''))
+        category = 'ONBEKEND'
+        reason = 'Volledige tariefkaart en kosteneenheid controleren'
+        start = None
+        if re.search(r'ets\s*2|co\s*[₂2]|carp|emissierechten', line, re.I):
+            date = re.search(r'vanaf\s+1\s+januari\s+(20\d{2})', context, re.I)
+            if date and re.search(r'ets\s*2|emissierechten', context, re.I):
+                start = date.group(1) + '-01-01'
+                if start > row['tariefmaand'] + '-01':
+                    category = 'TOEKOMSTIG'
+                    reason = 'Toekomstige emissiekost; ingangsdatum uit lokale broncontext'
+        elif re.search(r'federale (?:bijdrage|accijns)|bijdrage op de energie|bijdrage op energie', line, re.I) or (line.strip().lower() == 'supplementen' and re.search(r'federale accijns', context, re.I)) or (re.search(r'bijdragen', line, re.I) and re.search(r'integraal doorgestort aan de netbeheerders', line, re.I)):
+            category = 'REEDS_VERREKEND'
+            reason = 'Gereguleerde kost; niet als extra leverancierskost behandelen'
+        elif re.search(r'administratiekost|bijkomende kost|extra kost|biomethaan', line, re.I) and not re.search(r'ets\s*2|co\s*[₂2]|carp|emissie', context, re.I):
+            category = 'EXTRA_LEVERANCIERSKOST'
+            reason = 'Mogelijke extra kost; bedrag, verplicht karakter en eenheid nog controleren'
+        result.append({**rule, 'categorie': category, 'motivering': reason,
+                       'ingangsdatum': start, 'bedrag_gevalideerd': False})
+    return result
+
 def check(name, row, method, month):
     row = row if isinstance(row, dict) else {}
     problems = []
@@ -87,6 +118,7 @@ def check(name, row, method, month):
             'vaste_vergoeding_volledig_gevalideerd': ok,
             'overige_kosten_eur_incl_btw': None,
             'overige_kosten_gevalideerd': False,
+            'overige_kosten_classificatie': classify_costs(row, ok),
             'pdf_sha256': digest, 'pdf_url': row.get('pdf_url'),
             'voorwaarden_bronregels': row.get('voorwaarden_bronregels', []),
             'geschiktheid': values, 'geschiktheid_bewijs': evidence,
