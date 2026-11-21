@@ -56,15 +56,14 @@ def check(data, fixed, index, month=None, register=None, prices=None):
             and direct_price > 0
         )
         index_ok = (
-            index.get('alle_broncontroles_geslaagd') is True
-            and index.get('actueel_voor_huidige_maand') is True
+            index_item.get('actueel_voor_huidige_maand') is True
             and index.get('huidige_kalendermaand_utc') == month
-            and index_item.get('status') in (
-                'HISTORISCHE_BRONWAARDE_GECONTROLEERD',
-                'HISTORISCHE_EN_FORWARD_BRONWAARDEN_GECONTROLEERD',
-            )
+            and index_item.get('status') ==
+                'HISTORISCHE_EN_FORWARD_BRONWAARDEN_GECONTROLEERD'
             and index_item.get('historische_indexmaand') == previous
-            and isinstance(index_item.get('historische_waarde_eur_per_mwh'), (int, float))
+            and type(index_item.get('historische_waarde_eur_per_mwh')) in (int, float)
+            and math.isfinite(index_item['historische_waarde_eur_per_mwh'])
+            and 0 < index_item['historische_waarde_eur_per_mwh'] <= 1000
         )
         if not index_ok and not direct_ok:
             issues.append('Historische indexbron niet volledig geverifieerd')
