@@ -9,6 +9,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from io import BytesIO
 import json
+import math
 from pathlib import Path
 import re
 import sys
@@ -68,7 +69,23 @@ FORMULE_PATROON = re.compile(
 def normaliseer_index(index: str) -> str:
     return re.sub(r"\s+", "", index).upper().replace("–", "-")
 
+def valideer_formule(gevonden: dict, verwachte_index: str) -> bool:
+    if not isinstance(gevonden, dict):
+        return False
 
+    factor = gevonden.get("factor")
+    toeslag = gevonden.get("toeslag")
+    index = gevonden.get("index")
+
+    return (
+        isinstance(index, str)
+        and normaliseer_index(index) == normaliseer_index(verwachte_index)
+        and type(factor) in (int, float)
+        and math.isfinite(factor)
+        and factor > 0
+        and type(toeslag) in (int, float)
+        and math.isfinite(toeslag)
+    )
 def herken_formule(tekst: str) -> dict | None:
     def getal(waarde: str) -> float:
         return float(waarde.replace(",", "."))
