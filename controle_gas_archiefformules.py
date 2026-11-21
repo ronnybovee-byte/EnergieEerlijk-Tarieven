@@ -101,7 +101,16 @@ def vergelijk(naam, kandidaat, referentie, sessie):
         resultaat['referentie_index_behouden'] = True
         resultaat['index_eenheid_verwacht'] = GAS_CONTRACTEN[naam]['index_eenheid']
         resultaat['formule_uitkomst_eenheid_verwacht'] = GAS_CONTRACTEN[naam]['formule_uitkomst_eenheid']
-        resultaat['formule_eenheden_gevalideerd'] = False      
+        resultaat['formule_eenheden_gevalideerd'] = False   
+        resultaat['formule_bronregels'] = [
+            regel.strip()
+            for regel in tekst.splitlines()
+            if re.search(
+                r'tariefformule|prijsformule|€/MWh|EUR/MWh|c€/kWh|cent/kWh',
+                regel,
+                re.IGNORECASE
+            )
+        ][:80]      
         resultaat['status'] = 'formule_gelijk_aan_referentie' if gelijk else 'formule_afwijkend'
         resultaat['reden'] = ('Formulevergelijking geslaagd; geen controle van indexwaarde, '
                               'indexeenheid, vaste vergoeding of jaarprijs' if gelijk else
