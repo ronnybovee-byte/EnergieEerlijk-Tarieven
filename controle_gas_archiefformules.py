@@ -103,7 +103,19 @@ def vergelijk(naam, kandidaat, referentie, sessie):
         resultaat['formule_uitkomst_eenheid_verwacht'] = GAS_CONTRACTEN[naam]['formule_uitkomst_eenheid']
         resultaat['formule_eenheden_gevalideerd'] = False 
         tekst_norm = re.sub(r'\s+', ' ', tekst).casefold()
+        resultaat['index_eenheid_gevalideerd'] = False
 
+        if naam == 'ENGIE Flow Gas':
+            resultaat['index_eenheid_gevalideerd'] = bool(re.search(
+                r'de geschatte jaarlijkse parameter\s+ztpdam\s*\(heren\)\s+bedraagt.{0,180}?\d+[,.]\d+\s*€/mwh',
+                tekst_norm
+            ))
+
+        elif naam == 'Luminus BasicFlex Online Gas':
+            resultaat['index_eenheid_gevalideerd'] = bool(re.search(
+                r'ttf\s+dah\s+m\s*=\s*\d+[,.]\d+\s*€/mwh',
+                tekst_norm
+            ))
         if naam == 'OCTA+ Boost Flex Gas':
             uitkomst_bevestigd = bool(re.search(
                 r'prijsformule\s+is\s+als\s+volgt,\s+in\s+ceur/kwh\s+excl\.\s*btw',
@@ -120,7 +132,8 @@ def vergelijk(naam, kandidaat, referentie, sessie):
             )
 
             if resultaat['formule_eenheden_gevalideerd']:
-                resultaat['index_omrekenfactor'] = 0.1      
+                resultaat['index_omrekenfactor'] = 0.1     
+                resultaat['index_eenheid_gevalideerd'] = True              
         resultaat['formule_bronregels'] = [
             regel.strip()
             for regel in tekst.splitlines()
