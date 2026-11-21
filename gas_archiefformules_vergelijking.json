@@ -1,72 +1,9 @@
 {
   "schema_version": 1,
-  "gecontroleerd_op_utc": "2026-11-20T22:00:04.268401+00:00",
+  "gecontroleerd_op_utc": "2026-11-21T10:54:58.160465+00:00",
   "status": "alleen_formulevergelijking_niet_voor_app",
   "waarschuwing": "Geen automatische publicatie of goedkeuring van volledige gasprijzen.",
   "contracten": {
-    "ENGIE Flow Gas": {
-      "tariefmaand_archief": "2026-11",
-      "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
-      "status": "formule_gelijk_aan_referentie",
-      "sha256": "dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
-      "ocr_paginas": 0,
-      "contract_herkend": true,
-      "maand_vermeld": true,
-      "formule_gevonden": {
-        "index": "ZTPDAM(HEREN)",
-        "factor": 0.102,
-        "toeslag": 1.0095
-      },
-      "referentieformule": {
-        "index": "ZTPDAM(HEREN)",
-        "factor": 0.102,
-        "toeslag": 1.0095
-      },
-      "formule_gelijk": true,
-      "reden": "Formulevergelijking geslaagd; geen controle van indexwaarde, indexeenheid, vaste vergoeding of jaarprijs"
-    },
-    "Luminus BasicFlex Online Gas": {
-      "tariefmaand_archief": "2026-11",
-      "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
-      "status": "formule_gelijk_aan_referentie",
-      "sha256": "d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
-      "ocr_paginas": 0,
-      "contract_herkend": true,
-      "maand_vermeld": true,
-      "formule_gevonden": {
-        "index": "TTFDAHM",
-        "factor": 0.1001,
-        "toeslag": 0.5279
-      },
-      "referentieformule": {
-        "index": "TTFDAHM",
-        "factor": 0.1001,
-        "toeslag": 0.5279
-      },
-      "formule_gelijk": true,
-      "reden": "Formulevergelijking geslaagd; geen controle van indexwaarde, indexeenheid, vaste vergoeding of jaarprijs"
-    },
-    "OCTA+ Boost Flex Gas": {
-      "tariefmaand_archief": "2026-11",
-      "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
-      "status": "formule_gelijk_aan_referentie",
-      "sha256": "432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
-      "ocr_paginas": 0,
-      "contract_herkend": true,
-      "maand_vermeld": true,
-      "formule_gevonden": {
-        "index": "ZTPRLPM",
-        "factor": 1.02,
-        "toeslag": 0.32
-      },
-      "referentieformule": {
-        "index": "ZTPRLPM",
-        "factor": 1.02,
-        "toeslag": 0.32
-      },
-      "formule_gelijk": true,
-      "reden": "Formulevergelijking geslaagd; geen controle van indexwaarde, indexeenheid, vaste vergoeding of jaarprijs"
-    },
     "Ecofix Flexy Online": {
       "tariefmaand_archief": "2026-11",
       "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=dff71fecec519c27bf6c74164133d8567be4e7ed0de4630f9e039d2d8b3fdc1d",
@@ -86,6 +23,21 @@
         "toeslag": 0.22
       },
       "formule_gelijk": true,
+      "formule_technisch_gevalideerd": true,
+      "coefficienten_gewijzigd": false,
+      "referentie_index_behouden": true,
+      "index_eenheid_verwacht": "EUR/MWh",
+      "formule_uitkomst_eenheid_verwacht": "ct/kWh",
+      "formule_eenheden_gevalideerd": false,
+      "index_eenheid_gevalideerd": false,
+      "formule_bronregels": [
+        "Vaste vergoed Prijs per kWh (€ cent/kWh)",
+        "7 €cent/kWh",
+        "9 FT ecent/kWh €/jaar",
+        "Yer €cent/kWh Woe €cent/kWh Wet) ‘€cent/kWh",
+        "Onze tariefformule voor aardgas (excl. btw): (0,1010*TTF-RLP-M) + 0,2200 c€/kWh",
+        "Deze tariefformule blijft 1 jaar gegarandeerd, ook bij een contract van onbepaalde duur."
+      ],
       "reden": "Formulevergelijking geslaagd; geen controle van indexwaarde, indexeenheid, vaste vergoeding of jaarprijs"
     },
     "TotalEnergies myEssential Variabel Gas": {
@@ -107,6 +59,148 @@
         "toeslag": 0.574
       },
       "formule_gelijk": true,
+      "formule_technisch_gevalideerd": true,
+      "coefficienten_gewijzigd": false,
+      "referentie_index_behouden": true,
+      "index_eenheid_verwacht": "EUR/MWh",
+      "formule_uitkomst_eenheid_verwacht": "ct/kWh",
+      "formule_eenheden_gevalideerd": false,
+      "index_eenheid_gevalideerd": false,
+      "formule_bronregels": [
+        "Het aanbod \"TotalEnergies myEssential Variabel\" is een tariefformule 2.2 [ Taksen en heffingen]",
+        "(c€/kWh)",
+        "0.101 * TTF_M_RLP + 0.574 Tariefformule",
+        "het voorschotbedrag wordt de elektriciteitsprijs bepaald op basis van de waarde van de index in deze formule. 2/Bij de jaarlijkse afrekening wordt de prijsformule",
+        "Enkelvoudige Meter: 9,60 € cent/kWh",
+        "(c€/kWh) (€/jaar) Kosten voor",
+        "0-5000 0-5000 (c€/kWh) telactiviteit",
+        "150.000 400.000 150.000 400.000 (c€/kWh)",
+        "Federale bijdrage 4 c€/kWh"
+      ],
+      "reden": "Formulevergelijking geslaagd; geen controle van indexwaarde, indexeenheid, vaste vergoeding of jaarprijs"
+    },
+    "Luminus BasicFlex Online Gas": {
+      "tariefmaand_archief": "2026-11",
+      "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
+      "status": "formule_gelijk_aan_referentie",
+      "sha256": "d1105da725c750ad6570110124ad0eab588d12f27706107efadf84453d467b65",
+      "ocr_paginas": 0,
+      "contract_herkend": true,
+      "maand_vermeld": true,
+      "formule_gevonden": {
+        "index": "TTFDAHM",
+        "factor": 0.1001,
+        "toeslag": 0.5279
+      },
+      "referentieformule": {
+        "index": "TTF DAH M",
+        "factor": 0.1001,
+        "toeslag": 0.5279
+      },
+      "formule_gelijk": true,
+      "formule_technisch_gevalideerd": true,
+      "coefficienten_gewijzigd": false,
+      "referentie_index_behouden": true,
+      "index_eenheid_verwacht": "EUR/MWh",
+      "formule_uitkomst_eenheid_verwacht": "ct/kWh",
+      "formule_eenheden_gevalideerd": false,
+      "index_eenheid_gevalideerd": true,
+      "index_omrekenfactor": 1.0,
+      "formule_bronregels": [
+        "Energie (c€/kWh) 9,70",
+        "energie (c€/kWh)2",
+        "Variabel Vast Variabel Vast Variabel Vast (c€/kWh)",
+        "(c€/kWh) (€/jaar) (c€/kWh) (€/jaar) (c€/kWh) (€/jaar)",
+        "Bijdrage op de energie (c€/kWh) -",
+        "Bijzondere accijns (*) (c€/kWh) 1,0929",
+        "Aansluitingsvergoeding (c€/kWh) -",
+        "(*) Verschillend tarief afhankelijk van verbruik op jaarbasis: 0-12.000 kWh: 1,0929 c€/kWh, >= 12.001 kWh: 1,1830 c€/kWh",
+        "Index (excl. BTW): TTF DAH M = 86,104 €/MWh (indexwaarde van oktober 2026) goedgekeurd door de regulator (Vlaamse Nutsregulator) en de waarden van de taksen, heffingen,",
+        "Tariefformule energiekost (excl. BTW): 0,1001 x TTF DAH M + 0,5279 bijdragen en toeslagen zijn de meest recent gekende waarden op het moment van creatie van deze",
+        "om nieuwe parameters of nieuwe componenten te gebruiken om de prijsformule te berekenen alsnog papieren facturen wenst te ontvangen, dan kan dat enkel wanneer u instemt op een contract",
+        "tariefformule bestaat, wordt berekend op basis van de index die van toepassing is tijdens de periode Dit systeem verplicht ons om emissierechten voor CO 2 te kopen en in te leveren ter compensatie van"
+      ],
+      "reden": "Formulevergelijking geslaagd; geen controle van indexwaarde, indexeenheid, vaste vergoeding of jaarprijs"
+    },
+    "ENGIE Flow Gas": {
+      "tariefmaand_archief": "2026-11",
+      "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
+      "status": "formule_gelijk_aan_referentie",
+      "sha256": "dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
+      "ocr_paginas": 0,
+      "contract_herkend": true,
+      "maand_vermeld": true,
+      "formule_gevonden": {
+        "index": "ZTPDAM(HEREN)",
+        "factor": 0.102,
+        "toeslag": 1.0095
+      },
+      "referentieformule": {
+        "index": "ZTPDAM(HEREN)",
+        "factor": 0.102,
+        "toeslag": 1.0095
+      },
+      "formule_gelijk": true,
+      "formule_technisch_gevalideerd": true,
+      "coefficienten_gewijzigd": false,
+      "referentie_index_behouden": true,
+      "index_eenheid_verwacht": "EUR/MWh",
+      "formule_uitkomst_eenheid_verwacht": "ct/kWh",
+      "formule_eenheden_gevalideerd": false,
+      "index_eenheid_gevalideerd": true,
+      "index_omrekenfactor": 1.0,
+      "formule_bronregels": [
+        "- Gegarandeerde prijsformule - Volg de prijzen en beheer",
+        "Prijs per kWh(1) (c€/kWh)",
+        "Prijs per kwh(1) (c€/kWh)",
+        "vergoeding vergoeding vergoeding c€/kWh",
+        "c€/kWh c€/kWh c€/kWh €/jaar",
+        "Federale Accijns(8) (c€/kWh)",
+        "(1) De prijsformules zijn geldig voor alle contracten die afgesloten Het resultaat van deze formules is een bedrag uitgedrukt in c€/kWh.",
+        "in €/MWh, wordt berekend en gepubliceerd op engie.be.",
+        "€/MWh).",
+        "89,2144 €/MWh voor deze maand volgens de Vlaamse schrikkeljaar)."
+      ],
+      "reden": "Formulevergelijking geslaagd; geen controle van indexwaarde, indexeenheid, vaste vergoeding of jaarprijs"
+    },
+    "OCTA+ Boost Flex Gas": {
+      "tariefmaand_archief": "2026-11",
+      "pdf_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
+      "status": "formule_gelijk_aan_referentie",
+      "sha256": "432590afb3a59d20b4f0050ce67166b7b576aed062da530bcb838a4e49b1e9b0",
+      "ocr_paginas": 0,
+      "contract_herkend": true,
+      "maand_vermeld": true,
+      "formule_gevonden": {
+        "index": "ZTPRLPM",
+        "factor": 1.02,
+        "toeslag": 0.32
+      },
+      "referentieformule": {
+        "index": "ZTP RLP M",
+        "factor": 1.02,
+        "toeslag": 0.32
+      },
+      "formule_gelijk": true,
+      "formule_technisch_gevalideerd": true,
+      "coefficienten_gewijzigd": false,
+      "referentie_index_behouden": true,
+      "index_eenheid_verwacht": "ct/kWh",
+      "formule_uitkomst_eenheid_verwacht": "ct/kWh",
+      "formule_eenheden_gevalideerd": true,
+      "index_eenheid_gevalideerd": true,
+      "index_omrekenfactor": 0.1,
+      "formule_bronregels": [
+        "ENERGIEKOST (c€/kWh)",
+        "Gasprijs (c€/kWh) 9,98",
+        "NETTARIEVEN (c€/kWh)",
+        "c€/kWh",
+        "€/jaar c€/kWh €/jaar c€/kWh €/jaar",
+        "Federale accijns (c€/kWh)",
+        "voor elke leveringsmaand, waarbij de weging gebaseerd is op het RLP-profiel (gepubliceerd door Synergrid). De prijsformule is als volgt, in",
+        "EUR/MWh, volstaat het om de waarde te delen door 10 voor de toepassing van de prijsindexatieformule in cEUR/kWh. Bijvoorbeeld, een waarde",
+        "van 100 EUR/MWh is gelijk aan 10 cEUR/kWh."
+      ],
       "reden": "Formulevergelijking geslaagd; geen controle van indexwaarde, indexeenheid, vaste vergoeding of jaarprijs"
     }
   }

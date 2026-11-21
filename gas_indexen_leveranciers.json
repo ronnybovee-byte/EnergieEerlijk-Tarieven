@@ -1,18 +1,14 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-20T22:00:42.471310+00:00",
+  "gegenereerd_op_utc": "2026-11-21T10:55:42.789148+00:00",
   "voor_android_app": false,
   "status": "HISTORISCHE_BRONCONTROLE_GEEN_JAARPRIJS",
   "contracten": {
     "ENGIE Flow Gas": {
-      "status": "HISTORISCHE_INDEX_GEVONDEN",
+      "status": "BRONFORMAAT_OF_WAARDE_NOG_NIET_GEVALIDEERD",
       "bron_url": "https://www.engie.be/nl/energie/elektriciteit-gas/prijzen-voorwaarden/indexatieparameters/indexatieparameters-gas",
       "index": "ZTPDAM (Heren)",
-      "index_definitie": "ZTP DAM",
-      "laatste_volledige_maand": "2026-10",
-      "waarde_eur_per_mwh": 85.777,
-      "waarde_ct_per_kwh": 8.5777,
-      "aantal_historische_maanden": 58,
+      "reden": "ValueError: Geen onderling consistente ENGIE-maandwaarden",
       "jaarprognose_gevalideerd": false,
       "geschikt_voor_automatische_jaarprijs": false
     },
