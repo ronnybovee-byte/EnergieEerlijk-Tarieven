@@ -100,15 +100,12 @@ def collect_octaplus():
         found[date] = value
     if not found:
         raise ValueError('Geen volledige rijen met ZTP RLP Maand gevonden')
-    # De oorspronkelijke november-2026 referentie blijft een anker,
-    # maar nieuwere maanden mogen de nieuwste waarde bepalen.
-    if '2026-10' in found and abs(found['2026-10'] - 87.893) > 0.002:
-        raise ValueError('OCTA+ oktober 2026 wijkt af van gecontroleerde bron')
+    
     last = max(found)
     today = dt.datetime.now(dt.timezone.utc).date()
     last_complete = (today.replace(day=1) - dt.timedelta(days=1)).strftime('%Y-%m')
-    if last > last_complete:
-        raise ValueError('Indexmaand is nog niet volledig afgesloten')
+    if last != last_complete:
+        raise ValueError('OCTA+-index van de vorige volledige maand ontbreekt')
     return {'status': 'HISTORISCHE_INDEX_GEVONDEN', 'bron_url': URL,
             'index': 'ZTP RLP M', 'index_definitie': 'ZTP RLP Maand',
             'laatste_volledige_maand': last,
