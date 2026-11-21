@@ -16,6 +16,7 @@ import requests
 from controle_gas_tariefkaarten import GAS_CONTRACTEN, lees_pdf
 
 BESTAND = Path("gas_gevalideerde_formules.json")
+ARCHIEF = Path("gas_archiefformules_vergelijking.json")
 MAANDEN = {
     "januari": 1, "februari": 2, "maart": 3, "april": 4,
     "mei": 5, "juni": 6, "juli": 7, "augustus": 8,
@@ -81,12 +82,27 @@ def main() -> None:
     contracten = gegevens.get("contracten")
     if not isinstance(contracten, dict) or not contracten:
         raise SystemExit("FOUT: geen gevalideerde contracten")
-
+    archief = json.loads(ARCHIEF.read_text(encoding="utf-8"))
+    archief_contracten = archief.get("contracten", {})
     huidige_maand = datetime.now(timezone.utc).strftime("%Y-%m")
     for naam, formule in contracten.items():
         if naam not in GAS_CONTRACTEN or not isinstance(formule, dict):
             raise SystemExit(f"FOUT: onbekend of ongeldig contract: {naam}")
-        url = GAS_CONTRACTEN[naam]["url"]
+        bron = archief_contracten.get(naam, {})
+        url = bron.get("pdf_url")
+
+        if (
+            bron.get("tariefmaand_archief") != huidige_maand
+            or bron.get("status") != "formule_gelijk_aan_referentie"
+            or not isinstance(url, str)
+            or not url.startswith("https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=")
+        ):
+            formule["bron_url"] = None
+            formule["tariefmaand"] = None
+            formule["geldigheid_status"] = "nog_te_bevestigen"
+            formule["geldigheid_bewijs"] = "geen_gevalideerde_actuele_tariefkaart"
+            formule["is_huidige_maand"] = False
+            continue
         # Een mislukte download mag geen schijnbaar actuele publicatie opleveren.
         tekst = lees_bron(naam, url)
         maand, reden = vind_tariefmaand(tekst)
