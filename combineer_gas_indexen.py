@@ -201,7 +201,8 @@ def main():
             norm = read_json(args.genormaliseerd)
         except (OSError, ValueError):
             norm = {}
-          try:
+
+        try:
             leveranciers = read_json(args.leveranciers)
         except (OSError, ValueError):
             leveranciers = {}
