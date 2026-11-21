@@ -27,8 +27,11 @@ MAAND_NAMEN = "|".join(MAANDEN)
 
 # Alleen contexten die expliciet op contracten of tariefkaartprijzen slaan.
 CONTRACT_PERIODE = re.compile(
-    rf"prijzen\s+(?:aardgas\s+)?voor\s+contracten\s+afgesloten\s+in\s+"
-    rf"(?P<maand>{MAAND_NAMEN})\s+(?P<jaar>20\d{{2}})",
+    rf"(?:prijzen\s+(?:aardgas\s+)?voor\s+contracten\s+afgesloten\s+in\s+|"
+    rf"onbepaalde\s+duur\*{{0,2}}\s+die\s+zijn\s+afgesloten\s+in\s+|"
+    rf"BasicFlex\s+Online\s+Gas\s+Regio:\s+Vlaanderen\s+Verbruikers:\s+residentieel\s+\()"
+    rf"(?P<maand>{MAAND_NAMEN})\s+(?P<jaar>20\d{{2}})"
+    rf"(?:\)\s+Tarief:\s+variabel|\b)",
     re.IGNORECASE,
 )
 CONTRACT_DATUMBEREIK = re.compile(
