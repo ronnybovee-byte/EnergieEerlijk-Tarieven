@@ -105,6 +105,25 @@ def main() -> None:
             formule["is_huidige_maand"] = False
             continue
         # Een mislukte download mag geen schijnbaar actuele publicatie opleveren.
+        actuele_formule = bron.get("formule_gevonden")
+
+        if not isinstance(actuele_formule, dict):
+            formule["is_huidige_maand"] = False
+            formule["geldigheid_status"] = "nog_te_bevestigen"
+            continue
+
+        formule["index"] = actuele_formule["index"]
+        formule["factor"] = actuele_formule["factor"]
+        formule["toeslag"] = actuele_formule["toeslag"]
+
+        formule["index_eenheid"] = bron.get("index_eenheid_verwacht")
+        formule["formule_uitkomst_eenheid"] = bron.get(
+            "formule_uitkomst_eenheid_verwacht"
+        )
+        formule["index_omrekenfactor"] = bron.get("index_omrekenfactor")
+        formule["formule_eenheden_gevalideerd"] = (
+            bron.get("formule_eenheden_gevalideerd") is True
+        )
         tekst = lees_bron(naam, url)
         maand, reden = vind_tariefmaand(tekst)
         formule["bron_url"] = url
