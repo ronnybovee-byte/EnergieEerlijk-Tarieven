@@ -16,7 +16,7 @@ import requests
 from controle_gas_tariefkaarten import GAS_CONTRACTEN, herken_formule, lees_pdf, normaliseer_index, valideer_formule
 
 KANDIDATEN = Path('gas_gevonden_tariefkaarten.json')
-GEVALIDEERD = Path('gas_gevalideerde_formules.json')
+
 UITVOER = Path('gas_archiefformules_vergelijking.json')
 MAANDNAMEN = ('januari', 'februari', 'maart', 'april', 'mei', 'juni',
               'juli', 'augustus', 'september', 'oktober', 'november', 'december')
@@ -107,8 +107,10 @@ def vergelijk(naam, kandidaat, referentie, sessie):
 
 def main():
     bron = json.loads(KANDIDATEN.read_text(encoding='utf-8'))
-    gevalideerd = json.loads(GEVALIDEERD.read_text(encoding='utf-8'))
-    referenties = gevalideerd.get('contracten', {})
+    referenties = {
+        naam: gegevens['verwachte_formule']
+        for naam, gegevens in GAS_CONTRACTEN.items()
+    }
     rapport = {
         'schema_version': 1,
         'gecontroleerd_op_utc': datetime.now(timezone.utc).isoformat(),
