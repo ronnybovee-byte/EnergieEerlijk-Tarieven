@@ -13,7 +13,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 import requests
-from controle_gas_tariefkaarten import GAS_CONTRACTEN, herken_formule, lees_pdf, normaliseer_index
+from controle_gas_tariefkaarten import GAS_CONTRACTEN, herken_formule, lees_pdf, normaliseer_index, valideer_formule
 
 KANDIDATEN = Path('gas_gevonden_tariefkaarten.json')
 GEVALIDEERD = Path('gas_gevalideerde_formules.json')
@@ -55,6 +55,11 @@ def vergelijk(naam, kandidaat, referentie, sessie):
         if sha != hash_id:
             resultaat['reden'] = 'sha256_verschilt_van_archief_id'
             return resultaat
+        huidige_maand = datetime.now(timezone.utc).strftime('%Y-%m')
+        if maand != huidige_maand:
+            resultaat['reden'] = 'geen_actuele_tariefkaart'
+            return resultaat
+
         tekst, ocr_paginas = lees_pdf(pdf)
         resultaat['ocr_paginas'] = ocr_paginas
         if not tekst.strip():
@@ -79,6 +84,11 @@ def vergelijk(naam, kandidaat, referentie, sessie):
         resultaat['formule_gevonden'] = gevonden
         if gevonden is None:
             resultaat['reden'] = 'formule_niet_herkend'
+            return resultaat
+        if not valideer_formule(
+            gevonden, GAS_CONTRACTEN[naam]['verwachte_formule']['index']
+        ):
+            resultaat['reden'] = 'ongeldige_formule_of_onbekende_index'
             return resultaat
         verwacht = {k: referentie[k] for k in ('index', 'factor', 'toeslag')}
         resultaat['referentieformule'] = verwacht
