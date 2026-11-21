@@ -85,6 +85,8 @@ def check(name, row, method, month):
     return {'vast_bedrag_eur_incl_btw_per_jaar': format(matches[0], '.2f') if ok else None,
             'bedrag_en_pdf_bewijs_gecontroleerd': ok,
             'vaste_vergoeding_volledig_gevalideerd': ok,
+            'overige_kosten_eur_incl_btw': None,
+            'overige_kosten_gevalideerd': False,
             'pdf_sha256': digest, 'pdf_url': row.get('pdf_url'),
             'voorwaarden_bronregels': row.get('voorwaarden_bronregels', []),
             'geschiktheid': values, 'geschiktheid_bewijs': evidence,
