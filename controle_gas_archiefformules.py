@@ -116,7 +116,7 @@ def vergelijk(naam, kandidaat, referentie, sessie):
                 r'ttf\s+dah\s+m\s*=\s*\d+[,.]\d+\s*€/mwh',
                 tekst_norm
             ))
-         if (
+      if (
             naam in ('ENGIE Flow Gas', 'Luminus BasicFlex Online Gas')
             and resultaat['index_eenheid_gevalideerd']
         ):
