@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "gegenereerd_op_utc": "2026-11-21T10:55:51.636835+00:00",
-  "status": "GEDEELTELIJKE_OF_ONVOLLEDIGE_BRONGEGEVENS",
+  "gegenereerd_op_utc": "2026-11-21T11:08:08.612808+00:00",
+  "status": "GECOMBINEERDE_BRONGEGEVENS_GEEN_JAARPRIJSVALIDATIE",
   "voor_android_app": false,
   "geschikt_voor_automatische_jaarprijs": false,
   "bronnen": [
@@ -11,20 +11,22 @@
   ],
   "contracten": {
     "ENGIE Flow Gas": {
-      "status": "BRONCONTROLE_MISLUKT",
+      "status": "HISTORISCHE_EN_FORWARD_BRONWAARDEN_GECONTROLEERD",
       "index": "ZTPDAM (Heren)",
-      "historische_indexmaand": null,
-      "historische_waarde_eur_per_mwh": null,
-      "geschatte_jaarparameter_eur_per_mwh": null,
-      "herkomst_jaarparameter": null,
-      "bron_url": null,
-      "jaarprognose_gevalideerd": false,
-      "jaarparameter_bronbewijs": null,
+      "historische_indexmaand": "2026-10",
+      "historische_waarde_eur_per_mwh": 85.777,
+      "geschatte_jaarparameter_eur_per_mwh": 89.2144,
+      "herkomst_jaarparameter": "gas_indexwaarden_bewijs.json",
+      "bron_url": "https://energieplatform-vlaanderen.be/tariefkaartarchief?pdf=dc12088e63cec5de4e893c6ed2003903804ad794b2b31d08257f3e30ce222da1",
+      "jaarprognose_gevalideerd": true,
+      "jaarparameter_bronbewijs": {
+        "bron": "gas_indexwaarden_bewijs.json",
+        "tariefmaand": "2026-11",
+        "bronbewijs_consistent": true
+      },
       "geschikt_voor_automatische_jaarprijs": false,
-      "blokkades": [
-        "Historische brongegevens niet betrouwbaar bevestigd"
-      ],
-      "actueel_voor_huidige_maand": false
+      "blokkades": [],
+      "actueel_voor_huidige_maand": true
     },
     "OCTA+ Boost Flex Gas": {
       "status": "HISTORISCHE_EN_FORWARD_BRONWAARDEN_GECONTROLEERD",
@@ -58,8 +60,8 @@
       "actueel_voor_huidige_maand": true
     }
   },
-  "alle_broncontroles_geslaagd": false,
+  "alle_broncontroles_geslaagd": true,
   "huidige_kalendermaand_utc": "2026-11",
-  "actueel_voor_huidige_maand": false,
+  "actueel_voor_huidige_maand": true,
   "waarschuwing": "Bronindexen zijn geen volledige jaarprijzen; tariefkaarten en kosten moeten afzonderlijk worden gevalideerd."
 }
