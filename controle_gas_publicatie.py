@@ -92,7 +92,7 @@ def check(data, fixed, index, month=None, register=None, prices=None):
         for key in adverse:
             issues.append('Strijdige contractvoorwaarde: ' + key)
         forward = index_item.get('geschatte_jaarparameter_eur_per_mwh')
-        if not direct_ok and (type(forward) not in (int, float) or not math.isfinite(forward) or forward <= 0):
+        if not direct_ok and (type(forward) not in (int, float) or not math.isfinite(forward) or not 0 < forward <= 1000):
             issues.append('Bruikbare jaarparameter ontbreekt')
         formula = (item or {}).get('formule_gevonden') or {} if isinstance(item, dict) else {}
         normalize = lambda value: ''.join(c for c in str(value).upper() if c.isalnum())
