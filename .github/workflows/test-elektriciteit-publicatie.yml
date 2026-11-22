@@ -4,10 +4,11 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   test-publicatie:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -64,3 +65,22 @@ jobs:
           assert origineel.read_bytes() == inhoud
           print("GESLAAGD: productiegegevens ongewijzigd")
           PY
+
+      - name: Rechtstreekse Git-publicatie testen
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch="test-publicatie-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git commit --allow-empty -m "Tijdelijke test automatische publicatie"
+          git push origin "HEAD:refs/heads/$branch"
+          trap 'git push origin --delete "$branch"' EXIT
+          lokaal="$(git rev-parse HEAD)"
+          extern="$(git ls-remote --exit-code origin "refs/heads/$branch" | cut -f1)"
+          test "$lokaal" = "$extern"
+          echo "TEST 4 GESLAAGD: Git-publicatie bevestigd"
+          git push origin --delete "$branch"
+          trap - EXIT
+          echo "GESLAAGD: tijdelijke testbranch verwijderd"
