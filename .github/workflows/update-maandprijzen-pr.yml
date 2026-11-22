@@ -1,5 +1,4 @@
-
-name: Maandprijzen bijwerken via Pull Request
+name: Maandprijzen automatisch bijwerken
 
 on:
   workflow_dispatch:
@@ -8,15 +7,21 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
+
+concurrency:
+  group: elektriciteit-tarieven-publicatie
+  cancel-in-progress: false
 
 jobs:
   update-maandprijzen:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
       - name: Repository ophalen
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Python installeren
         uses: actions/setup-python@v5
@@ -29,33 +34,19 @@ jobs:
       - name: Nieuwe maandprijzen ophalen
         run: python3 update_maandprijzen.py
 
-      - name: Eindcontrole prijzen en jaarprijzen
+      - name: Volledige eindcontrole
         run: python3 controle_alle_prijzen.py
 
-      - name: Controleren welke bestanden zijn gewijzigd
-        id: wijzigingen
+      - name: Gevalideerde elektriciteitsprijzen publiceren
         run: |
           if git diff --quiet -- tariefkaart_scenarios_v120.csv; then
-            echo "gewijzigd=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "gewijzigd=true" >> "$GITHUB_OUTPUT"
+            echo "Geen wijzigingen om te publiceren"
+            exit 0
           fi
 
-      - name: Pull Request aanmaken
-        if: steps.wijzigingen.outputs.gewijzigd == 'true'
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          add-paths: tariefkaart_scenarios_v120.csv
-          branch: automatisch/maandprijzen
-          delete-branch: true
-          commit-message: 'Automatische update maandprijzen'
-          title: 'EnergieEerlijk - nieuwe maandprijzen'
-          body: |
-            Automatisch voorstel voor de maandelijkse tarieven.
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-            Alle 14 tariefkaarten zijn gecontroleerd.
-            De 56 prijswaarden zijn gecontroleerd.
-            De overige leverancierskosten en 14 jaarprijzen zijn gecontroleerd.
-
-            Controleer de wijzigingen voordat je deze Pull Request goedkeurt.
+          git add tariefkaart_scenarios_v120.csv
+          git commit -m "Automatische update gevalideerde elektriciteitsprijzen"
+          git push origin HEAD:main
