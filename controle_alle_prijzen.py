@@ -245,6 +245,20 @@ def lees_prijzen(inhoud, paginas, product_id):
             os.remove(tijdelijk_pad)
 
 
+def controleer_overige_kosten(product):
+    """Accepteer uitsluitend expliciet gevalideerde, eindige bedragen."""
+    product_id = product.get("id", "onbekend")
+    if product.get("overige_kosten_gevalideerd", "").strip().lower() != "ja":
+        raise ValueError(f"Overige kosten niet gevalideerd: {product_id}")
+    try:
+        waarde = bedrag(product.get("overige_kosten_eur_incl_btw", ""))
+    except (ArithmeticError, ValueError, TypeError) as fout:
+        raise ValueError(f"Overige kosten ontbreken of zijn ongeldig: {product_id}") from fout
+    if not waarde.is_finite() or waarde < 0:
+        raise ValueError(f"Ongeldige overige kosten: {product_id}")
+    return waarde
+
+
 def controleer_product(product):
     product_id = product["id"].strip()
     leverancier, contract = PRODUCTEN[product_id]
@@ -259,6 +273,8 @@ def controleer_product(product):
 
     prijzen = lees_prijzen(inhoud, paginas, product_id)
 
+    overige = controleer_overige_kosten(product)
+    print(f"OK overige kosten: EUR {overige:.2f} (gevalideerd)")
     fouten = []
 
     for veld in VELDEN:
@@ -394,7 +410,8 @@ def bereken_jaarprijzen(producten):
         else:
             groen = 0.0
 
-        jaarprijs = levering + groen + netkosten + accijnzen
+        overige = float(controleer_overige_kosten(product))
+        jaarprijs = levering + groen + netkosten + accijnzen + overige
 
         # Vergelijk uitsluitend met de referentie van november 2026.
         tariefmaand = product["tariefmaand"].strip()
