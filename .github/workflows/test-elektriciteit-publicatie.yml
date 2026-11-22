@@ -1,0 +1,66 @@
+name: Test elektriciteit publicatie
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-publicatie:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - run: python -m pip install pdfplumber
+
+      - name: Publicatiebeveiliging testen
+        run: |
+          python - <<'PY'
+          import csv
+          import copy
+          import tempfile
+          from pathlib import Path
+          import controle_alle_prijzen as c
+
+          origineel = Path(c.CSV_PAD)
+          inhoud = origineel.read_bytes()
+
+          with tempfile.TemporaryDirectory() as mapnaam:
+              tijdelijk = Path(mapnaam) / origineel.name
+              tijdelijk.write_bytes(inhoud)
+
+              with tijdelijk.open(encoding="utf-8-sig") as f:
+                  producten = list(csv.DictReader(f))
+
+              c.bereken_jaarprijzen(producten)
+              print("TEST 1 GESLAAGD")
+
+              test = copy.deepcopy(producten)
+              test[0]["overige_kosten_gevalideerd"] = "nee"
+
+              try:
+                  c.bereken_jaarprijzen(test)
+              except ValueError:
+                  print("TEST 2 GESLAAGD: geblokkeerd")
+              else:
+                  raise RuntimeError("TEST 2 MISLUKT")
+
+              test = copy.deepcopy(producten)
+              for product in test:
+                  product["tariefmaand"] = "2026-12"
+
+              test[0]["dag_ct"] = str(
+                  c.bedrag(test[0]["dag_ct"]) + 1
+              )
+
+              c.bereken_jaarprijzen(test)
+              print("TEST 3 GESLAAGD")
+
+          assert origineel.read_bytes() == inhoud
+          print("GESLAAGD: productiegegevens ongewijzigd")
+          PY
