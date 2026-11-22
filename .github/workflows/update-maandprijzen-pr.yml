@@ -29,6 +29,9 @@ jobs:
       - name: Nieuwe maandprijzen ophalen
         run: python3 update_maandprijzen.py
 
+      - name: Eindcontrole prijzen en jaarprijzen
+        run: python3 controle_alle_prijzen.py
+
       - name: Controleren welke bestanden zijn gewijzigd
         id: wijzigingen
         run: |
@@ -52,6 +55,7 @@ jobs:
             Automatisch voorstel voor de maandelijkse tarieven.
 
             Alle 14 tariefkaarten zijn gecontroleerd.
-            De 56 prijswaarden zijn verwerkt.
+            De 56 prijswaarden zijn gecontroleerd.
+            De overige leverancierskosten en 14 jaarprijzen zijn gecontroleerd.
 
             Controleer de wijzigingen voordat je deze Pull Request goedkeurt.
