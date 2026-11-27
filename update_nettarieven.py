@@ -7,6 +7,11 @@ from urllib.parse import urljoin, urlparse, unquote
 from urllib.request import Request, urlopen
 from tempfile import TemporaryDirectory
 import re
+from html.parser import HTMLParser
+from urllib.parse import urljoin, urlparse, unquote
+from urllib.request import Request, urlopen
+from tempfile import TemporaryDirectory
+import re
 
 from openpyxl import load_workbook
 
@@ -170,6 +175,141 @@ def lees_gas(pad, jaar):
     wb.close()
     return gegevens
 
+BRON_URL = (
+    "https://www.vlaamsenutsregulator.be/"
+    "elektriciteit-en-aardgas/nettarieven/"
+    "hoeveel-bedragen-de-distributienettarieven"
+)
+
+
+def officiele_url(url):
+    parsed = urlparse(url)
+    return (
+        parsed.scheme == "https"
+        and parsed.hostname in {
+            "www.vlaamsenutsregulator.be",
+            "assets.vlaamsenutsregulator.be",
+            "vlaamsenutsregulator.be"
+        }
+    )
+
+
+class LinkParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.links = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "a":
+            href = dict(attrs).get("href")
+            if href:
+                self.links.append(href)
+
+
+def download(url):
+    controle(officiele_url(url), "Niet-officiele bron")
+
+    request = Request(
+        url,
+        headers={"User-Agent": "EerlijkeEnergie/1.0"}
+    )
+
+    with urlopen(request, timeout=60) as response:
+        controle(
+            officiele_url(response.geturl()),
+            "Niet-officiele downloadbestemming"
+        )
+
+        inhoud = response.read(10_000_001)
+
+    controle(
+        len(inhoud) <= 10_000_000,
+        "Bestand onverwacht groot"
+    )
+
+    return inhoud
+
+
+def zoek_officiele_bestanden(gewenst_jaar=None):
+    parser = LinkParser()
+    parser.feed(download(BRON_URL).decode("utf-8"))
+
+    gevonden = {}
+
+    for href in parser.links:
+        url = urljoin(BRON_URL, href)
+
+        if not officiele_url(url):
+            continue
+
+        naam = unquote(
+            urlparse(url).path.rsplit("/", 1)[-1]
+        ).lower()
+
+        match = re.fullmatch(
+            r"distributienettarieven[\s_-]+"
+            r"(elektriciteit|aardgas)[\s_-]+"
+            r"(20\d{2})\.xlsx",
+            naam
+        )
+
+        if not match:
+            continue
+
+        energie, jaar = match.groups()
+        jaar = int(jaar)
+
+        gevonden.setdefault(jaar, {})
+        gevonden[jaar].setdefault(energie, set()).add(url)
+
+    controle(
+        bool(gevonden),
+        "Geen officiele Excelbestanden gevonden"
+    )
+
+    jaar = (
+        gewenst_jaar
+        if gewenst_jaar is not None
+        else max(gevonden)
+    )
+
+    bestanden = gevonden.get(jaar, {})
+
+    for energie in ("elektriciteit", "aardgas"):
+        controle(
+            len(bestanden.get(energie, set())) == 1,
+            f"Ontbrekende of dubbele bron: {energie} {jaar}"
+        )
+
+    return (
+        jaar,
+        next(iter(bestanden["elektriciteit"])),
+        next(iter(bestanden["aardgas"]))
+    )
+
+
+def lees_online(jaar=None):
+    jaar, elek_url, gas_url = (
+        zoek_officiele_bestanden(jaar)
+    )
+
+    print(f"Officieel tariefjaar: {jaar}")
+    print(f"Elektriciteit: {elek_url}")
+    print(f"Aardgas: {gas_url}")
+
+    with TemporaryDirectory() as mapnaam:
+        elek = Path(mapnaam) / "elektriciteit.xlsx"
+        gas = Path(mapnaam) / "aardgas.xlsx"
+
+        elek.write_bytes(download(elek_url))
+        gas.write_bytes(download(gas_url))
+
+        return jaar, {
+            "geldig_vanaf": f"{jaar}-01-01",
+            "geldig_tot": f"{jaar}-12-31",
+            "elektriciteit": lees_elektriciteit(elek, jaar),
+            "gas": lees_gas(gas, jaar)
+        }
 BRON_URL = (
     "https://www.vlaamsenutsregulator.be/"
     "elektriciteit-en-aardgas/nettarieven/"
