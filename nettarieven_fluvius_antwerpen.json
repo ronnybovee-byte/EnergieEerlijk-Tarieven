@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "netbeheerder": "Fluvius Antwerpen",
+  "valuta": "EUR",
+  "inclusief_btw": false,
+  "bron": "Vlaamse Nutsregulator",
+  "tarieven": {
+    "2026": {
+      "geldig_vanaf": "2026-01-01",
+      "geldig_tot": "2026-12-31",
+      "elektriciteit": {
+        "meter": "analoog",
+        "vaste_term_eur_jaar": 123.51,
+        "databeheer_eur_jaar": 17.85,
+        "netgebruik_eur_kwh": 0.0492427,
+        "openbare_dienst_eur_kwh": 0.0254845,
+        "toeslagen_eur_kwh": 0.0015690
+      },
+      "gas": {
+        "categorie": "T2",
+        "vaste_term_eur_jaar": 78.51,
+        "databeheer_eur_jaar": 17.85,
+        "netgebruik_eur_kwh": 0.0077903,
+        "openbare_dienst_eur_kwh": 0.0003667,
+        "pensioenlasten_eur_kwh": 0.0003405,
+        "retributies_eur_kwh": 0.0000467
+      }
+    },
+    "2027": {
+      "geldig_vanaf": "2027-01-01",
+      "geldig_tot": "2027-12-31",
+      "elektriciteit": {
+        "meter": "analoog",
+        "vaste_term_eur_jaar": 134.66,
+        "databeheer_eur_jaar": 18.48,
+        "netgebruik_eur_kwh": 0.0510957,
+        "openbare_dienst_eur_kwh": 0.0263927,
+        "toeslagen_eur_kwh": 0.0013279
+      },
+      "gas": {
+        "categorie": "T2",
+        "vaste_term_eur_jaar": 76.12,
+        "databeheer_eur_jaar": 18.48,
+        "netgebruik_eur_kwh": 0.0075529,
+        "openbare_dienst_eur_kwh": 0.0006473,
+        "pensioenlasten_eur_kwh": 0.0003262,
+        "retributies_eur_kwh": 0.0000400
+      }
+    }
+  }
+}
