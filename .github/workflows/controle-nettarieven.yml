@@ -1,0 +1,47 @@
+name: Controle nettarieven Fluvius Antwerpen
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 7 * * 1'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: controle-nettarieven
+  cancel-in-progress: false
+
+jobs:
+  controle-nettarieven:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Repository ophalen
+        uses: actions/checkout@v4
+
+      - name: Python voorbereiden
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Benodigde bibliotheek installeren
+        run: pip install openpyxl
+
+      - name: Officiele nettarieven controleren
+        run: python update_nettarieven.py --online --publiceren
+
+      - name: Gevalideerde nettarieven publiceren
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add nettarieven_fluvius_antwerpen.json
+
+          if git diff --cached --quiet; then
+            echo "OK: geen gewijzigde nettarieven."
+          else
+            git commit -m "Actualisering officiele nettarieven Fluvius Antwerpen"
+            git push
+          fi
