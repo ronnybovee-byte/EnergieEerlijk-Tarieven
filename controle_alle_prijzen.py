@@ -6,6 +6,8 @@ import urllib.parse
 import urllib.request
 from decimal import Decimal
 from datetime import date
+from pathlib import Path
+import json
 import pdfplumber
 
 from lees_tariefkaart import (
@@ -383,8 +385,37 @@ def bereken_jaarprijzen(producten):
     nacht_kwh = 1816.0
     totaal_kwh = dag_kwh + nacht_kwh
 
-    # Dezelfde bedragen als in de huidige Android Top 10.
-    netkosten = 130.9206 + 18.92 + totaal_kwh * 0.080874
+        # Officiele nettarieven volgens het tariefjaar.
+    bron = Path(__file__).resolve().parent / (
+        "nettarieven_fluvius_antwerpen.json"
+    )
+
+    gegevens = json.loads(
+        bron.read_text(encoding="utf-8")
+    )
+
+    jaar = str(TARIEFMAAND.year)
+
+    if jaar not in gegevens["tarieven"]:
+        raise RuntimeError(
+            f"Geen gevalideerde nettarieven voor {jaar}"
+        )
+
+    net = gegevens["tarieven"][jaar]["elektriciteit"]
+
+    netkosten = (
+        net["vaste_term_eur_jaar"]
+        + net["databeheer_eur_jaar"]
+        + totaal_kwh * (
+            net["netgebruik_eur_kwh"]
+            + net["openbare_dienst_eur_kwh"]
+            + net["toeslagen_eur_kwh"]
+        )
+    ) * 1.06
+
+    print(f"Nettarieven Fluvius Antwerpen: {jaar}")
+    print(f"Nettarieven incl. btw: EUR {netkosten:.2f}")
+
     accijnzen = totaal_kwh * 0.044732
 
     print()
